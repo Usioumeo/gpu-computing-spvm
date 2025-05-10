@@ -90,4 +90,11 @@ void coo_reserve(COO *coo, unsigned long nnz);
 
 int coo_from_file(FILE *input, COO *coo);
 
+
+// compare function for qsort
+int compare_cooEntry(const void *a, const void *b);
+
+int coo_write_to_file(FILE *output, COO *coo);
+
+int coo_compare(COO *coo1, COO *coo2);
 #endif

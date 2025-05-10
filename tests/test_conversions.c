@@ -4,14 +4,13 @@
 
 int main(){
     COO *coo = coo_new();
-    coo_generate_random(coo, 10, 10, 10);
+    coo_generate_random(coo, 10, 10, 201);
     
 
     coo_sort_in_ascending_order(coo);
 
     CSR *csr = csr_new();
     coo_to_csr(coo, csr);
-    
 
     COO *coo2 = coo_new();
     csr_to_coo(csr, coo2);
@@ -25,20 +24,11 @@ int main(){
     for(unsigned long i = 0; i < coo2->nnz; ++i){
         printf("coo2 %ld %ld %f\n", coo2->data[i].row, coo2->data[i].col, coo2->data[i].val);
     }*/
-    
 
-
-    for(unsigned long i = 0; i < coo->nnz; ++i){
-        if (coo->data[i].row != coo2->data[i].row ||
-            coo->data[i].col != coo2->data[i].col ||
-            coo->data[i].val - coo2->data[i].val>0.00000001
-            ){
-            printf("error at %ld\n", i );
-            printf("coo %ld %ld %f\n", coo->data[i].row, coo->data[i].col, coo->data[i].val);
-            printf("coo2 %ld %ld %f\n", coo2->data[i].row, coo2->data[i].col, coo2->data[i].val);
-            return -1;
-        }
-    }   
+    if (coo_compare(coo, coo2)!=0){
+        printf("error comparing the two matrices\n");
+        return -1;
+    }
 
     
     coo_free(coo);

@@ -18,9 +18,25 @@ void coo_generate_random(COO *coo, unsigned long rows, unsigned long cols,
   for (unsigned long i = 0; i < coo->nnz; ++i) {
     coo->data[i].row = (unsigned long)rand() % rows;
     coo->data[i].col = (unsigned long)rand() % cols;
-    coo->data[i].val = (float)(rand() % 10 + 1);
+    coo->data[i].val = (float)(rand() % 2001 - 1000) / 1000.0f; // Random value
   }
+  // there could be duplicates, sort and remove them
+  coo_sort_in_ascending_order(coo);
+  COOEntry *tmp = (COOEntry *)malloc(coo->nnz * sizeof(COOEntry));
+  COOEntry *index = tmp;
+  tmp[0] = coo->data[0];
+  index++;
+  for (unsigned long i = 1; i < coo->nnz; ++i) {
+    if (coo->data[i].row != index->row || coo->data[i].col != index->col) {
+      *index = coo->data[i];
+      index++;
+    }
+  }
+  coo_reserve(coo, index - tmp);
+  mempcpy(coo->data, tmp, (index - tmp) * sizeof(COOEntry));
+  free(tmp);
 }
+
 
 void coo_reserve(COO *coo, unsigned long nnz) {
   coo->data = (COOEntry *)realloc(coo->data, nnz * sizeof(COOEntry));
@@ -78,6 +94,8 @@ void coo_to_csr(COO *coo, CSR *csr) {
 // it doesn't destroy the orifinal csr matrix
 void csr_to_coo(CSR *csr, COO *coo) {
   // init coo
+  coo->nrow = csr->nrow;
+  coo->ncol = csr->ncol;
   coo_reserve(coo, csr->nnz);
 
   for (unsigned long i = 0; i < csr->nrow; ++i) {
@@ -161,7 +179,7 @@ int coo_from_file(FILE *input, COO *coo) {
   /*  This is how one can screen matrix types if their application */
   /*  only supports a subset of the Matrix Market data types.      */
 
-  if (!mm_is_matrix(matcode) ||  !mm_is_sparse(matcode)) { //&& 
+  if (!mm_is_matrix(matcode) || !mm_is_sparse(matcode)) { //&&
     printf("Sorry, this application does not support ");
     printf("Market Market type: [%s]\n", mm_typecode_to_str(matcode));
     exit(1);
@@ -191,5 +209,51 @@ int coo_from_file(FILE *input, COO *coo) {
 
   if (input != stdin)
     fclose(input);
+  return 0;
+}
+
+int coo_write_to_file(FILE *output, COO *coo) {
+  MM_typecode matcode;
+  unsigned long i;
+
+  mm_initialize_typecode(&matcode);
+  mm_set_matrix(&matcode);
+  mm_set_coordinate(&matcode);
+  mm_set_real(&matcode);
+
+  mm_write_banner(output, matcode);
+  mm_write_mtx_crd_size(output, coo->nrow, coo->ncol, coo->nnz);
+
+  /* NOTE: matrix market files use 1-based indices, i.e. first element
+    of a vector has index 1, not 0.  */
+
+  for (i = 0; i < coo->nnz; i++)
+    fprintf(output, "%ld %ld %10.3f\n", coo->data[i].row + 1,
+            coo->data[i].col + 1, coo->data[i].val);
+  fclose(output);
+  return 0;
+}
+
+int coo_compare(COO *coo1, COO *coo2) {
+  if (coo1->nnz != coo2->nnz || coo1->nrow != coo2->nrow ||
+      coo1->ncol != coo2->ncol) {
+    printf("coo1 %ld %ld %ld\n", coo1->nrow, coo1->ncol, coo1->nnz);
+    printf("coo2 %ld %ld %ld\n", coo2->nrow, coo2->ncol, coo2->nnz);
+    return 1;
+  }
+  coo_sort_in_ascending_order(coo1);
+  coo_sort_in_ascending_order(coo2);
+
+  for (unsigned long i = 0; i < coo1->nnz; ++i) {
+    if (coo1->data[i].row != coo2->data[i].row ||
+        coo1->data[i].col != coo2->data[i].col ||
+        coo1->data[i].val - coo2->data[i].val > 0.00000001) {
+      printf("coo1 %ld %ld %f\n", coo1->data[i].row, coo1->data[i].col,
+             coo1->data[i].val);
+      printf("coo2 %ld %ld %f\n", coo2->data[i].row, coo2->data[i].col,
+             coo2->data[i].val);
+      return 1;
+    }
+  }
   return 0;
 }
