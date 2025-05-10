@@ -1,6 +1,7 @@
 #ifndef LIBCSR_H
 #define LIBCSR_H
 
+#include <stdio.h>
 #include <stdlib.h>
 typedef struct {
     // row index (0 indexed)
@@ -84,5 +85,9 @@ COO* coo_new();
 
 // Function to create a new empty CSR matrix
 CSR* csr_new();
+
+void coo_reserve(COO *coo, unsigned long nnz);
+
+int coo_from_file(FILE *input, COO *coo);
 
 #endif

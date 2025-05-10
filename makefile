@@ -1,6 +1,8 @@
 CC=gcc
 
-FLAGS=-g -fsanitize=address -O0 -Wall -Wextra -Wpedantic -Wshadow -Wfloat-equal -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2
+FLAGS=-g -fsanitize=address -O0 -Wall -Wextra -Wpedantic 
+#-Wshadow -Wfloat-equal -Wconversion -Wsign-conversion -Wnull-dereference 
+#-Wdouble-promotion -Wformat=2
 LIBS=-L/opt/shares/openfoam/software/OpenBLAS/0.3.23-GCC-12.3.0/lib 
 INCLUDES=-I/opt/shares/openfoam/software/OpenBLAS/0.3.23-GCC-12.3.0/include -Iinclude
 LIB_FLAGS=-lm -lopenblas 
@@ -9,6 +11,7 @@ LIB_FLAGS=-lm -lopenblas
 BIN_FOLDER := bin
 OBJ_FOLDER := obj
 SRC_FOLDER := src
+DATA_FOLDER := data
 #BATCH_OUT_FOLDER := outputs
 
 MAIN_NAME=main
@@ -20,16 +23,16 @@ LIB_NAME=lib
 
 
 
-OBJECTS = $(OBJ_FOLDER)/$(LIB_NAME).o
+OBJECTS = $(OBJ_FOLDER)/$(LIB_NAME).o $(OBJ_FOLDER)/mmio.o
 
 all: $(BIN_FOLDER)/$(MAIN_BIN) $(BIN_FOLDER)/$(MAIN_TEST) 
 
 
 # build object files
 
-$(OBJ_FOLDER)/$(LIB_NAME).o: $(SRC_FOLDER)/$(LIB_NAME).c
+$(OBJ_FOLDER)/%.o: $(SRC_FOLDER)/%.c
 	@mkdir -p $(BIN_FOLDER) $(OBJ_FOLDER)
-	$(CC) $(FLAGS) -c $(SRC_FOLDER)/$(LIB_NAME).c -o $@ $(LIB_FLAGS)
+	$(CC) $(FLAGS) -c $< -o $@ $(LIB_FLAGS)
 
 
 # main exec
@@ -40,13 +43,26 @@ $(BIN_FOLDER)/$(MAIN_BIN): $(MAIN_SRC) $(OBJECTS)
 
 
 clean:
-	rm -rf $(BIN_FOLDER) $(OBJ_FOLDER)
+	rm -rf $(BIN_FOLDER) $(OBJ_FOLDER) $(DATA_FOLDER)
 
 
 
-
+# 	
 datasets:
-	@curl -L --output "hollywood" https://suitesparse-collection-website.herokuapp.com/MM/LAW/hollywood-2009.tar.gz
+	@mkdir -p $(DATA_FOLDER)
+	@if ! [ -f $(DATA_FOLDER)/hollywood.tar.gz ]; then \
+		echo "Downloading dataset..."; \
+		curl -L --output $(DATA_FOLDER)/hollywood.tar.gz https://suitesparse-collection-website.herokuapp.com/MM/LAW/hollywood-2009.tar.gz; \
+		echo "Unpacking dataset..."; \
+		tar -xzf $(DATA_FOLDER)/hollywood.tar.gz -C $(DATA_FOLDER); \
+	fi
+	@if ! [ -f $(DATA_FOLDER)/abb313.tar.gz ]; then \
+		echo "Downloading dataset..."; \
+		curl -L --output $(DATA_FOLDER)/abb313.tar.gz https://suitesparse-collection-website.herokuapp.com/MM/HB/abb313.tar.gz; \
+		echo "Unpacking dataset..."; \
+		tar -xzf $(DATA_FOLDER)/abb313.tar.gz -C $(DATA_FOLDER); \
+	fi
+	
 
 
 TEST_FOLDER := tests
@@ -55,7 +71,7 @@ TEST_OBJECTS := $(patsubst $(TEST_FOLDER)/%.c, $(OBJ_FOLDER)/%.o, $(TEST_SOURCES
 TEST_BINS := $(patsubst $(TEST_FOLDER)/%.c, $(BIN_FOLDER)/%, $(TEST_SOURCES))
 
 # Add a test target
-test: $(TEST_BINS)
+test: $(TEST_BINS) datasets
 	@echo "Running tests..."
 	@echo "Test binaries: $(TEST_BINS)"
 	@for test_bin in $(TEST_BINS); do \

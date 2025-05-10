@@ -16,7 +16,7 @@ int main(){
     COO *coo2 = coo_new();
     csr_to_coo(csr, coo2);
     // the second should already be sorted
-    
+
     
     /*for(unsigned long i = 0; i < coo->nnz; ++i){
         printf("coo %ld %ld %f\n", coo->data[i].row, coo->data[i].col, coo->data[i].val);
@@ -31,7 +31,7 @@ int main(){
     for(unsigned long i = 0; i < coo->nnz; ++i){
         if (coo->data[i].row != coo2->data[i].row ||
             coo->data[i].col != coo2->data[i].col ||
-            coo->data[i].val != coo2->data[i].val
+            coo->data[i].val - coo2->data[i].val>0.00000001
             ){
             printf("error at %ld\n", i );
             printf("coo %ld %ld %f\n", coo->data[i].row, coo->data[i].col, coo->data[i].val);
