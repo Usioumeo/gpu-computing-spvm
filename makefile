@@ -1,9 +1,10 @@
 CC=gcc
 
+FLAGS=-g -fsanitize=address -O0 -Wall -Wextra -Wpedantic -Wshadow -Wfloat-equal -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wformat=2
 LIBS=-L/opt/shares/openfoam/software/OpenBLAS/0.3.23-GCC-12.3.0/lib 
 INCLUDES=-I/opt/shares/openfoam/software/OpenBLAS/0.3.23-GCC-12.3.0/include -Iinclude
-LIB_FLAGS=-lm -lopenblas -g -fsanitize=address 
-#-g -O0
+LIB_FLAGS=-lm -lopenblas 
+
 
 BIN_FOLDER := bin
 OBJ_FOLDER := obj
@@ -28,13 +29,13 @@ all: $(BIN_FOLDER)/$(MAIN_BIN) $(BIN_FOLDER)/$(MAIN_TEST)
 
 $(OBJ_FOLDER)/$(LIB_NAME).o: $(SRC_FOLDER)/$(LIB_NAME).c
 	@mkdir -p $(BIN_FOLDER) $(OBJ_FOLDER)
-	$(CC) -c $(SRC_FOLDER)/$(LIB_NAME).c -o $@ $(LIB_FLAGS)
+	$(CC) $(FLAGS) -c $(SRC_FOLDER)/$(LIB_NAME).c -o $@ $(LIB_FLAGS)
 
 
 # main exec
 $(BIN_FOLDER)/$(MAIN_BIN): $(MAIN_SRC) $(OBJECTS)
 	@mkdir -p $(BIN_FOLDER)
-	$(CC) $^ -o $@ $(LIBS) $(INCLUDES) $(LIB_FLAGS)
+	$(CC) $(FLAGS) $^ -o $@ $(LIBS) $(INCLUDES) $(LIB_FLAGS)
 
 
 
@@ -69,9 +70,9 @@ test: $(TEST_BINS)
 # Build test object files
 $(OBJ_FOLDER)/%.o: $(TEST_FOLDER)/%.c
 	@mkdir -p $(OBJ_FOLDER)
-	$(CC) -c $< -o $@ $(LIBS) $(INCLUDES) $(LIB_FLAGS)
+	$(CC) $(FLAGS) -c $< -o $@ $(LIBS) $(INCLUDES) $(LIB_FLAGS)
 
 # Build test executables
 $(BIN_FOLDER)/%: $(OBJ_FOLDER)/%.o $(OBJECTS)
 	@mkdir -p $(BIN_FOLDER)
-	$(CC) $^ -o $@ $(LIBS) $(INCLUDES) $(LIB_FLAGS)
+	$(CC) $(FLAGS) $^ -o $@ $(LIBS) $(INCLUDES) $(LIB_FLAGS)

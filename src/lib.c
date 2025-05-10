@@ -3,59 +3,20 @@
 Entry to COO 
 */
 
+#include <stdio.h>
 #include <stdlib.h>
-typedef struct {
-    // row index (0 indexed)
-    int row;
-    // col index (0 indexed)
-    int col;
-    // value contained
-    float val; 
-} COOEntry;
-
-/*
-COO Matrix
-*/
-typedef struct {
-    // multiple COO entries
-    COOEntry *data;
-    //non-zero elements, aka number of COO entries,
-    int nnz;
-    // how many rows
-    int nrow;
-    // how many columns
-    int ncol;
-}COO;
-
-
-/*
-CSR Matrix
-to obtain the number of non-
-*/
-typedef struct{
-    // one row index for each row +1 (and value refers to col_idx and val)
-    int *row_idx;
-    // array of columns, there is one for each non-zero element
-    int *col_idx;
-    // array of values, there is one for each non-zero element
-    float *val;
-    // how many rows
-    int nrow;
-    // how many columns
-    int ncol;
-    // how many non-zero elements (its not strictly necessary to store it, it can be computed as row_idx[nrow])
-    int nnz;
-}CSR;
-
+#include "headers/lib.h"
 
 
 // Function to generate random sparse matrix in COO format
-void coo_generate_random(COO *coo, int rows, int cols, int nnz) {
+void coo_generate_random(COO *coo, unsigned long rows, unsigned long cols, unsigned long nnz) {
     coo->nnz = nnz;
+    coo->nrow = rows;
+    coo->ncol = cols;
     coo->data = (COOEntry *)realloc(coo->data, nnz * sizeof(COOEntry));
-    for (int i = 0; i < coo->nnz; ++i) {
-        coo->data[i].row = rand() % rows;
-        coo->data[i].col = rand() % cols;
+    for (unsigned long i = 0; i < coo->nnz; ++i) {
+        coo->data[i].row = (unsigned long)rand() % rows;
+        coo->data[i].col = (unsigned long)rand() % cols;
         coo->data[i].val = (float)(rand() % 10 + 1);
     }
 }
@@ -66,35 +27,36 @@ void coo_generate_random(COO *coo, int rows, int cols, int nnz) {
 // it doesn't destroy the orifinal coo matrix
 void coo_to_csr(COO *coo, CSR *csr) {
     csr->nnz=coo->nnz;
-
+    csr->nrow=coo->nrow;
+    csr->ncol=coo->ncol;
     //resize csr arrays
-    csr->row_idx = (int *)realloc(csr->row_idx, (coo->nrow + 1) * sizeof(int));
-    csr->col_idx = (int *)realloc(csr->col_idx, coo->nnz * sizeof(int));
+    csr->row_idx = (unsigned long *)realloc(csr->row_idx, (coo->nrow + 1) * sizeof(unsigned long));
+    csr->col_idx = (unsigned long *)realloc(csr->col_idx, coo->nnz * sizeof(unsigned long));
     csr->val = (float *)realloc(csr->val, coo->nnz * sizeof(float));
 
     //initialize row_idx to 0
-    for (int i = 0; i <= csr->nrow; ++i)
+    for (unsigned long i = 0; i <= csr->nrow; ++i)
         csr->row_idx[i] = 0;
 
     //count the number of non-zero elements in each row
-    for (int i = 0; i < coo->nnz; ++i)
+    for (unsigned long i = 0; i < coo->nnz; ++i)
         csr->row_idx[coo->data[i].row + 1]++;
 
     //compute the prefix sum to get the row pointers
-    for (int i = 0; i < csr->nrow; ++i)
+    for (unsigned long i = 0; i < csr->nrow; ++i)
         csr->row_idx[i + 1] += csr->row_idx[i];
 
     //temporary array to keep track of the current index in each row
-    int *temp = (int *)malloc(csr->nrow * sizeof(int));
+    unsigned long *temp = (unsigned long*)malloc(csr->nrow * sizeof(unsigned long));
     
     //initialize temp to the row pointers
-    for (int i = 0; i < csr->nrow; ++i)
+    for (unsigned long i = 0; i < csr->nrow; ++i)
         temp[i] = csr->row_idx[i];
 
     //fill the col_idx and val arrays
-    for (int i = 0; i < csr->nnz; ++i) {
-        int row = coo->data[i].row;
-        int idx = temp[row]++;
+    for (unsigned long i = 0; i < csr->nnz; ++i) {
+        unsigned long row = coo->data[i].row;
+        unsigned long idx = temp[row]++;
         csr->col_idx[idx] = coo->data[i].col;
         csr->val[idx] = coo->data[i].val;
     }
@@ -108,12 +70,12 @@ void coo_to_csr(COO *coo, CSR *csr) {
 void csr_to_coo(CSR *csr, COO *coo) {
     //init coo 
     coo->nnz = csr->nnz;
-    coo->data = (COOEntry *)realloc(coo->data, csr->nnz * sizeof(COOEntry));
+    coo->data = (COOEntry *)realloc(coo->data, (long unsigned) csr->nnz * sizeof(COOEntry));
     
     
-    for (int i = 0; i < csr->nrow; ++i) {
+    for (unsigned long i = 0; i < csr->nrow; ++i) {
         //for each row
-        for (int j = csr->row_idx[i]; j < csr->row_idx[i + 1]; ++j) {
+        for (unsigned long j = csr->row_idx[i]; j < csr->row_idx[i + 1]; ++j) {
             //for each entry in the row
             coo->data[j].row = i;
             coo->data[j].col = csr->col_idx[j];
@@ -128,15 +90,15 @@ int compare_cooEntry(const void *a, const void *b) {
     COOEntry *entryB = (COOEntry *)b;
 
     if (entryA->row != entryB->row) {
-        return entryA->row - entryB->row;
+        return (int)entryA->row - (int)entryB->row;
     } else {
-        return entryA->col - entryB->col;
+        return (int)entryA->col - (int)entryB->col;
     }
 }
 
 // Function to sort COO entries by row and column indices
 void coo_sort_in_ascending_order(COO *coo) {
-    qsort(coo->data, coo->nnz, sizeof(COOEntry), compare_cooEntry);
+    qsort(coo->data, (long unsigned) coo->nnz, sizeof(COOEntry), compare_cooEntry);
 }
 
 // Function to free the memory allocated for COO matrix

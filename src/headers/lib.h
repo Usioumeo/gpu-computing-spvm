@@ -4,42 +4,49 @@
 #include <stdlib.h>
 typedef struct {
     // row index (0 indexed)
-    int row;
+    unsigned long row;
     // col index (0 indexed)
-    int col;
+    unsigned long col;
     // value contained
     float val; 
 } COOEntry;
 
+/*
+COO Matrix
+*/
 typedef struct {
     // multiple COO entries
     COOEntry *data;
     //non-zero elements, aka number of COO entries,
-    int nnz;
+    unsigned long nnz;
     // how many rows
-    int nrow;
+    unsigned long nrow;
     // how many columns
-    int ncol;
+    unsigned long ncol;
 }COO;
 
 
+/*
+CSR Matrix
+to obtain the number of non-
+*/
 typedef struct{
     // one row index for each row +1 (and value refers to col_idx and val)
-    int *row_idx;
+    unsigned long *row_idx;
     // array of columns, there is one for each non-zero element
-    int *col_idx;
+    unsigned long *col_idx;
     // array of values, there is one for each non-zero element
     float *val;
     // how many rows
-    int nrow;
+    unsigned long nrow;
     // how many columns
-    int ncol;
+    unsigned long ncol;
     // how many non-zero elements (its not strictly necessary to store it, it can be computed as row_idx[nrow])
-    int nnz;
+    unsigned long nnz;
 }CSR;
 
 // Function to generate random sparse matrix in COO format
-void coo_generate_random(COO *coo, int rows, int cols, int nnz);
+void coo_generate_random(COO *coo, unsigned long rows, unsigned long cols, unsigned long nnz);
 
 // Function to convert COO to CSR
 // 
