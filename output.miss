@@ -1,0 +1,2212 @@
+src/lib.c:29:31: missed: couldn't vectorize loop
+src/lib.c:29:31: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:18:31: missed: couldn't vectorize loop
+src/lib.c:18:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:42:27: missed: statement clobbers memory: _64 = realloc (_63, _62);
+src/lib.c:19:39: missed: statement clobbers memory: _1 = rand ();
+src/lib.c:20:39: missed: statement clobbers memory: _7 = rand ();
+src/lib.c:21:32: missed: statement clobbers memory: _12 = rand ();
+src/lib.c:131:3: missed: statement clobbers memory: qsort (prephitmp_75, _81, 24, compare_cooEntry);
+src/lib.c:25:31: missed: statement clobbers memory: tmp_47 = malloc (_21);
+src/lib.c:27:10: missed: not vectorized: more than one data ref in stmt: *tmp_47 = *_22;
+src/lib.c:31:14: missed: not vectorized: more than one data ref in stmt: *index_83 = *_24;
+src/lib.c:42:27: missed: statement clobbers memory: _67 = realloc (_22, prephitmp_106);
+src/lib.c:36:3: missed: statement clobbers memory: mempcpy (_67, tmp_47, prephitmp_106);
+src/lib.c:37:3: missed: statement clobbers memory: free (tmp_47);
+src/lib.c:15:13: missed: not vectorized: vectorization is not profitable.
+src/lib.c:15:13: missed: not vectorized: vectorization is not profitable.
+src/lib.c:42:27: missed: statement clobbers memory: _3 = realloc (_2, _1);
+src/lib.c:49:35: missed: statement clobbers memory: _4 = realloc (_3, _2);
+src/lib.c:52:24: missed: statement clobbers memory: _7 = realloc (_6, _5);
+src/lib.c:53:23: missed: statement clobbers memory: _10 = realloc (_9, _8);
+src/lib.c:87:31: missed: couldn't vectorize loop
+src/lib.c:87:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:75:31: missed: couldn't vectorize loop
+src/lib.c:75:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:71:31: missed: couldn't vectorize loop
+src/lib.c:71:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:67:31: missed: couldn't vectorize loop
+src/lib.c:67:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:49:35: missed: statement clobbers memory: _84 = realloc (_83, _82);
+src/lib.c:52:24: missed: statement clobbers memory: _87 = realloc (_86, _85);
+src/lib.c:53:23: missed: statement clobbers memory: _90 = realloc (_89, _88);
+src/lib.c:80:24: missed: statement clobbers memory: temp_55 = malloc (0);
+src/lib.c:80:24: missed: statement clobbers memory: temp_67 = malloc (_29);
+src/lib.c:84:13: missed: statement clobbers memory: __builtin_memcpy (temp_67, _4, _29);
+src/lib.c:94:3: missed: statement clobbers memory: free (temp_59);
+src/lib.c:106:31: missed: couldn't vectorize loop
+src/lib.c:106:31: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:108:47: missed: couldn't vectorize loop
+src/lib.c:108:47: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:42:27: missed: statement clobbers memory: _38 = realloc (_37, _36);
+src/lib.c:131:3: missed: statement clobbers memory: qsort (_2, _1, 24, compare_cooEntry);
+src/lib.c:137:3: missed: statement clobbers memory: free (_1);
+src/lib.c:139:3: missed: statement clobbers memory: free (coo_3(D));
+src/lib.c:145:3: missed: statement clobbers memory: free (_1);
+src/lib.c:146:3: missed: statement clobbers memory: free (_2);
+src/lib.c:147:3: missed: statement clobbers memory: free (_3);
+src/lib.c:151:3: missed: statement clobbers memory: free (csr_5(D));
+src/lib.c:156:21: missed: statement clobbers memory: coo_3 = malloc (32);
+src/lib.c:166:21: missed: statement clobbers memory: csr_3 = malloc (48);
+src/lib.c:208:30: missed: couldn't vectorize loop
+src/lib.c:208:30: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:179:7: missed: statement clobbers memory: _1 = mm_read_banner (input_31(D), &matcode);
+src/lib.c:195:7: missed: statement clobbers memory: _5 = mm_read_mtx_crd_size (input_31(D), &M, &N, &nnz);
+src/lib.c:42:27: missed: statement clobbers memory: _56 = realloc (_55, _54);
+src/lib.c:209:5: missed: statement clobbers memory: fscanf (input_31(D), "%lu %lu %f\n", _17, _16, _15);
+src/lib.c:216:5: missed: statement clobbers memory: fclose (input_31(D));
+src/lib.c:196:5: missed: statement clobbers memory: exit (1);
+src/lib.c:188:5: missed: statement clobbers memory: printf ("Sorry, this application does not support ");
+src/lib.c:189:5: missed: statement clobbers memory: _4 = mm_typecode_to_str (&matcode);
+src/lib.c:189:5: missed: statement clobbers memory: printf ("Market Market type: [%s]\n", _4);
+src/lib.c:190:5: missed: statement clobbers memory: exit (1);
+src/lib.c:180:5: missed: statement clobbers memory: __builtin_puts (&"Could not process Matrix Market banner."[0]);
+src/lib.c:181:5: missed: statement clobbers memory: exit (1);
+src/lib.c:235:17: missed: couldn't vectorize loop
+src/lib.c:235:17: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:229:3: missed: statement clobbers memory: mm_write_banner (output_24(D), &matcode);
+src/lib.c:230:3: missed: statement clobbers memory: mm_write_mtx_crd_size (output_24(D), _6, _4, _2);
+src/lib.c:236:5: missed: statement clobbers memory: fprintf (output_24(D), "%ld %ld %10.3f\n", _15, _13, _11);
+src/lib.c:238:3: missed: statement clobbers memory: fclose (output_24(D));
+src/lib.c:252:31: missed: couldn't vectorize loop
+src/lib.c:253:22: missed: not vectorized: no vectype for stmt: _15 = _14->row;
+ scalar_type: long unsigned int
+src/lib.c:131:3: missed: statement clobbers memory: qsort (_49, _1, 24, compare_cooEntry);
+src/lib.c:131:3: missed: statement clobbers memory: qsort (_48, _47, 24, compare_cooEntry);
+src/lib.c:256:7: missed: statement clobbers memory: printf ("coo1 %ld %ld %f\n", _56, pretmp_59, _27);
+src/lib.c:258:7: missed: statement clobbers memory: printf ("coo2 %ld %ld %f\n", _34, _33, _32);
+src/lib.c:245:5: missed: statement clobbers memory: printf ("coo1 %ld %ld %ld\n", pretmp_69, pretmp_70, _1);
+src/lib.c:246:5: missed: statement clobbers memory: printf ("coo2 %ld %ld %ld\n", _11, _10, _9);
+src/lib.c:274:31: missed: couldn't vectorize loop
+src/lib.c:274:31: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:276:48: missed: couldn't vectorize loop
+src/lib.c:278:25: missed: not vectorized: complicated access pattern.
+src/lib.c:274:31: missed: couldn't vectorize loop
+src/lib.c:274:31: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:276:48: missed: couldn't vectorize loop
+src/lib.c:278:25: missed: not vectorized: complicated access pattern.
+src/mmio.c:114:31: missed: couldn't vectorize loop
+src/mmio.c:114:31: missed: not vectorized: number of iterations cannot be computed.
+src/mmio.c:112:26: missed: couldn't vectorize loop
+src/mmio.c:112:26: missed: not vectorized: number of iterations cannot be computed.
+src/mmio.c:110:20: missed: couldn't vectorize loop
+src/mmio.c:110:20: missed: not vectorized: number of iterations cannot be computed.
+src/mmio.c:108:20: missed: couldn't vectorize loop
+src/mmio.c:108:20: missed: not vectorized: number of iterations cannot be computed.
+src/mmio.c:101:7: missed: statement clobbers memory: _3 = fgets (&line, 1025, f_43(D));
+src/mmio.c:104:7: missed: statement clobbers memory: _4 = sscanf (&line, "%s %s %s %s %s", &banner, &mtx, &crd, &data_type, &storage_scheme);
+src/mmio.c:118:7: missed: statement clobbers memory: _73 = strncmp (&banner, "%%MatrixMarket", 14);
+src/mmio.c:122:7: missed: statement clobbers memory: _74 = strcmp (&mtx, "matrix");
+src/mmio.c:129:7: missed: statement clobbers memory: _75 = strcmp (&crd, "coordinate");
+src/mmio.c:131:12: missed: statement clobbers memory: _76 = strcmp (&crd, "array");
+src/mmio.c:138:7: missed: statement clobbers memory: _77 = strcmp (&data_type, "real");
+src/mmio.c:140:12: missed: statement clobbers memory: _78 = strcmp (&data_type, "complex");
+src/mmio.c:142:12: missed: statement clobbers memory: _79 = strcmp (&data_type, "pattern");
+src/mmio.c:144:12: missed: statement clobbers memory: _80 = strcmp (&data_type, "integer");
+src/mmio.c:151:7: missed: statement clobbers memory: _81 = strcmp (&storage_scheme, "general");
+src/mmio.c:153:12: missed: statement clobbers memory: _82 = strcmp (&storage_scheme, "symmetric");
+src/mmio.c:155:12: missed: statement clobbers memory: _83 = strcmp (&storage_scheme, "hermitian");
+src/mmio.c:157:12: missed: statement clobbers memory: _84 = strcmp (&storage_scheme, "skew-symmetric");
+src/mmio.c:166:7: missed: statement clobbers memory: _1 = fprintf (f_4(D), "%d %d %d\n", M_5(D), N_6(D), nz_7(D));
+src/mmio.c:194:29: missed: couldn't vectorize loop
+src/mmio.c:194:29: missed: not vectorized: could not determine main exit from loop with multiple exits.
+src/mmio.c:183:20: missed: couldn't vectorize loop
+src/mmio.c:183:20: missed: not vectorized: could not determine main exit from loop with multiple exits.
+src/mmio.c:181:9: missed: statement clobbers memory: _1 = fgets (&line, 1025, f_15(D));
+src/mmio.c:186:7: missed: statement clobbers memory: _3 = sscanf (&line, "%d %d %d", M_13(D), N_11(D), nz_9(D));
+src/mmio.c:191:24: missed: statement clobbers memory: num_items_read_19 = fscanf (f_15(D), "%d %d %d", M_13(D), N_11(D), nz_9(D));
+src/mmio.c:220:29: missed: couldn't vectorize loop
+src/mmio.c:220:29: missed: not vectorized: could not determine main exit from loop with multiple exits.
+src/mmio.c:209:20: missed: couldn't vectorize loop
+src/mmio.c:209:20: missed: not vectorized: could not determine main exit from loop with multiple exits.
+src/mmio.c:207:9: missed: statement clobbers memory: _1 = fgets (&line, 1025, f_13(D));
+src/mmio.c:212:7: missed: statement clobbers memory: _3 = sscanf (&line, "%d %d", M_11(D), N_9(D));
+src/mmio.c:217:24: missed: statement clobbers memory: num_items_read_17 = fscanf (f_13(D), "%d %d", M_11(D), N_9(D));
+src/mmio.c:226:7: missed: statement clobbers memory: _1 = fprintf (f_4(D), "%d %d\n", M_5(D), N_6(D));
+src/mmio.c:242:19: missed: couldn't vectorize loop
+src/mmio.c:243:11: missed: statement clobbers memory: _13 = fscanf (f_41(D), "%d %d %lg %lg", _12, _11, _8, _6);
+src/mmio.c:247:19: missed: couldn't vectorize loop
+src/mmio.c:248:11: missed: statement clobbers memory: _20 = fscanf (f_41(D), "%d %d %lg\n", _19, _18, _16);
+src/mmio.c:254:19: missed: couldn't vectorize loop
+src/mmio.c:255:11: missed: statement clobbers memory: _26 = fscanf (f_41(D), "%d %d", _25, _23);
+src/mmio.c:255:11: missed: statement clobbers memory: _26 = fscanf (f_41(D), "%d %d", _25, _23);
+src/mmio.c:248:11: missed: statement clobbers memory: _20 = fscanf (f_41(D), "%d %d %lg\n", _19, _18, _16);
+src/mmio.c:243:11: missed: statement clobbers memory: _13 = fscanf (f_41(D), "%d %d %lg %lg", _12, _11, _8, _6);
+src/mmio.c:275:9: missed: statement clobbers memory: _5 = fscanf (f_11(D), "%d %d", I_12(D), J_13(D));
+src/mmio.c:269:9: missed: statement clobbers memory: _4 = fscanf (f_11(D), "%d %d %lg\n", I_12(D), J_13(D), real_15(D));
+src/mmio.c:266:9: missed: statement clobbers memory: _2 = fscanf (f_11(D), "%d %d %lg %lg", I_12(D), J_13(D), real_15(D), imag_17(D));
+src/mmio.c:296:7: missed: statement clobbers memory: _1 = strcmp (fname_43(D), "stdin");
+src/mmio.c:298:17: missed: statement clobbers memory: f_45 = fopen (fname_43(D), "r");
+src/mmio.c:301:19: missed: statement clobbers memory: ret_code_49 = mm_read_banner (f_36, matcode_47(D));
+src/mmio.c:308:19: missed: statement clobbers memory: ret_code_54 = mm_read_mtx_crd_size (f_36, M_50(D), N_51(D), nz_52(D));
+src/mmio.c:311:15: missed: statement clobbers memory: _8 = malloc (_7);
+src/mmio.c:312:15: missed: statement clobbers memory: _12 = malloc (_11);
+src/mmio.c:328:16: missed: statement clobbers memory: ret_code_64 = mm_read_mtx_crd_data (f_36, _34, _33, _32, _31, _12, 0B, matcode_47(D));
+src/mmio.c:321:22: missed: statement clobbers memory: _26 = malloc (_25);
+src/mmio.c:322:16: missed: statement clobbers memory: ret_code_68 = mm_read_mtx_crd_data (f_36, _30, _29, _28, _27, _12, _26, matcode_47(D));
+src/mmio.c:316:22: missed: statement clobbers memory: _18 = malloc (_17);
+src/mmio.c:317:16: missed: statement clobbers memory: ret_code_72 = mm_read_mtx_crd_data (f_36, _22, _21, _20, _19, _12, _18, matcode_47(D));
+src/mmio.c:334:5: missed: statement clobbers memory: fclose (f_36);
+src/mmio.c:396:13: missed: statement clobbers memory: _1 = strlen (s_5(D));
+src/mmio.c:397:22: missed: statement clobbers memory: s2_8 = malloc (_3);
+src/mmio.c:398:10: missed: statement clobbers memory: _10 = strcpy (s2_8, s_5(D));
+src/mmio.c:445:3: missed: statement clobbers memory: sprintf (&buffer, "%s %s %s %s", "matrix", types$1_6, types$2_5, types$3_3);
+src/mmio.c:396:13: missed: statement clobbers memory: _15 = strlen (&buffer);
+src/mmio.c:397:22: missed: statement clobbers memory: s2_19 = malloc (_18);
+src/mmio.c:398:10: missed: statement clobbers memory: _20 = strcpy (s2_19, &buffer);
+src/mmio.c:67:17: missed: couldn't vectorize loop
+src/mmio.c:67:17: missed: not vectorized: number of iterations cannot be computed.
+src/mmio.c:25:12: missed: statement clobbers memory: f_35 = fopen (fname_33(D), "r");
+src/mmio.c:28:7: missed: statement clobbers memory: _1 = mm_read_banner (f_35, &matcode);
+src/mmio.c:43:7: missed: statement clobbers memory: _8 = mm_read_mtx_crd_size (f_35, &M, &N, &nz);
+src/mmio.c:55:14: missed: statement clobbers memory: I_45 = malloc (_14);
+src/mmio.c:56:14: missed: statement clobbers memory: J_47 = malloc (_14);
+src/mmio.c:57:19: missed: statement clobbers memory: val_49 = malloc (_16);
+src/mmio.c:68:5: missed: statement clobbers memory: fscanf (f_35, "%d %d %lg\n", _22, _21, _19);
+src/mmio.c:72:3: missed: statement clobbers memory: fclose (f_35);
+src/mmio.c:44:5: missed: statement clobbers memory: __builtin_fwrite ("read_unsymmetric_sparse(): could not parse matrix size.\n", 1, 56, stderr.2_9);
+src/mmio.c:36:5: missed: statement clobbers memory: __builtin_fwrite ("Sorry, this application does not support ", 1, 41, stderr.0_5);
+src/mmio.c:37:5: missed: statement clobbers memory: _6 = mm_typecode_to_str (&matcode);
+src/mmio.c:37:5: missed: statement clobbers memory: fprintf (stderr.1_7, "Market Market type: [%s]\n", _6);
+src/mmio.c:29:5: missed: statement clobbers memory: printf ("mm_read_unsymetric: Could not process Matrix Market banner ");
+src/mmio.c:30:5: missed: statement clobbers memory: printf (" in file [%s]\n", fname_33(D));
+src/mmio.c:339:15: missed: statement clobbers memory: str_5 = mm_typecode_to_str (matcode_3(D));
+src/mmio.c:342:14: missed: statement clobbers memory: ret_code_8 = fprintf (f_6(D), "%s %s\n", "%%MatrixMarket", str_5);
+src/mmio.c:343:3: missed: statement clobbers memory: free (str_5);
+src/mmio.c:369:19: missed: couldn't vectorize loop
+src/mmio.c:370:7: missed: statement clobbers memory: fprintf (f_36, "%d %d\n", _9, _7);
+src/mmio.c:372:19: missed: couldn't vectorize loop
+src/mmio.c:373:7: missed: statement clobbers memory: fprintf (f_36, "%d %d %20.16g\n", _18, _16, _13);
+src/mmio.c:375:19: missed: couldn't vectorize loop
+src/mmio.c:376:7: missed: statement clobbers memory: fprintf (f_36, "%d %d %20.16g %20.16g\n", _33, _31, _27, _24);
+src/mmio.c:355:7: missed: statement clobbers memory: _1 = strcmp (fname_50(D), "stdout");
+src/mmio.c:357:17: missed: statement clobbers memory: f_52 = fopen (fname_50(D), "w");
+src/mmio.c:361:3: missed: statement clobbers memory: fprintf (f_36, "%s ", "%%MatrixMarket");
+src/mmio.c:362:3: missed: statement clobbers memory: _2 = mm_typecode_to_str (matcode_55(D));
+src/mmio.c:362:3: missed: statement clobbers memory: fprintf (f_36, "%s\n", _2);
+src/mmio.c:365:3: missed: statement clobbers memory: fprintf (f_36, "%d %d %d\n", M_58(D), N_59(D), nz_60(D));
+src/mmio.c:380:7: missed: statement clobbers memory: fclose (f_36);
+src/mmio.c:376:7: missed: statement clobbers memory: fprintf (f_36, "%d %d %20.16g %20.16g\n", _33, _31, _27, _24);
+src/mmio.c:373:7: missed: statement clobbers memory: fprintf (f_36, "%d %d %20.16g\n", _18, _16, _13);
+src/mmio.c:370:7: missed: statement clobbers memory: fprintf (f_36, "%d %d\n", _9, _7);
+src/mmio.c:385:5: missed: statement clobbers memory: fclose (f_36);
+tests/baseline.c:35:5: missed: couldn't vectorize loop
+tests/baseline.c:35:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline.c:32:30: missed: couldn't vectorize loop
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:25:16: missed: statement clobbers memory: coo_32 = coo_new ();
+tests/baseline.c:26:5: missed: statement clobbers memory: coo_generate_random (coo_32, 4096, 4096, 20000000);
+tests/baseline.c:27:16: missed: statement clobbers memory: csr_35 = csr_new ();
+tests/baseline.c:28:5: missed: statement clobbers memory: coo_to_csr (coo_32, csr_35);
+tests/baseline.c:30:33: missed: statement clobbers memory: rand_vec_38 = malloc (16384);
+tests/baseline.c:31:29: missed: statement clobbers memory: output_40 = malloc (16384);
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:35:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline.c:36:5: missed: statement clobbers memory: spmv_csr (*csr_35, 4096, rand_vec_38, output_40);
+tests/baseline.c:37:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline.c:38:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u reps of %lu\n", _22, 10, _21);
+tests/baseline.c:41:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _24);
+tests/baseline.c:44:5: missed: statement clobbers memory: coo_free (coo_32);
+tests/baseline.c:45:5: missed: statement clobbers memory: csr_free (csr_35);
+tests/baseline.c:46:5: missed: statement clobbers memory: free (rand_vec_38);
+tests/baseline.c:47:5: missed: statement clobbers memory: free (output_40);
+tests/baseline.c:48:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/baseline-ss.c:48:5: missed: couldn't vectorize loop
+tests/baseline-ss.c:48:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline-ss.c:44:30: missed: couldn't vectorize loop
+tests/baseline-ss.c:45:30: missed: statement clobbers memory: _11 = rand ();
+tests/baseline-ss.c:32:31: missed: couldn't vectorize loop
+tests/baseline-ss.c:32:31: missed: not vectorized: number of iterations cannot be computed.
+tests/baseline-ss.c:26:16: missed: statement clobbers memory: coo_41 = coo_new ();
+tests/baseline-ss.c:27:5: missed: statement clobbers memory: coo_generate_random (coo_41, 4096, 4096, 20000000);
+tests/baseline-ss.c:31:13: missed: statement clobbers memory: A_44 = cs_di_spalloc (4096, 4096, 20000000, 1, 0);
+tests/baseline-ss.c:33:9: missed: statement clobbers memory: cs_di_entry (A_44, _9, _7, _5);
+tests/baseline-ss.c:37:13: missed: statement clobbers memory: C_46 = cs_di_compress (A_44);
+tests/baseline-ss.c:38:5: missed: statement clobbers memory: cs_di_spfree (A_44);
+tests/baseline-ss.c:42:35: missed: statement clobbers memory: rand_vec_49 = malloc (32768);
+tests/baseline-ss.c:43:31: missed: statement clobbers memory: output_51 = malloc (32768);
+tests/baseline-ss.c:45:30: missed: statement clobbers memory: _11 = rand ();
+tests/baseline-ss.c:48:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline-ss.c:49:5: missed: statement clobbers memory: cs_di_gaxpy (C_46, rand_vec_49, output_51);
+tests/baseline-ss.c:50:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline-ss.c:51:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u reps of %d\n", _29, 10, 20000000);
+tests/baseline-ss.c:54:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _31);
+tests/baseline-ss.c:57:5: missed: statement clobbers memory: coo_free (coo_41);
+tests/baseline-ss.c:59:5: missed: statement clobbers memory: free (rand_vec_49);
+tests/baseline-ss.c:60:5: missed: statement clobbers memory: free (output_51);
+tests/baseline-ss.c:61:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_cholmod.c:6:1: missed: statement clobbers memory: cholmod_start (&c);
+tests/test_cholmod.c:10:1: missed: statement clobbers memory: cholmod_finish (&c);
+tests/test_cholmod.c:6:1: missed: statement clobbers memory: cholmod_start (&c);
+tests/test_cholmod.c:10:1: missed: statement clobbers memory: cholmod_finish (&c);
+tests/test_conversions.c:6:16: missed: statement clobbers memory: coo_6 = coo_new ();
+tests/test_conversions.c:7:5: missed: statement clobbers memory: coo_generate_random (coo_6, 10, 10, 201);
+tests/test_conversions.c:10:5: missed: statement clobbers memory: coo_sort_in_ascending_order (coo_6);
+tests/test_conversions.c:12:16: missed: statement clobbers memory: csr_10 = csr_new ();
+tests/test_conversions.c:13:5: missed: statement clobbers memory: coo_to_csr (coo_6, csr_10);
+tests/test_conversions.c:15:17: missed: statement clobbers memory: coo2_13 = coo_new ();
+tests/test_conversions.c:16:5: missed: statement clobbers memory: csr_to_coo (csr_10, coo2_13);
+tests/test_conversions.c:28:9: missed: statement clobbers memory: _1 = coo_compare (coo_6, coo2_13);
+tests/test_conversions.c:34:5: missed: statement clobbers memory: coo_free (coo_6);
+tests/test_conversions.c:35:5: missed: statement clobbers memory: coo_free (coo2_13);
+tests/test_conversions.c:36:5: missed: statement clobbers memory: csr_free (csr_10);
+tests/test_conversions.c:38:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_conversions.c:29:9: missed: statement clobbers memory: __builtin_puts (&"error comparing the two matrices"[0]);
+tests/test_load_from_file.c:6:16: missed: statement clobbers memory: coo_8 = coo_new ();
+tests/test_load_from_file.c:9:19: missed: statement clobbers memory: input_10 = fopen ("data/abb313/abb313.mtx", "r");
+tests/test_load_from_file.c:17:14: missed: statement clobbers memory: ret_12 = coo_from_file (input_10, coo_8);
+tests/test_load_from_file.c:29:5: missed: statement clobbers memory: coo_free (coo_8);
+tests/test_load_from_file.c:31:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_load_from_file.c:24:9: missed: statement clobbers memory: __builtin_puts (&"Invalid headers read"[0]);
+tests/test_load_from_file.c:18:9: missed: statement clobbers memory: printf ("error loading from file %d\n", ret_12);
+tests/test_load_from_file.c:11:9: missed: statement clobbers memory: __builtin_puts (&"Error opening file"[0]);
+tests/test_write_and_load.c:7:16: missed: statement clobbers memory: coo_6 = coo_new ();
+tests/test_write_and_load.c:8:5: missed: statement clobbers memory: coo_generate_random (coo_6, 100, 100, 200);
+tests/test_write_and_load.c:11:20: missed: statement clobbers memory: output_9 = fopen ("data/dummy.mtx", "w");
+tests/test_write_and_load.c:18:14: missed: statement clobbers memory: ret_11 = coo_write_to_file (output_9, coo_6);
+tests/test_write_and_load.c:24:17: missed: statement clobbers memory: coo2_13 = coo_new ();
+tests/test_write_and_load.c:25:19: missed: statement clobbers memory: input_15 = fopen ("data/dummy.mtx", "r");
+tests/test_write_and_load.c:31:14: missed: statement clobbers memory: ret_17 = coo_from_file (input_15, coo2_13);
+tests/test_write_and_load.c:36:9: missed: statement clobbers memory: _1 = coo_compare (coo_6, coo2_13);
+tests/test_write_and_load.c:41:5: missed: statement clobbers memory: coo_free (coo_6);
+tests/test_write_and_load.c:42:5: missed: statement clobbers memory: coo_free (coo2_13);
+tests/test_write_and_load.c:43:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_write_and_load.c:37:9: missed: statement clobbers memory: __builtin_puts (&"error comparing the two matrices"[0]);
+tests/test_write_and_load.c:32:9: missed: statement clobbers memory: printf ("error loading from file %d\n", ret_17);
+tests/test_write_and_load.c:19:9: missed: statement clobbers memory: printf ("error writing to file %d\n", ret_11);
+tests/test_write_and_load.c:13:9: missed: statement clobbers memory: __builtin_puts (&"Error opening file"[0]);
+tests/baseline.c:35:5: missed: couldn't vectorize loop
+tests/baseline.c:35:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline.c:32:30: missed: couldn't vectorize loop
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:25:16: missed: statement clobbers memory: coo_32 = coo_new ();
+tests/baseline.c:26:5: missed: statement clobbers memory: coo_generate_random (coo_32, 4096, 4096, 200000);
+tests/baseline.c:27:16: missed: statement clobbers memory: csr_35 = csr_new ();
+tests/baseline.c:28:5: missed: statement clobbers memory: coo_to_csr (coo_32, csr_35);
+tests/baseline.c:30:33: missed: statement clobbers memory: rand_vec_38 = malloc (16384);
+tests/baseline.c:31:29: missed: statement clobbers memory: output_40 = malloc (16384);
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:35:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline.c:36:5: missed: statement clobbers memory: spmv_csr (*csr_35, 4096, rand_vec_38, output_40);
+tests/baseline.c:37:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline.c:38:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u reps of %lu\n", _22, 10, _21);
+tests/baseline.c:41:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _24);
+tests/baseline.c:44:5: missed: statement clobbers memory: coo_free (coo_32);
+tests/baseline.c:45:5: missed: statement clobbers memory: csr_free (csr_35);
+tests/baseline.c:46:5: missed: statement clobbers memory: free (rand_vec_38);
+tests/baseline.c:47:5: missed: statement clobbers memory: free (output_40);
+tests/baseline.c:48:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+src/lib.c:29:31: missed: couldn't vectorize loop
+src/lib.c:29:31: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:18:31: missed: couldn't vectorize loop
+src/lib.c:18:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:42:27: missed: statement clobbers memory: _64 = realloc (_63, _62);
+src/lib.c:19:39: missed: statement clobbers memory: _1 = rand ();
+src/lib.c:20:39: missed: statement clobbers memory: _7 = rand ();
+src/lib.c:21:32: missed: statement clobbers memory: _12 = rand ();
+src/lib.c:131:3: missed: statement clobbers memory: qsort (prephitmp_75, _81, 24, compare_cooEntry);
+src/lib.c:25:31: missed: statement clobbers memory: tmp_47 = malloc (_21);
+src/lib.c:27:10: missed: not vectorized: more than one data ref in stmt: *tmp_47 = *_22;
+src/lib.c:31:14: missed: not vectorized: more than one data ref in stmt: *index_83 = *_24;
+src/lib.c:42:27: missed: statement clobbers memory: _67 = realloc (_22, prephitmp_106);
+src/lib.c:36:3: missed: statement clobbers memory: mempcpy (_67, tmp_47, prephitmp_106);
+src/lib.c:37:3: missed: statement clobbers memory: free (tmp_47);
+src/lib.c:15:13: missed: not vectorized: vectorization is not profitable.
+src/lib.c:15:13: missed: not vectorized: vectorization is not profitable.
+src/lib.c:42:27: missed: statement clobbers memory: _3 = realloc (_2, _1);
+src/lib.c:49:35: missed: statement clobbers memory: _4 = realloc (_3, _2);
+src/lib.c:52:24: missed: statement clobbers memory: _7 = realloc (_6, _5);
+src/lib.c:53:23: missed: statement clobbers memory: _10 = realloc (_9, _8);
+src/lib.c:87:31: missed: couldn't vectorize loop
+src/lib.c:87:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:75:31: missed: couldn't vectorize loop
+src/lib.c:75:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:71:31: missed: couldn't vectorize loop
+src/lib.c:71:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:67:31: missed: couldn't vectorize loop
+src/lib.c:67:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:49:35: missed: statement clobbers memory: _84 = realloc (_83, _82);
+src/lib.c:52:24: missed: statement clobbers memory: _87 = realloc (_86, _85);
+src/lib.c:53:23: missed: statement clobbers memory: _90 = realloc (_89, _88);
+src/lib.c:80:24: missed: statement clobbers memory: temp_55 = malloc (0);
+src/lib.c:80:24: missed: statement clobbers memory: temp_67 = malloc (_29);
+src/lib.c:84:13: missed: statement clobbers memory: __builtin_memcpy (temp_67, _4, _29);
+src/lib.c:94:3: missed: statement clobbers memory: free (temp_59);
+src/lib.c:106:31: missed: couldn't vectorize loop
+src/lib.c:106:31: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:108:47: missed: couldn't vectorize loop
+src/lib.c:108:47: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:42:27: missed: statement clobbers memory: _38 = realloc (_37, _36);
+src/lib.c:131:3: missed: statement clobbers memory: qsort (_2, _1, 24, compare_cooEntry);
+src/lib.c:137:3: missed: statement clobbers memory: free (_1);
+src/lib.c:139:3: missed: statement clobbers memory: free (coo_3(D));
+src/lib.c:145:3: missed: statement clobbers memory: free (_1);
+src/lib.c:146:3: missed: statement clobbers memory: free (_2);
+src/lib.c:147:3: missed: statement clobbers memory: free (_3);
+src/lib.c:151:3: missed: statement clobbers memory: free (csr_5(D));
+src/lib.c:156:21: missed: statement clobbers memory: coo_3 = malloc (32);
+src/lib.c:166:21: missed: statement clobbers memory: csr_3 = malloc (48);
+src/lib.c:208:30: missed: couldn't vectorize loop
+src/lib.c:208:30: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:179:7: missed: statement clobbers memory: _1 = mm_read_banner (input_31(D), &matcode);
+src/lib.c:195:7: missed: statement clobbers memory: _5 = mm_read_mtx_crd_size (input_31(D), &M, &N, &nnz);
+src/lib.c:42:27: missed: statement clobbers memory: _56 = realloc (_55, _54);
+src/lib.c:209:5: missed: statement clobbers memory: fscanf (input_31(D), "%lu %lu %f\n", _17, _16, _15);
+src/lib.c:216:5: missed: statement clobbers memory: fclose (input_31(D));
+src/lib.c:196:5: missed: statement clobbers memory: exit (1);
+src/lib.c:188:5: missed: statement clobbers memory: printf ("Sorry, this application does not support ");
+src/lib.c:189:5: missed: statement clobbers memory: _4 = mm_typecode_to_str (&matcode);
+src/lib.c:189:5: missed: statement clobbers memory: printf ("Market Market type: [%s]\n", _4);
+src/lib.c:190:5: missed: statement clobbers memory: exit (1);
+src/lib.c:180:5: missed: statement clobbers memory: __builtin_puts (&"Could not process Matrix Market banner."[0]);
+src/lib.c:181:5: missed: statement clobbers memory: exit (1);
+src/lib.c:235:17: missed: couldn't vectorize loop
+src/lib.c:235:17: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:229:3: missed: statement clobbers memory: mm_write_banner (output_24(D), &matcode);
+src/lib.c:230:3: missed: statement clobbers memory: mm_write_mtx_crd_size (output_24(D), _6, _4, _2);
+src/lib.c:236:5: missed: statement clobbers memory: fprintf (output_24(D), "%ld %ld %10.3f\n", _15, _13, _11);
+src/lib.c:238:3: missed: statement clobbers memory: fclose (output_24(D));
+src/lib.c:252:31: missed: couldn't vectorize loop
+src/lib.c:253:22: missed: not vectorized: no vectype for stmt: _15 = _14->row;
+ scalar_type: long unsigned int
+src/lib.c:131:3: missed: statement clobbers memory: qsort (_49, _1, 24, compare_cooEntry);
+src/lib.c:131:3: missed: statement clobbers memory: qsort (_48, _47, 24, compare_cooEntry);
+src/lib.c:256:7: missed: statement clobbers memory: printf ("coo1 %ld %ld %f\n", _56, pretmp_59, _27);
+src/lib.c:258:7: missed: statement clobbers memory: printf ("coo2 %ld %ld %f\n", _34, _33, _32);
+src/lib.c:245:5: missed: statement clobbers memory: printf ("coo1 %ld %ld %ld\n", pretmp_69, pretmp_70, _1);
+src/lib.c:246:5: missed: statement clobbers memory: printf ("coo2 %ld %ld %ld\n", _11, _10, _9);
+src/lib.c:274:31: missed: couldn't vectorize loop
+src/lib.c:274:31: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:278:11: missed: couldn't vectorize loop
+src/lib.c:278:25: missed: not vectorized: complicated access pattern.
+src/lib.c:270:5: missed: statement clobbers memory: __builtin_GOMP_barrier ();
+src/lib.c:324:31: missed: couldn't vectorize loop
+src/lib.c:324:31: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:325:48: missed: couldn't vectorize loop
+src/lib.c:327:25: missed: not vectorized: complicated access pattern.
+tests/baseline.c:35:5: missed: couldn't vectorize loop
+tests/baseline.c:35:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline.c:32:30: missed: couldn't vectorize loop
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:25:16: missed: statement clobbers memory: coo_32 = coo_new ();
+tests/baseline.c:26:5: missed: statement clobbers memory: coo_generate_random (coo_32, 4096, 4096, 200000);
+tests/baseline.c:27:16: missed: statement clobbers memory: csr_35 = csr_new ();
+tests/baseline.c:28:5: missed: statement clobbers memory: coo_to_csr (coo_32, csr_35);
+tests/baseline.c:30:33: missed: statement clobbers memory: rand_vec_38 = malloc (16384);
+tests/baseline.c:31:29: missed: statement clobbers memory: output_40 = malloc (16384);
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:35:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline.c:36:5: missed: statement clobbers memory: spmv_csr (*csr_35, 4096, rand_vec_38, output_40);
+tests/baseline.c:37:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline.c:38:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u reps of %lu\n", _22, 10, _21);
+tests/baseline.c:41:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _24);
+tests/baseline.c:44:5: missed: statement clobbers memory: coo_free (coo_32);
+tests/baseline.c:45:5: missed: statement clobbers memory: csr_free (csr_35);
+tests/baseline.c:46:5: missed: statement clobbers memory: free (rand_vec_38);
+tests/baseline.c:47:5: missed: statement clobbers memory: free (output_40);
+tests/baseline.c:48:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/baseline-ss.c:48:5: missed: couldn't vectorize loop
+tests/baseline-ss.c:48:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline-ss.c:44:30: missed: couldn't vectorize loop
+tests/baseline-ss.c:45:30: missed: statement clobbers memory: _11 = rand ();
+tests/baseline-ss.c:32:31: missed: couldn't vectorize loop
+tests/baseline-ss.c:32:31: missed: not vectorized: number of iterations cannot be computed.
+tests/baseline-ss.c:26:16: missed: statement clobbers memory: coo_41 = coo_new ();
+tests/baseline-ss.c:27:5: missed: statement clobbers memory: coo_generate_random (coo_41, 4096, 4096, 20000000);
+tests/baseline-ss.c:31:13: missed: statement clobbers memory: A_44 = cs_di_spalloc (4096, 4096, 20000000, 1, 0);
+tests/baseline-ss.c:33:9: missed: statement clobbers memory: cs_di_entry (A_44, _9, _7, _5);
+tests/baseline-ss.c:37:13: missed: statement clobbers memory: C_46 = cs_di_compress (A_44);
+tests/baseline-ss.c:38:5: missed: statement clobbers memory: cs_di_spfree (A_44);
+tests/baseline-ss.c:42:35: missed: statement clobbers memory: rand_vec_49 = malloc (32768);
+tests/baseline-ss.c:43:31: missed: statement clobbers memory: output_51 = malloc (32768);
+tests/baseline-ss.c:45:30: missed: statement clobbers memory: _11 = rand ();
+tests/baseline-ss.c:48:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline-ss.c:49:5: missed: statement clobbers memory: cs_di_gaxpy (C_46, rand_vec_49, output_51);
+tests/baseline-ss.c:50:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline-ss.c:51:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u reps of %d\n", _29, 10, 20000000);
+tests/baseline-ss.c:54:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _31);
+tests/baseline-ss.c:57:5: missed: statement clobbers memory: coo_free (coo_41);
+tests/baseline-ss.c:59:5: missed: statement clobbers memory: free (rand_vec_49);
+tests/baseline-ss.c:60:5: missed: statement clobbers memory: free (output_51);
+tests/baseline-ss.c:61:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_conversions.c:6:16: missed: statement clobbers memory: coo_6 = coo_new ();
+tests/test_conversions.c:7:5: missed: statement clobbers memory: coo_generate_random (coo_6, 10, 10, 201);
+tests/test_conversions.c:10:5: missed: statement clobbers memory: coo_sort_in_ascending_order (coo_6);
+tests/test_conversions.c:12:16: missed: statement clobbers memory: csr_10 = csr_new ();
+tests/test_conversions.c:13:5: missed: statement clobbers memory: coo_to_csr (coo_6, csr_10);
+tests/test_conversions.c:15:17: missed: statement clobbers memory: coo2_13 = coo_new ();
+tests/test_conversions.c:16:5: missed: statement clobbers memory: csr_to_coo (csr_10, coo2_13);
+tests/test_conversions.c:28:9: missed: statement clobbers memory: _1 = coo_compare (coo_6, coo2_13);
+tests/test_conversions.c:34:5: missed: statement clobbers memory: coo_free (coo_6);
+tests/test_conversions.c:35:5: missed: statement clobbers memory: coo_free (coo2_13);
+tests/test_conversions.c:36:5: missed: statement clobbers memory: csr_free (csr_10);
+tests/test_conversions.c:38:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_conversions.c:29:9: missed: statement clobbers memory: __builtin_puts (&"error comparing the two matrices"[0]);
+tests/test_load_from_file.c:6:16: missed: statement clobbers memory: coo_8 = coo_new ();
+tests/test_load_from_file.c:9:19: missed: statement clobbers memory: input_10 = fopen ("data/abb313/abb313.mtx", "r");
+tests/test_load_from_file.c:17:14: missed: statement clobbers memory: ret_12 = coo_from_file (input_10, coo_8);
+tests/test_load_from_file.c:29:5: missed: statement clobbers memory: coo_free (coo_8);
+tests/test_load_from_file.c:31:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_load_from_file.c:24:9: missed: statement clobbers memory: __builtin_puts (&"Invalid headers read"[0]);
+tests/test_load_from_file.c:18:9: missed: statement clobbers memory: printf ("error loading from file %d\n", ret_12);
+tests/test_load_from_file.c:11:9: missed: statement clobbers memory: __builtin_puts (&"Error opening file"[0]);
+tests/test_write_and_load.c:7:16: missed: statement clobbers memory: coo_6 = coo_new ();
+tests/test_write_and_load.c:8:5: missed: statement clobbers memory: coo_generate_random (coo_6, 100, 100, 200);
+tests/test_write_and_load.c:11:20: missed: statement clobbers memory: output_9 = fopen ("data/dummy.mtx", "w");
+tests/test_write_and_load.c:18:14: missed: statement clobbers memory: ret_11 = coo_write_to_file (output_9, coo_6);
+tests/test_write_and_load.c:24:17: missed: statement clobbers memory: coo2_13 = coo_new ();
+tests/test_write_and_load.c:25:19: missed: statement clobbers memory: input_15 = fopen ("data/dummy.mtx", "r");
+tests/test_write_and_load.c:31:14: missed: statement clobbers memory: ret_17 = coo_from_file (input_15, coo2_13);
+tests/test_write_and_load.c:36:9: missed: statement clobbers memory: _1 = coo_compare (coo_6, coo2_13);
+tests/test_write_and_load.c:41:5: missed: statement clobbers memory: coo_free (coo_6);
+tests/test_write_and_load.c:42:5: missed: statement clobbers memory: coo_free (coo2_13);
+tests/test_write_and_load.c:43:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_write_and_load.c:37:9: missed: statement clobbers memory: __builtin_puts (&"error comparing the two matrices"[0]);
+tests/test_write_and_load.c:32:9: missed: statement clobbers memory: printf ("error loading from file %d\n", ret_17);
+tests/test_write_and_load.c:19:9: missed: statement clobbers memory: printf ("error writing to file %d\n", ret_11);
+tests/test_write_and_load.c:13:9: missed: statement clobbers memory: __builtin_puts (&"Error opening file"[0]);
+src/lib.c:29:31: missed: couldn't vectorize loop
+src/lib.c:29:31: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:18:31: missed: couldn't vectorize loop
+src/lib.c:18:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:42:27: missed: statement clobbers memory: _64 = realloc (_63, _62);
+src/lib.c:19:39: missed: statement clobbers memory: _1 = rand ();
+src/lib.c:20:39: missed: statement clobbers memory: _7 = rand ();
+src/lib.c:21:32: missed: statement clobbers memory: _12 = rand ();
+src/lib.c:131:3: missed: statement clobbers memory: qsort (prephitmp_75, _81, 24, compare_cooEntry);
+src/lib.c:25:31: missed: statement clobbers memory: tmp_47 = malloc (_21);
+src/lib.c:27:10: missed: not vectorized: more than one data ref in stmt: *tmp_47 = *_22;
+src/lib.c:31:14: missed: not vectorized: more than one data ref in stmt: *index_83 = *_24;
+src/lib.c:42:27: missed: statement clobbers memory: _67 = realloc (_22, prephitmp_106);
+src/lib.c:36:3: missed: statement clobbers memory: mempcpy (_67, tmp_47, prephitmp_106);
+src/lib.c:37:3: missed: statement clobbers memory: free (tmp_47);
+src/lib.c:15:13: missed: not vectorized: vectorization is not profitable.
+src/lib.c:15:13: missed: not vectorized: vectorization is not profitable.
+src/lib.c:42:27: missed: statement clobbers memory: _3 = realloc (_2, _1);
+src/lib.c:49:35: missed: statement clobbers memory: _4 = realloc (_3, _2);
+src/lib.c:52:24: missed: statement clobbers memory: _7 = realloc (_6, _5);
+src/lib.c:53:23: missed: statement clobbers memory: _10 = realloc (_9, _8);
+src/lib.c:87:31: missed: couldn't vectorize loop
+src/lib.c:87:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:75:31: missed: couldn't vectorize loop
+src/lib.c:75:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:71:31: missed: couldn't vectorize loop
+src/lib.c:71:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:67:31: missed: couldn't vectorize loop
+src/lib.c:67:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:49:35: missed: statement clobbers memory: _84 = realloc (_83, _82);
+src/lib.c:52:24: missed: statement clobbers memory: _87 = realloc (_86, _85);
+src/lib.c:53:23: missed: statement clobbers memory: _90 = realloc (_89, _88);
+src/lib.c:80:24: missed: statement clobbers memory: temp_55 = malloc (0);
+src/lib.c:80:24: missed: statement clobbers memory: temp_67 = malloc (_29);
+src/lib.c:84:13: missed: statement clobbers memory: __builtin_memcpy (temp_67, _4, _29);
+src/lib.c:94:3: missed: statement clobbers memory: free (temp_59);
+src/lib.c:106:31: missed: couldn't vectorize loop
+src/lib.c:106:31: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:108:47: missed: couldn't vectorize loop
+src/lib.c:108:47: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:42:27: missed: statement clobbers memory: _38 = realloc (_37, _36);
+src/lib.c:131:3: missed: statement clobbers memory: qsort (_2, _1, 24, compare_cooEntry);
+src/lib.c:137:3: missed: statement clobbers memory: free (_1);
+src/lib.c:139:3: missed: statement clobbers memory: free (coo_3(D));
+src/lib.c:145:3: missed: statement clobbers memory: free (_1);
+src/lib.c:146:3: missed: statement clobbers memory: free (_2);
+src/lib.c:147:3: missed: statement clobbers memory: free (_3);
+src/lib.c:151:3: missed: statement clobbers memory: free (csr_5(D));
+src/lib.c:156:21: missed: statement clobbers memory: coo_3 = malloc (32);
+src/lib.c:166:21: missed: statement clobbers memory: csr_3 = malloc (48);
+src/lib.c:208:30: missed: couldn't vectorize loop
+src/lib.c:208:30: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:179:7: missed: statement clobbers memory: _1 = mm_read_banner (input_31(D), &matcode);
+src/lib.c:195:7: missed: statement clobbers memory: _5 = mm_read_mtx_crd_size (input_31(D), &M, &N, &nnz);
+src/lib.c:42:27: missed: statement clobbers memory: _56 = realloc (_55, _54);
+src/lib.c:209:5: missed: statement clobbers memory: fscanf (input_31(D), "%lu %lu %f\n", _17, _16, _15);
+src/lib.c:216:5: missed: statement clobbers memory: fclose (input_31(D));
+src/lib.c:196:5: missed: statement clobbers memory: exit (1);
+src/lib.c:188:5: missed: statement clobbers memory: printf ("Sorry, this application does not support ");
+src/lib.c:189:5: missed: statement clobbers memory: _4 = mm_typecode_to_str (&matcode);
+src/lib.c:189:5: missed: statement clobbers memory: printf ("Market Market type: [%s]\n", _4);
+src/lib.c:190:5: missed: statement clobbers memory: exit (1);
+src/lib.c:180:5: missed: statement clobbers memory: __builtin_puts (&"Could not process Matrix Market banner."[0]);
+src/lib.c:181:5: missed: statement clobbers memory: exit (1);
+src/lib.c:235:17: missed: couldn't vectorize loop
+src/lib.c:235:17: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:229:3: missed: statement clobbers memory: mm_write_banner (output_24(D), &matcode);
+src/lib.c:230:3: missed: statement clobbers memory: mm_write_mtx_crd_size (output_24(D), _6, _4, _2);
+src/lib.c:236:5: missed: statement clobbers memory: fprintf (output_24(D), "%ld %ld %10.3f\n", _15, _13, _11);
+src/lib.c:238:3: missed: statement clobbers memory: fclose (output_24(D));
+src/lib.c:252:31: missed: couldn't vectorize loop
+src/lib.c:253:22: missed: not vectorized: no vectype for stmt: _15 = _14->row;
+ scalar_type: long unsigned int
+src/lib.c:131:3: missed: statement clobbers memory: qsort (_49, _1, 24, compare_cooEntry);
+src/lib.c:131:3: missed: statement clobbers memory: qsort (_48, _47, 24, compare_cooEntry);
+src/lib.c:256:7: missed: statement clobbers memory: printf ("coo1 %ld %ld %f\n", _56, pretmp_59, _27);
+src/lib.c:258:7: missed: statement clobbers memory: printf ("coo2 %ld %ld %f\n", _34, _33, _32);
+src/lib.c:245:5: missed: statement clobbers memory: printf ("coo1 %ld %ld %ld\n", pretmp_69, pretmp_70, _1);
+src/lib.c:246:5: missed: statement clobbers memory: printf ("coo2 %ld %ld %ld\n", _11, _10, _9);
+src/lib.c:274:31: missed: couldn't vectorize loop
+src/lib.c:274:31: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:278:11: missed: couldn't vectorize loop
+src/lib.c:278:25: missed: not vectorized: complicated access pattern.
+src/lib.c:270:5: missed: statement clobbers memory: __builtin_GOMP_barrier ();
+src/lib.c:325:31: missed: couldn't vectorize loop
+src/lib.c:325:31: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:326:48: missed: couldn't vectorize loop
+src/lib.c:328:25: missed: not vectorized: complicated access pattern.
+tests/baseline.c:35:5: missed: couldn't vectorize loop
+tests/baseline.c:35:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline.c:32:30: missed: couldn't vectorize loop
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:25:16: missed: statement clobbers memory: coo_32 = coo_new ();
+tests/baseline.c:26:5: missed: statement clobbers memory: coo_generate_random (coo_32, 4096, 4096, 200000);
+tests/baseline.c:27:16: missed: statement clobbers memory: csr_35 = csr_new ();
+tests/baseline.c:28:5: missed: statement clobbers memory: coo_to_csr (coo_32, csr_35);
+tests/baseline.c:30:33: missed: statement clobbers memory: rand_vec_38 = malloc (16384);
+tests/baseline.c:31:29: missed: statement clobbers memory: output_40 = malloc (16384);
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:35:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline.c:36:5: missed: statement clobbers memory: spmv_csr (*csr_35, 4096, rand_vec_38, output_40);
+tests/baseline.c:37:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline.c:38:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u reps of %lu\n", _22, 10, _21);
+tests/baseline.c:41:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _24);
+tests/baseline.c:44:5: missed: statement clobbers memory: coo_free (coo_32);
+tests/baseline.c:45:5: missed: statement clobbers memory: csr_free (csr_35);
+tests/baseline.c:46:5: missed: statement clobbers memory: free (rand_vec_38);
+tests/baseline.c:47:5: missed: statement clobbers memory: free (output_40);
+tests/baseline.c:48:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/baseline-ss.c:48:5: missed: couldn't vectorize loop
+tests/baseline-ss.c:48:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline-ss.c:44:30: missed: couldn't vectorize loop
+tests/baseline-ss.c:45:30: missed: statement clobbers memory: _11 = rand ();
+tests/baseline-ss.c:32:31: missed: couldn't vectorize loop
+tests/baseline-ss.c:32:31: missed: not vectorized: number of iterations cannot be computed.
+tests/baseline-ss.c:26:16: missed: statement clobbers memory: coo_41 = coo_new ();
+tests/baseline-ss.c:27:5: missed: statement clobbers memory: coo_generate_random (coo_41, 4096, 4096, 20000000);
+tests/baseline-ss.c:31:13: missed: statement clobbers memory: A_44 = cs_di_spalloc (4096, 4096, 20000000, 1, 0);
+tests/baseline-ss.c:33:9: missed: statement clobbers memory: cs_di_entry (A_44, _9, _7, _5);
+tests/baseline-ss.c:37:13: missed: statement clobbers memory: C_46 = cs_di_compress (A_44);
+tests/baseline-ss.c:38:5: missed: statement clobbers memory: cs_di_spfree (A_44);
+tests/baseline-ss.c:42:35: missed: statement clobbers memory: rand_vec_49 = malloc (32768);
+tests/baseline-ss.c:43:31: missed: statement clobbers memory: output_51 = malloc (32768);
+tests/baseline-ss.c:45:30: missed: statement clobbers memory: _11 = rand ();
+tests/baseline-ss.c:48:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline-ss.c:49:5: missed: statement clobbers memory: cs_di_gaxpy (C_46, rand_vec_49, output_51);
+tests/baseline-ss.c:50:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline-ss.c:51:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u reps of %d\n", _29, 10, 20000000);
+tests/baseline-ss.c:54:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _31);
+tests/baseline-ss.c:57:5: missed: statement clobbers memory: coo_free (coo_41);
+tests/baseline-ss.c:59:5: missed: statement clobbers memory: free (rand_vec_49);
+tests/baseline-ss.c:60:5: missed: statement clobbers memory: free (output_51);
+tests/baseline-ss.c:61:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_conversions.c:6:16: missed: statement clobbers memory: coo_6 = coo_new ();
+tests/test_conversions.c:7:5: missed: statement clobbers memory: coo_generate_random (coo_6, 10, 10, 201);
+tests/test_conversions.c:10:5: missed: statement clobbers memory: coo_sort_in_ascending_order (coo_6);
+tests/test_conversions.c:12:16: missed: statement clobbers memory: csr_10 = csr_new ();
+tests/test_conversions.c:13:5: missed: statement clobbers memory: coo_to_csr (coo_6, csr_10);
+tests/test_conversions.c:15:17: missed: statement clobbers memory: coo2_13 = coo_new ();
+tests/test_conversions.c:16:5: missed: statement clobbers memory: csr_to_coo (csr_10, coo2_13);
+tests/test_conversions.c:28:9: missed: statement clobbers memory: _1 = coo_compare (coo_6, coo2_13);
+tests/test_conversions.c:34:5: missed: statement clobbers memory: coo_free (coo_6);
+tests/test_conversions.c:35:5: missed: statement clobbers memory: coo_free (coo2_13);
+tests/test_conversions.c:36:5: missed: statement clobbers memory: csr_free (csr_10);
+tests/test_conversions.c:38:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_conversions.c:29:9: missed: statement clobbers memory: __builtin_puts (&"error comparing the two matrices"[0]);
+tests/test_load_from_file.c:6:16: missed: statement clobbers memory: coo_8 = coo_new ();
+tests/test_load_from_file.c:9:19: missed: statement clobbers memory: input_10 = fopen ("data/abb313/abb313.mtx", "r");
+tests/test_load_from_file.c:17:14: missed: statement clobbers memory: ret_12 = coo_from_file (input_10, coo_8);
+tests/test_load_from_file.c:29:5: missed: statement clobbers memory: coo_free (coo_8);
+tests/test_load_from_file.c:31:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_load_from_file.c:24:9: missed: statement clobbers memory: __builtin_puts (&"Invalid headers read"[0]);
+tests/test_load_from_file.c:18:9: missed: statement clobbers memory: printf ("error loading from file %d\n", ret_12);
+tests/test_load_from_file.c:11:9: missed: statement clobbers memory: __builtin_puts (&"Error opening file"[0]);
+tests/test_write_and_load.c:7:16: missed: statement clobbers memory: coo_6 = coo_new ();
+tests/test_write_and_load.c:8:5: missed: statement clobbers memory: coo_generate_random (coo_6, 100, 100, 200);
+tests/test_write_and_load.c:11:20: missed: statement clobbers memory: output_9 = fopen ("data/dummy.mtx", "w");
+tests/test_write_and_load.c:18:14: missed: statement clobbers memory: ret_11 = coo_write_to_file (output_9, coo_6);
+tests/test_write_and_load.c:24:17: missed: statement clobbers memory: coo2_13 = coo_new ();
+tests/test_write_and_load.c:25:19: missed: statement clobbers memory: input_15 = fopen ("data/dummy.mtx", "r");
+tests/test_write_and_load.c:31:14: missed: statement clobbers memory: ret_17 = coo_from_file (input_15, coo2_13);
+tests/test_write_and_load.c:36:9: missed: statement clobbers memory: _1 = coo_compare (coo_6, coo2_13);
+tests/test_write_and_load.c:41:5: missed: statement clobbers memory: coo_free (coo_6);
+tests/test_write_and_load.c:42:5: missed: statement clobbers memory: coo_free (coo2_13);
+tests/test_write_and_load.c:43:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_write_and_load.c:37:9: missed: statement clobbers memory: __builtin_puts (&"error comparing the two matrices"[0]);
+tests/test_write_and_load.c:32:9: missed: statement clobbers memory: printf ("error loading from file %d\n", ret_17);
+tests/test_write_and_load.c:19:9: missed: statement clobbers memory: printf ("error writing to file %d\n", ret_11);
+tests/test_write_and_load.c:13:9: missed: statement clobbers memory: __builtin_puts (&"Error opening file"[0]);
+src/lib.c:277:12: missed: couldn't vectorize loop
+src/lib.c:277:12: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:278:11: missed: couldn't vectorize loop
+src/lib.c:278:25: missed: not vectorized: complicated access pattern.
+src/lib.c:29:31: missed: couldn't vectorize loop
+src/lib.c:29:31: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:18:31: missed: couldn't vectorize loop
+src/lib.c:18:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:42:27: missed: statement clobbers memory: _64 = realloc (_63, _62);
+src/lib.c:19:39: missed: statement clobbers memory: _1 = rand ();
+src/lib.c:20:39: missed: statement clobbers memory: _7 = rand ();
+src/lib.c:21:32: missed: statement clobbers memory: _12 = rand ();
+src/lib.c:131:3: missed: statement clobbers memory: qsort (prephitmp_75, _81, 24, compare_cooEntry);
+src/lib.c:25:31: missed: statement clobbers memory: tmp_47 = malloc (_21);
+src/lib.c:27:10: missed: not vectorized: more than one data ref in stmt: *tmp_47 = *_22;
+src/lib.c:31:14: missed: not vectorized: more than one data ref in stmt: *index_83 = *_24;
+src/lib.c:42:27: missed: statement clobbers memory: _67 = realloc (_22, prephitmp_106);
+src/lib.c:36:3: missed: statement clobbers memory: mempcpy (_67, tmp_47, prephitmp_106);
+src/lib.c:37:3: missed: statement clobbers memory: free (tmp_47);
+src/lib.c:15:13: missed: not vectorized: vectorization is not profitable.
+src/lib.c:15:13: missed: not vectorized: vectorization is not profitable.
+src/lib.c:42:27: missed: statement clobbers memory: _3 = realloc (_2, _1);
+src/lib.c:49:35: missed: statement clobbers memory: _4 = realloc (_3, _2);
+src/lib.c:52:24: missed: statement clobbers memory: _7 = realloc (_6, _5);
+src/lib.c:53:23: missed: statement clobbers memory: _10 = realloc (_9, _8);
+src/lib.c:87:31: missed: couldn't vectorize loop
+src/lib.c:87:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:75:31: missed: couldn't vectorize loop
+src/lib.c:75:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:71:31: missed: couldn't vectorize loop
+src/lib.c:71:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:67:31: missed: couldn't vectorize loop
+src/lib.c:67:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:49:35: missed: statement clobbers memory: _84 = realloc (_83, _82);
+src/lib.c:52:24: missed: statement clobbers memory: _87 = realloc (_86, _85);
+src/lib.c:53:23: missed: statement clobbers memory: _90 = realloc (_89, _88);
+src/lib.c:80:24: missed: statement clobbers memory: temp_55 = malloc (0);
+src/lib.c:80:24: missed: statement clobbers memory: temp_67 = malloc (_29);
+src/lib.c:84:13: missed: statement clobbers memory: __builtin_memcpy (temp_67, _4, _29);
+src/lib.c:94:3: missed: statement clobbers memory: free (temp_59);
+src/lib.c:106:31: missed: couldn't vectorize loop
+src/lib.c:106:31: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:108:47: missed: couldn't vectorize loop
+src/lib.c:108:47: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:42:27: missed: statement clobbers memory: _38 = realloc (_37, _36);
+src/lib.c:131:3: missed: statement clobbers memory: qsort (_2, _1, 24, compare_cooEntry);
+src/lib.c:137:3: missed: statement clobbers memory: free (_1);
+src/lib.c:139:3: missed: statement clobbers memory: free (coo_3(D));
+src/lib.c:145:3: missed: statement clobbers memory: free (_1);
+src/lib.c:146:3: missed: statement clobbers memory: free (_2);
+src/lib.c:147:3: missed: statement clobbers memory: free (_3);
+src/lib.c:151:3: missed: statement clobbers memory: free (csr_5(D));
+src/lib.c:156:21: missed: statement clobbers memory: coo_3 = malloc (32);
+src/lib.c:166:21: missed: statement clobbers memory: csr_3 = malloc (48);
+src/lib.c:208:30: missed: couldn't vectorize loop
+src/lib.c:208:30: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:179:7: missed: statement clobbers memory: _1 = mm_read_banner (input_31(D), &matcode);
+src/lib.c:195:7: missed: statement clobbers memory: _5 = mm_read_mtx_crd_size (input_31(D), &M, &N, &nnz);
+src/lib.c:42:27: missed: statement clobbers memory: _56 = realloc (_55, _54);
+src/lib.c:209:5: missed: statement clobbers memory: fscanf (input_31(D), "%lu %lu %f\n", _17, _16, _15);
+src/lib.c:216:5: missed: statement clobbers memory: fclose (input_31(D));
+src/lib.c:196:5: missed: statement clobbers memory: exit (1);
+src/lib.c:188:5: missed: statement clobbers memory: printf ("Sorry, this application does not support ");
+src/lib.c:189:5: missed: statement clobbers memory: _4 = mm_typecode_to_str (&matcode);
+src/lib.c:189:5: missed: statement clobbers memory: printf ("Market Market type: [%s]\n", _4);
+src/lib.c:190:5: missed: statement clobbers memory: exit (1);
+src/lib.c:180:5: missed: statement clobbers memory: __builtin_puts (&"Could not process Matrix Market banner."[0]);
+src/lib.c:181:5: missed: statement clobbers memory: exit (1);
+src/lib.c:235:17: missed: couldn't vectorize loop
+src/lib.c:235:17: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:229:3: missed: statement clobbers memory: mm_write_banner (output_24(D), &matcode);
+src/lib.c:230:3: missed: statement clobbers memory: mm_write_mtx_crd_size (output_24(D), _6, _4, _2);
+src/lib.c:236:5: missed: statement clobbers memory: fprintf (output_24(D), "%ld %ld %10.3f\n", _15, _13, _11);
+src/lib.c:238:3: missed: statement clobbers memory: fclose (output_24(D));
+src/lib.c:252:31: missed: couldn't vectorize loop
+src/lib.c:253:22: missed: not vectorized: no vectype for stmt: _15 = _14->row;
+ scalar_type: long unsigned int
+src/lib.c:131:3: missed: statement clobbers memory: qsort (_49, _1, 24, compare_cooEntry);
+src/lib.c:131:3: missed: statement clobbers memory: qsort (_48, _47, 24, compare_cooEntry);
+src/lib.c:256:7: missed: statement clobbers memory: printf ("coo1 %ld %ld %f\n", _56, pretmp_59, _27);
+src/lib.c:258:7: missed: statement clobbers memory: printf ("coo2 %ld %ld %f\n", _34, _33, _32);
+src/lib.c:245:5: missed: statement clobbers memory: printf ("coo1 %ld %ld %ld\n", pretmp_69, pretmp_70, _1);
+src/lib.c:246:5: missed: statement clobbers memory: printf ("coo2 %ld %ld %ld\n", _11, _10, _9);
+src/lib.c:270:5: missed: statement clobbers memory: __builtin_GOMP_parallel (spmv_csr._omp_fn.0, &.omp_data_o.5, 0, 0);
+src/lib.c:325:31: missed: couldn't vectorize loop
+src/lib.c:325:31: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:326:48: missed: couldn't vectorize loop
+src/lib.c:328:25: missed: not vectorized: complicated access pattern.
+tests/baseline.c:35:5: missed: couldn't vectorize loop
+tests/baseline.c:35:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline.c:32:30: missed: couldn't vectorize loop
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:25:16: missed: statement clobbers memory: coo_32 = coo_new ();
+tests/baseline.c:26:5: missed: statement clobbers memory: coo_generate_random (coo_32, 4096, 4096, 200000);
+tests/baseline.c:27:16: missed: statement clobbers memory: csr_35 = csr_new ();
+tests/baseline.c:28:5: missed: statement clobbers memory: coo_to_csr (coo_32, csr_35);
+tests/baseline.c:30:33: missed: statement clobbers memory: rand_vec_38 = malloc (16384);
+tests/baseline.c:31:29: missed: statement clobbers memory: output_40 = malloc (16384);
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:35:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline.c:36:5: missed: statement clobbers memory: spmv_csr (*csr_35, 4096, rand_vec_38, output_40);
+tests/baseline.c:37:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline.c:38:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u reps of %lu\n", _22, 10, _21);
+tests/baseline.c:41:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _24);
+tests/baseline.c:44:5: missed: statement clobbers memory: coo_free (coo_32);
+tests/baseline.c:45:5: missed: statement clobbers memory: csr_free (csr_35);
+tests/baseline.c:46:5: missed: statement clobbers memory: free (rand_vec_38);
+tests/baseline.c:47:5: missed: statement clobbers memory: free (output_40);
+tests/baseline.c:48:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/baseline-ss.c:48:5: missed: couldn't vectorize loop
+tests/baseline-ss.c:48:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline-ss.c:44:30: missed: couldn't vectorize loop
+tests/baseline-ss.c:45:30: missed: statement clobbers memory: _11 = rand ();
+tests/baseline-ss.c:32:31: missed: couldn't vectorize loop
+tests/baseline-ss.c:32:31: missed: not vectorized: number of iterations cannot be computed.
+tests/baseline-ss.c:26:16: missed: statement clobbers memory: coo_41 = coo_new ();
+tests/baseline-ss.c:27:5: missed: statement clobbers memory: coo_generate_random (coo_41, 4096, 4096, 20000000);
+tests/baseline-ss.c:31:13: missed: statement clobbers memory: A_44 = cs_di_spalloc (4096, 4096, 20000000, 1, 0);
+tests/baseline-ss.c:33:9: missed: statement clobbers memory: cs_di_entry (A_44, _9, _7, _5);
+tests/baseline-ss.c:37:13: missed: statement clobbers memory: C_46 = cs_di_compress (A_44);
+tests/baseline-ss.c:38:5: missed: statement clobbers memory: cs_di_spfree (A_44);
+tests/baseline-ss.c:42:35: missed: statement clobbers memory: rand_vec_49 = malloc (32768);
+tests/baseline-ss.c:43:31: missed: statement clobbers memory: output_51 = malloc (32768);
+tests/baseline-ss.c:45:30: missed: statement clobbers memory: _11 = rand ();
+tests/baseline-ss.c:48:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline-ss.c:49:5: missed: statement clobbers memory: cs_di_gaxpy (C_46, rand_vec_49, output_51);
+tests/baseline-ss.c:50:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline-ss.c:51:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u reps of %d\n", _29, 10, 20000000);
+tests/baseline-ss.c:54:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _31);
+tests/baseline-ss.c:57:5: missed: statement clobbers memory: coo_free (coo_41);
+tests/baseline-ss.c:59:5: missed: statement clobbers memory: free (rand_vec_49);
+tests/baseline-ss.c:60:5: missed: statement clobbers memory: free (output_51);
+tests/baseline-ss.c:61:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_conversions.c:6:16: missed: statement clobbers memory: coo_6 = coo_new ();
+tests/test_conversions.c:7:5: missed: statement clobbers memory: coo_generate_random (coo_6, 10, 10, 201);
+tests/test_conversions.c:10:5: missed: statement clobbers memory: coo_sort_in_ascending_order (coo_6);
+tests/test_conversions.c:12:16: missed: statement clobbers memory: csr_10 = csr_new ();
+tests/test_conversions.c:13:5: missed: statement clobbers memory: coo_to_csr (coo_6, csr_10);
+tests/test_conversions.c:15:17: missed: statement clobbers memory: coo2_13 = coo_new ();
+tests/test_conversions.c:16:5: missed: statement clobbers memory: csr_to_coo (csr_10, coo2_13);
+tests/test_conversions.c:28:9: missed: statement clobbers memory: _1 = coo_compare (coo_6, coo2_13);
+tests/test_conversions.c:34:5: missed: statement clobbers memory: coo_free (coo_6);
+tests/test_conversions.c:35:5: missed: statement clobbers memory: coo_free (coo2_13);
+tests/test_conversions.c:36:5: missed: statement clobbers memory: csr_free (csr_10);
+tests/test_conversions.c:38:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_conversions.c:29:9: missed: statement clobbers memory: __builtin_puts (&"error comparing the two matrices"[0]);
+tests/test_load_from_file.c:6:16: missed: statement clobbers memory: coo_8 = coo_new ();
+tests/test_load_from_file.c:9:19: missed: statement clobbers memory: input_10 = fopen ("data/abb313/abb313.mtx", "r");
+tests/test_load_from_file.c:17:14: missed: statement clobbers memory: ret_12 = coo_from_file (input_10, coo_8);
+tests/test_load_from_file.c:29:5: missed: statement clobbers memory: coo_free (coo_8);
+tests/test_load_from_file.c:31:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_load_from_file.c:24:9: missed: statement clobbers memory: __builtin_puts (&"Invalid headers read"[0]);
+tests/test_load_from_file.c:18:9: missed: statement clobbers memory: printf ("error loading from file %d\n", ret_12);
+tests/test_load_from_file.c:11:9: missed: statement clobbers memory: __builtin_puts (&"Error opening file"[0]);
+tests/test_write_and_load.c:7:16: missed: statement clobbers memory: coo_6 = coo_new ();
+tests/test_write_and_load.c:8:5: missed: statement clobbers memory: coo_generate_random (coo_6, 100, 100, 200);
+tests/test_write_and_load.c:11:20: missed: statement clobbers memory: output_9 = fopen ("data/dummy.mtx", "w");
+tests/test_write_and_load.c:18:14: missed: statement clobbers memory: ret_11 = coo_write_to_file (output_9, coo_6);
+tests/test_write_and_load.c:24:17: missed: statement clobbers memory: coo2_13 = coo_new ();
+tests/test_write_and_load.c:25:19: missed: statement clobbers memory: input_15 = fopen ("data/dummy.mtx", "r");
+tests/test_write_and_load.c:31:14: missed: statement clobbers memory: ret_17 = coo_from_file (input_15, coo2_13);
+tests/test_write_and_load.c:36:9: missed: statement clobbers memory: _1 = coo_compare (coo_6, coo2_13);
+tests/test_write_and_load.c:41:5: missed: statement clobbers memory: coo_free (coo_6);
+tests/test_write_and_load.c:42:5: missed: statement clobbers memory: coo_free (coo2_13);
+tests/test_write_and_load.c:43:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_write_and_load.c:37:9: missed: statement clobbers memory: __builtin_puts (&"error comparing the two matrices"[0]);
+tests/test_write_and_load.c:32:9: missed: statement clobbers memory: printf ("error loading from file %d\n", ret_17);
+tests/test_write_and_load.c:19:9: missed: statement clobbers memory: printf ("error writing to file %d\n", ret_11);
+tests/test_write_and_load.c:13:9: missed: statement clobbers memory: __builtin_puts (&"Error opening file"[0]);
+tests/baseline.c:35:5: missed: couldn't vectorize loop
+tests/baseline.c:35:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline.c:32:30: missed: couldn't vectorize loop
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:25:16: missed: statement clobbers memory: coo_32 = coo_new ();
+tests/baseline.c:26:5: missed: statement clobbers memory: coo_generate_random (coo_32, 4096, 4096, 20000000);
+tests/baseline.c:27:16: missed: statement clobbers memory: csr_35 = csr_new ();
+tests/baseline.c:28:5: missed: statement clobbers memory: coo_to_csr (coo_32, csr_35);
+tests/baseline.c:30:33: missed: statement clobbers memory: rand_vec_38 = malloc (16384);
+tests/baseline.c:31:29: missed: statement clobbers memory: output_40 = malloc (16384);
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:35:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline.c:36:5: missed: statement clobbers memory: spmv_csr (*csr_35, 4096, rand_vec_38, output_40);
+tests/baseline.c:37:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline.c:38:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u reps of %lu\n", _22, 10, _21);
+tests/baseline.c:41:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _24);
+tests/baseline.c:44:5: missed: statement clobbers memory: coo_free (coo_32);
+tests/baseline.c:45:5: missed: statement clobbers memory: csr_free (csr_35);
+tests/baseline.c:46:5: missed: statement clobbers memory: free (rand_vec_38);
+tests/baseline.c:47:5: missed: statement clobbers memory: free (output_40);
+tests/baseline.c:48:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/baseline.c:35:5: missed: couldn't vectorize loop
+tests/baseline.c:35:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline.c:32:30: missed: couldn't vectorize loop
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:25:16: missed: statement clobbers memory: coo_32 = coo_new ();
+tests/baseline.c:26:5: missed: statement clobbers memory: coo_generate_random (coo_32, 4096, 4096, 200000000);
+tests/baseline.c:27:16: missed: statement clobbers memory: csr_35 = csr_new ();
+tests/baseline.c:28:5: missed: statement clobbers memory: coo_to_csr (coo_32, csr_35);
+tests/baseline.c:30:33: missed: statement clobbers memory: rand_vec_38 = malloc (16384);
+tests/baseline.c:31:29: missed: statement clobbers memory: output_40 = malloc (16384);
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:35:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline.c:36:5: missed: statement clobbers memory: spmv_csr (*csr_35, 4096, rand_vec_38, output_40);
+tests/baseline.c:37:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline.c:38:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u reps of %lu\n", _22, 10, _21);
+tests/baseline.c:41:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _24);
+tests/baseline.c:44:5: missed: statement clobbers memory: coo_free (coo_32);
+tests/baseline.c:45:5: missed: statement clobbers memory: csr_free (csr_35);
+tests/baseline.c:46:5: missed: statement clobbers memory: free (rand_vec_38);
+tests/baseline.c:47:5: missed: statement clobbers memory: free (output_40);
+tests/baseline.c:48:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+src/lib.c:291:12: missed: couldn't vectorize loop
+src/lib.c:291:12: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:292:11: missed: couldn't vectorize loop
+src/lib.c:292:25: missed: not vectorized: complicated access pattern.
+src/lib.c:29:31: missed: couldn't vectorize loop
+src/lib.c:29:31: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:18:31: missed: couldn't vectorize loop
+src/lib.c:18:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:42:27: missed: statement clobbers memory: _64 = realloc (_63, _62);
+src/lib.c:19:39: missed: statement clobbers memory: _1 = rand ();
+src/lib.c:20:39: missed: statement clobbers memory: _7 = rand ();
+src/lib.c:21:32: missed: statement clobbers memory: _12 = rand ();
+src/lib.c:131:3: missed: statement clobbers memory: qsort (prephitmp_75, _81, 24, compare_cooEntry);
+src/lib.c:25:31: missed: statement clobbers memory: tmp_47 = malloc (_21);
+src/lib.c:27:10: missed: not vectorized: more than one data ref in stmt: *tmp_47 = *_22;
+src/lib.c:31:14: missed: not vectorized: more than one data ref in stmt: *index_83 = *_24;
+src/lib.c:42:27: missed: statement clobbers memory: _67 = realloc (_22, prephitmp_106);
+src/lib.c:36:3: missed: statement clobbers memory: mempcpy (_67, tmp_47, prephitmp_106);
+src/lib.c:37:3: missed: statement clobbers memory: free (tmp_47);
+src/lib.c:15:13: missed: not vectorized: vectorization is not profitable.
+src/lib.c:15:13: missed: not vectorized: vectorization is not profitable.
+src/lib.c:42:27: missed: statement clobbers memory: _3 = realloc (_2, _1);
+src/lib.c:49:35: missed: statement clobbers memory: _4 = realloc (_3, _2);
+src/lib.c:52:24: missed: statement clobbers memory: _7 = realloc (_6, _5);
+src/lib.c:53:23: missed: statement clobbers memory: _10 = realloc (_9, _8);
+src/lib.c:87:31: missed: couldn't vectorize loop
+src/lib.c:87:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:75:31: missed: couldn't vectorize loop
+src/lib.c:75:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:71:31: missed: couldn't vectorize loop
+src/lib.c:71:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:67:31: missed: couldn't vectorize loop
+src/lib.c:67:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:49:35: missed: statement clobbers memory: _84 = realloc (_83, _82);
+src/lib.c:52:24: missed: statement clobbers memory: _87 = realloc (_86, _85);
+src/lib.c:53:23: missed: statement clobbers memory: _90 = realloc (_89, _88);
+src/lib.c:80:24: missed: statement clobbers memory: temp_55 = malloc (0);
+src/lib.c:80:24: missed: statement clobbers memory: temp_67 = malloc (_29);
+src/lib.c:84:13: missed: statement clobbers memory: __builtin_memcpy (temp_67, _4, _29);
+src/lib.c:94:3: missed: statement clobbers memory: free (temp_59);
+src/lib.c:106:31: missed: couldn't vectorize loop
+src/lib.c:106:31: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:108:47: missed: couldn't vectorize loop
+src/lib.c:108:47: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:42:27: missed: statement clobbers memory: _38 = realloc (_37, _36);
+src/lib.c:131:3: missed: statement clobbers memory: qsort (_2, _1, 24, compare_cooEntry);
+src/lib.c:137:3: missed: statement clobbers memory: free (_1);
+src/lib.c:139:3: missed: statement clobbers memory: free (coo_3(D));
+src/lib.c:145:3: missed: statement clobbers memory: free (_1);
+src/lib.c:146:3: missed: statement clobbers memory: free (_2);
+src/lib.c:147:3: missed: statement clobbers memory: free (_3);
+src/lib.c:151:3: missed: statement clobbers memory: free (csr_5(D));
+src/lib.c:156:21: missed: statement clobbers memory: coo_3 = malloc (32);
+src/lib.c:166:21: missed: statement clobbers memory: csr_3 = malloc (48);
+src/lib.c:208:30: missed: couldn't vectorize loop
+src/lib.c:208:30: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:179:7: missed: statement clobbers memory: _1 = mm_read_banner (input_31(D), &matcode);
+src/lib.c:195:7: missed: statement clobbers memory: _5 = mm_read_mtx_crd_size (input_31(D), &M, &N, &nnz);
+src/lib.c:42:27: missed: statement clobbers memory: _56 = realloc (_55, _54);
+src/lib.c:209:5: missed: statement clobbers memory: fscanf (input_31(D), "%lu %lu %f\n", _17, _16, _15);
+src/lib.c:216:5: missed: statement clobbers memory: fclose (input_31(D));
+src/lib.c:196:5: missed: statement clobbers memory: exit (1);
+src/lib.c:188:5: missed: statement clobbers memory: printf ("Sorry, this application does not support ");
+src/lib.c:189:5: missed: statement clobbers memory: _4 = mm_typecode_to_str (&matcode);
+src/lib.c:189:5: missed: statement clobbers memory: printf ("Market Market type: [%s]\n", _4);
+src/lib.c:190:5: missed: statement clobbers memory: exit (1);
+src/lib.c:180:5: missed: statement clobbers memory: __builtin_puts (&"Could not process Matrix Market banner."[0]);
+src/lib.c:181:5: missed: statement clobbers memory: exit (1);
+src/lib.c:235:17: missed: couldn't vectorize loop
+src/lib.c:235:17: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:229:3: missed: statement clobbers memory: mm_write_banner (output_24(D), &matcode);
+src/lib.c:230:3: missed: statement clobbers memory: mm_write_mtx_crd_size (output_24(D), _6, _4, _2);
+src/lib.c:236:5: missed: statement clobbers memory: fprintf (output_24(D), "%ld %ld %10.3f\n", _15, _13, _11);
+src/lib.c:238:3: missed: statement clobbers memory: fclose (output_24(D));
+src/lib.c:252:31: missed: couldn't vectorize loop
+src/lib.c:253:22: missed: not vectorized: no vectype for stmt: _15 = _14->row;
+ scalar_type: long unsigned int
+src/lib.c:131:3: missed: statement clobbers memory: qsort (_49, _1, 24, compare_cooEntry);
+src/lib.c:131:3: missed: statement clobbers memory: qsort (_48, _47, 24, compare_cooEntry);
+src/lib.c:256:7: missed: statement clobbers memory: printf ("coo1 %ld %ld %f\n", _56, pretmp_59, _27);
+src/lib.c:258:7: missed: statement clobbers memory: printf ("coo2 %ld %ld %f\n", _34, _33, _32);
+src/lib.c:245:5: missed: statement clobbers memory: printf ("coo1 %ld %ld %ld\n", pretmp_69, pretmp_70, _1);
+src/lib.c:246:5: missed: statement clobbers memory: printf ("coo2 %ld %ld %ld\n", _11, _10, _9);
+src/lib.c:274:31: missed: couldn't vectorize loop
+src/lib.c:274:31: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:275:48: missed: couldn't vectorize loop
+src/lib.c:276:25: missed: not vectorized: complicated access pattern.
+src/lib.c:283:5: missed: statement clobbers memory: __builtin_GOMP_parallel (spmv_csr_openmp._omp_fn.0, &.omp_data_o.5, 0, 0);
+src/lib.c:274:31: missed: couldn't vectorize loop
+src/lib.c:274:31: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:275:48: missed: couldn't vectorize loop
+src/lib.c:276:25: missed: not vectorized: complicated access pattern.
+tests/baseline.c:35:5: missed: couldn't vectorize loop
+tests/baseline.c:35:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline.c:32:30: missed: couldn't vectorize loop
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:25:16: missed: statement clobbers memory: coo_32 = coo_new ();
+tests/baseline.c:26:5: missed: statement clobbers memory: coo_generate_random (coo_32, 4096, 4096, 200000000);
+tests/baseline.c:27:16: missed: statement clobbers memory: csr_35 = csr_new ();
+tests/baseline.c:28:5: missed: statement clobbers memory: coo_to_csr (coo_32, csr_35);
+tests/baseline.c:30:33: missed: statement clobbers memory: rand_vec_38 = malloc (16384);
+tests/baseline.c:31:29: missed: statement clobbers memory: output_40 = malloc (16384);
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:35:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline.c:36:5: missed: statement clobbers memory: spmv_csr (*csr_35, 4096, rand_vec_38, output_40);
+tests/baseline.c:37:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline.c:38:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u reps of %lu\n", _22, 10, _21);
+tests/baseline.c:41:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _24);
+tests/baseline.c:44:5: missed: statement clobbers memory: coo_free (coo_32);
+tests/baseline.c:45:5: missed: statement clobbers memory: csr_free (csr_35);
+tests/baseline.c:46:5: missed: statement clobbers memory: free (rand_vec_38);
+tests/baseline.c:47:5: missed: statement clobbers memory: free (output_40);
+tests/baseline.c:48:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/baseline-ss.c:48:5: missed: couldn't vectorize loop
+tests/baseline-ss.c:48:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline-ss.c:44:30: missed: couldn't vectorize loop
+tests/baseline-ss.c:45:30: missed: statement clobbers memory: _11 = rand ();
+tests/baseline-ss.c:32:31: missed: couldn't vectorize loop
+tests/baseline-ss.c:32:31: missed: not vectorized: number of iterations cannot be computed.
+tests/baseline-ss.c:26:16: missed: statement clobbers memory: coo_41 = coo_new ();
+tests/baseline-ss.c:27:5: missed: statement clobbers memory: coo_generate_random (coo_41, 4096, 4096, 20000000);
+tests/baseline-ss.c:31:13: missed: statement clobbers memory: A_44 = cs_di_spalloc (4096, 4096, 20000000, 1, 0);
+tests/baseline-ss.c:33:9: missed: statement clobbers memory: cs_di_entry (A_44, _9, _7, _5);
+tests/baseline-ss.c:37:13: missed: statement clobbers memory: C_46 = cs_di_compress (A_44);
+tests/baseline-ss.c:38:5: missed: statement clobbers memory: cs_di_spfree (A_44);
+tests/baseline-ss.c:42:35: missed: statement clobbers memory: rand_vec_49 = malloc (32768);
+tests/baseline-ss.c:43:31: missed: statement clobbers memory: output_51 = malloc (32768);
+tests/baseline-ss.c:45:30: missed: statement clobbers memory: _11 = rand ();
+tests/baseline-ss.c:48:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline-ss.c:49:5: missed: statement clobbers memory: cs_di_gaxpy (C_46, rand_vec_49, output_51);
+tests/baseline-ss.c:50:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline-ss.c:51:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u reps of %d\n", _29, 10, 20000000);
+tests/baseline-ss.c:54:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _31);
+tests/baseline-ss.c:57:5: missed: statement clobbers memory: coo_free (coo_41);
+tests/baseline-ss.c:59:5: missed: statement clobbers memory: free (rand_vec_49);
+tests/baseline-ss.c:60:5: missed: statement clobbers memory: free (output_51);
+tests/baseline-ss.c:61:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_conversions.c:6:16: missed: statement clobbers memory: coo_6 = coo_new ();
+tests/test_conversions.c:7:5: missed: statement clobbers memory: coo_generate_random (coo_6, 10, 10, 201);
+tests/test_conversions.c:10:5: missed: statement clobbers memory: coo_sort_in_ascending_order (coo_6);
+tests/test_conversions.c:12:16: missed: statement clobbers memory: csr_10 = csr_new ();
+tests/test_conversions.c:13:5: missed: statement clobbers memory: coo_to_csr (coo_6, csr_10);
+tests/test_conversions.c:15:17: missed: statement clobbers memory: coo2_13 = coo_new ();
+tests/test_conversions.c:16:5: missed: statement clobbers memory: csr_to_coo (csr_10, coo2_13);
+tests/test_conversions.c:28:9: missed: statement clobbers memory: _1 = coo_compare (coo_6, coo2_13);
+tests/test_conversions.c:34:5: missed: statement clobbers memory: coo_free (coo_6);
+tests/test_conversions.c:35:5: missed: statement clobbers memory: coo_free (coo2_13);
+tests/test_conversions.c:36:5: missed: statement clobbers memory: csr_free (csr_10);
+tests/test_conversions.c:38:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_conversions.c:29:9: missed: statement clobbers memory: __builtin_puts (&"error comparing the two matrices"[0]);
+tests/test_load_from_file.c:6:16: missed: statement clobbers memory: coo_8 = coo_new ();
+tests/test_load_from_file.c:9:19: missed: statement clobbers memory: input_10 = fopen ("data/abb313/abb313.mtx", "r");
+tests/test_load_from_file.c:17:14: missed: statement clobbers memory: ret_12 = coo_from_file (input_10, coo_8);
+tests/test_load_from_file.c:29:5: missed: statement clobbers memory: coo_free (coo_8);
+tests/test_load_from_file.c:31:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_load_from_file.c:24:9: missed: statement clobbers memory: __builtin_puts (&"Invalid headers read"[0]);
+tests/test_load_from_file.c:18:9: missed: statement clobbers memory: printf ("error loading from file %d\n", ret_12);
+tests/test_load_from_file.c:11:9: missed: statement clobbers memory: __builtin_puts (&"Error opening file"[0]);
+tests/test_write_and_load.c:7:16: missed: statement clobbers memory: coo_6 = coo_new ();
+tests/test_write_and_load.c:8:5: missed: statement clobbers memory: coo_generate_random (coo_6, 100, 100, 200);
+tests/test_write_and_load.c:11:20: missed: statement clobbers memory: output_9 = fopen ("data/dummy.mtx", "w");
+tests/test_write_and_load.c:18:14: missed: statement clobbers memory: ret_11 = coo_write_to_file (output_9, coo_6);
+tests/test_write_and_load.c:24:17: missed: statement clobbers memory: coo2_13 = coo_new ();
+tests/test_write_and_load.c:25:19: missed: statement clobbers memory: input_15 = fopen ("data/dummy.mtx", "r");
+tests/test_write_and_load.c:31:14: missed: statement clobbers memory: ret_17 = coo_from_file (input_15, coo2_13);
+tests/test_write_and_load.c:36:9: missed: statement clobbers memory: _1 = coo_compare (coo_6, coo2_13);
+tests/test_write_and_load.c:41:5: missed: statement clobbers memory: coo_free (coo_6);
+tests/test_write_and_load.c:42:5: missed: statement clobbers memory: coo_free (coo2_13);
+tests/test_write_and_load.c:43:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_write_and_load.c:37:9: missed: statement clobbers memory: __builtin_puts (&"error comparing the two matrices"[0]);
+tests/test_write_and_load.c:32:9: missed: statement clobbers memory: printf ("error loading from file %d\n", ret_17);
+tests/test_write_and_load.c:19:9: missed: statement clobbers memory: printf ("error writing to file %d\n", ret_11);
+tests/test_write_and_load.c:13:9: missed: statement clobbers memory: __builtin_puts (&"Error opening file"[0]);
+tests/baseline.c:35:5: missed: couldn't vectorize loop
+tests/baseline.c:35:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline.c:32:30: missed: couldn't vectorize loop
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:25:16: missed: statement clobbers memory: coo_32 = coo_new ();
+tests/baseline.c:26:5: missed: statement clobbers memory: coo_generate_random (coo_32, 4096, 4096, 20000000);
+tests/baseline.c:27:16: missed: statement clobbers memory: csr_35 = csr_new ();
+tests/baseline.c:28:5: missed: statement clobbers memory: coo_to_csr (coo_32, csr_35);
+tests/baseline.c:30:33: missed: statement clobbers memory: rand_vec_38 = malloc (16384);
+tests/baseline.c:31:29: missed: statement clobbers memory: output_40 = malloc (16384);
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:35:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline.c:36:5: missed: statement clobbers memory: spmv_csr (*csr_35, 4096, rand_vec_38, output_40);
+tests/baseline.c:37:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline.c:38:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u reps of %lu\n", _22, 10, _21);
+tests/baseline.c:41:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _24);
+tests/baseline.c:44:5: missed: statement clobbers memory: coo_free (coo_32);
+tests/baseline.c:45:5: missed: statement clobbers memory: csr_free (csr_35);
+tests/baseline.c:46:5: missed: statement clobbers memory: free (rand_vec_38);
+tests/baseline.c:47:5: missed: statement clobbers memory: free (output_40);
+tests/baseline.c:48:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/baseline.c:35:5: missed: couldn't vectorize loop
+tests/baseline.c:35:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline.c:32:30: missed: couldn't vectorize loop
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:25:16: missed: statement clobbers memory: coo_32 = coo_new ();
+tests/baseline.c:26:5: missed: statement clobbers memory: coo_generate_random (coo_32, 4096, 4096, 20000000);
+tests/baseline.c:27:16: missed: statement clobbers memory: csr_35 = csr_new ();
+tests/baseline.c:28:5: missed: statement clobbers memory: coo_to_csr (coo_32, csr_35);
+tests/baseline.c:30:33: missed: statement clobbers memory: rand_vec_38 = malloc (16384);
+tests/baseline.c:31:29: missed: statement clobbers memory: output_40 = malloc (16384);
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:35:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline.c:36:5: missed: statement clobbers memory: spmv_csr (*csr_35, 4096, rand_vec_38, output_40);
+tests/baseline.c:37:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline.c:38:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u reps of %lu\n", _22, 100, _21);
+tests/baseline.c:41:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _24);
+tests/baseline.c:44:5: missed: statement clobbers memory: coo_free (coo_32);
+tests/baseline.c:45:5: missed: statement clobbers memory: csr_free (csr_35);
+tests/baseline.c:46:5: missed: statement clobbers memory: free (rand_vec_38);
+tests/baseline.c:47:5: missed: statement clobbers memory: free (output_40);
+tests/baseline.c:48:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/baseline.c:35:5: missed: couldn't vectorize loop
+tests/baseline.c:35:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline.c:32:30: missed: couldn't vectorize loop
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:25:16: missed: statement clobbers memory: coo_32 = coo_new ();
+tests/baseline.c:26:5: missed: statement clobbers memory: coo_generate_random (coo_32, 4096, 4096, 20000000);
+tests/baseline.c:27:16: missed: statement clobbers memory: csr_35 = csr_new ();
+tests/baseline.c:28:5: missed: statement clobbers memory: coo_to_csr (coo_32, csr_35);
+tests/baseline.c:30:33: missed: statement clobbers memory: rand_vec_38 = malloc (16384);
+tests/baseline.c:31:29: missed: statement clobbers memory: output_40 = malloc (16384);
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:35:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline.c:36:5: missed: statement clobbers memory: spmv_csr_openmp (*csr_35, 4096, rand_vec_38, output_40);
+tests/baseline.c:37:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline.c:38:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u reps of %lu\n", _22, 100, _21);
+tests/baseline.c:41:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _24);
+tests/baseline.c:44:5: missed: statement clobbers memory: coo_free (coo_32);
+tests/baseline.c:45:5: missed: statement clobbers memory: csr_free (csr_35);
+tests/baseline.c:46:5: missed: statement clobbers memory: free (rand_vec_38);
+tests/baseline.c:47:5: missed: statement clobbers memory: free (output_40);
+tests/baseline.c:48:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+src/lib.c:309:12: missed: couldn't vectorize loop
+src/lib.c:309:12: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:310:11: missed: couldn't vectorize loop
+src/lib.c:310:25: missed: not vectorized: complicated access pattern.
+src/lib.c:37:31: missed: couldn't vectorize loop
+src/lib.c:37:31: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+src/lib.c:50:5: missed: couldn't vectorize loop
+src/lib.c:50:5: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:50:5: missed: couldn't vectorize loop
+src/lib.c:50:5: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:42:5: missed: couldn't vectorize loop
+src/lib.c:42:5: missed: not vectorized: could not determine main exit from loop with multiple exits.
+src/lib.c:32:34: missed: statement clobbers memory: tmp_set_198 = malloc (_2);
+src/lib.c:59:27: missed: statement clobbers memory: _352 = realloc (_351, _209);
+src/lib.c:38:39: missed: statement clobbers memory: _3 = rand ();
+src/lib.c:39:39: missed: statement clobbers memory: _9 = rand ();
+src/lib.c:42:5: missed: statement clobbers memory: _51 = memcmp (_50, &key, 8);
+src/lib.c:50:5: missed: statement clobbers memory: _91 = malloc (64);
+src/lib.c:50:5: missed: statement clobbers memory: memset (_350, 0, 48);
+src/lib.c:50:5: missed: statement clobbers memory: _93 = malloc (512);
+src/lib.c:50:5: missed: statement clobbers memory: memset (_93, 0, 512);
+src/lib.c:50:5: missed: statement clobbers memory: _he_new_buckets_316 = malloc (_123);
+src/lib.c:50:5: missed: statement clobbers memory: memset (_he_new_buckets_316, 0, _123);
+src/lib.c:50:5: missed: statement clobbers memory: free (pretmp_463);
+src/lib.c:51:32: missed: statement clobbers memory: _158 = rand ();
+src/lib.c:50:5: missed: statement clobbers memory: exit (-1);
+src/lib.c:53:3: missed: statement clobbers memory: free (_167);
+src/lib.c:53:3: missed: statement clobbers memory: free (_168);
+src/lib.c:54:3: missed: statement clobbers memory: free (tmp_set_198);
+src/lib.c:28:5: missed: statement clobbers memory: __builtin_puts (&"Error: nnz cannot be greater than rows * cols"[0]);
+src/lib.c:29:5: missed: statement clobbers memory: exit (1);
+src/lib.c:33:13: missed: not vectorized: vectorization is not profitable.
+src/lib.c:50:5: missed: not vectorized: vectorization is not profitable.
+src/lib.c:59:27: missed: statement clobbers memory: _3 = realloc (_2, _1);
+src/lib.c:67:35: missed: statement clobbers memory: _4 = realloc (_3, _2);
+src/lib.c:70:24: missed: statement clobbers memory: _7 = realloc (_6, _5);
+src/lib.c:71:23: missed: statement clobbers memory: _10 = realloc (_9, _8);
+src/lib.c:105:31: missed: couldn't vectorize loop
+src/lib.c:105:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:93:31: missed: couldn't vectorize loop
+src/lib.c:93:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:89:31: missed: couldn't vectorize loop
+src/lib.c:89:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:85:31: missed: couldn't vectorize loop
+src/lib.c:85:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:67:35: missed: statement clobbers memory: _84 = realloc (_83, _82);
+src/lib.c:70:24: missed: statement clobbers memory: _87 = realloc (_86, _85);
+src/lib.c:71:23: missed: statement clobbers memory: _90 = realloc (_89, _88);
+src/lib.c:98:24: missed: statement clobbers memory: temp_55 = malloc (0);
+src/lib.c:98:24: missed: statement clobbers memory: temp_67 = malloc (_29);
+src/lib.c:102:13: missed: statement clobbers memory: __builtin_memcpy (temp_67, _4, _29);
+src/lib.c:112:3: missed: statement clobbers memory: free (temp_59);
+src/lib.c:124:31: missed: couldn't vectorize loop
+src/lib.c:124:31: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:126:47: missed: couldn't vectorize loop
+src/lib.c:126:47: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:59:27: missed: statement clobbers memory: _38 = realloc (_37, _36);
+src/lib.c:149:3: missed: statement clobbers memory: qsort (_2, _1, 24, compare_cooEntry);
+src/lib.c:155:3: missed: statement clobbers memory: free (_1);
+src/lib.c:157:3: missed: statement clobbers memory: free (coo_3(D));
+src/lib.c:163:3: missed: statement clobbers memory: free (_1);
+src/lib.c:164:3: missed: statement clobbers memory: free (_2);
+src/lib.c:165:3: missed: statement clobbers memory: free (_3);
+src/lib.c:169:3: missed: statement clobbers memory: free (csr_5(D));
+src/lib.c:174:21: missed: statement clobbers memory: coo_3 = malloc (32);
+src/lib.c:184:21: missed: statement clobbers memory: csr_3 = malloc (48);
+src/lib.c:226:30: missed: couldn't vectorize loop
+src/lib.c:226:30: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:197:7: missed: statement clobbers memory: _1 = mm_read_banner (input_31(D), &matcode);
+src/lib.c:213:7: missed: statement clobbers memory: _5 = mm_read_mtx_crd_size (input_31(D), &M, &N, &nnz);
+src/lib.c:59:27: missed: statement clobbers memory: _56 = realloc (_55, _54);
+src/lib.c:227:5: missed: statement clobbers memory: fscanf (input_31(D), "%lu %lu %f\n", _17, _16, _15);
+src/lib.c:234:5: missed: statement clobbers memory: fclose (input_31(D));
+src/lib.c:214:5: missed: statement clobbers memory: exit (1);
+src/lib.c:206:5: missed: statement clobbers memory: printf ("Sorry, this application does not support ");
+src/lib.c:207:5: missed: statement clobbers memory: _4 = mm_typecode_to_str (&matcode);
+src/lib.c:207:5: missed: statement clobbers memory: printf ("Market Market type: [%s]\n", _4);
+src/lib.c:208:5: missed: statement clobbers memory: exit (1);
+src/lib.c:198:5: missed: statement clobbers memory: __builtin_puts (&"Could not process Matrix Market banner."[0]);
+src/lib.c:199:5: missed: statement clobbers memory: exit (1);
+src/lib.c:253:17: missed: couldn't vectorize loop
+src/lib.c:253:17: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:247:3: missed: statement clobbers memory: mm_write_banner (output_24(D), &matcode);
+src/lib.c:248:3: missed: statement clobbers memory: mm_write_mtx_crd_size (output_24(D), _6, _4, _2);
+src/lib.c:254:5: missed: statement clobbers memory: fprintf (output_24(D), "%ld %ld %10.3f\n", _15, _13, _11);
+src/lib.c:256:3: missed: statement clobbers memory: fclose (output_24(D));
+src/lib.c:270:31: missed: couldn't vectorize loop
+src/lib.c:271:22: missed: not vectorized: no vectype for stmt: _15 = _14->row;
+ scalar_type: long unsigned int
+src/lib.c:149:3: missed: statement clobbers memory: qsort (_49, _1, 24, compare_cooEntry);
+src/lib.c:149:3: missed: statement clobbers memory: qsort (_48, _47, 24, compare_cooEntry);
+src/lib.c:274:7: missed: statement clobbers memory: printf ("coo1 %ld %ld %f\n", _56, pretmp_59, _27);
+src/lib.c:276:7: missed: statement clobbers memory: printf ("coo2 %ld %ld %f\n", _34, _33, _32);
+src/lib.c:263:5: missed: statement clobbers memory: printf ("coo1 %ld %ld %ld\n", pretmp_69, pretmp_70, _1);
+src/lib.c:264:5: missed: statement clobbers memory: printf ("coo2 %ld %ld %ld\n", _11, _10, _9);
+src/lib.c:292:31: missed: couldn't vectorize loop
+src/lib.c:292:31: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:293:48: missed: couldn't vectorize loop
+src/lib.c:294:25: missed: not vectorized: complicated access pattern.
+src/lib.c:301:5: missed: statement clobbers memory: __builtin_GOMP_parallel (spmv_csr_openmp._omp_fn.0, &.omp_data_o.8, 0, 0);
+src/lib.c:292:31: missed: couldn't vectorize loop
+src/lib.c:292:31: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:293:48: missed: couldn't vectorize loop
+src/lib.c:294:25: missed: not vectorized: complicated access pattern.
+tests/baseline.c:35:5: missed: couldn't vectorize loop
+tests/baseline.c:35:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline.c:32:30: missed: couldn't vectorize loop
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:25:16: missed: statement clobbers memory: coo_32 = coo_new ();
+tests/baseline.c:26:5: missed: statement clobbers memory: coo_generate_random (coo_32, 4096, 4096, 20000000);
+tests/baseline.c:27:16: missed: statement clobbers memory: csr_35 = csr_new ();
+tests/baseline.c:28:5: missed: statement clobbers memory: coo_to_csr (coo_32, csr_35);
+tests/baseline.c:30:33: missed: statement clobbers memory: rand_vec_38 = malloc (16384);
+tests/baseline.c:31:29: missed: statement clobbers memory: output_40 = malloc (16384);
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:35:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline.c:36:5: missed: statement clobbers memory: spmv_csr_openmp (*csr_35, 4096, rand_vec_38, output_40);
+tests/baseline.c:37:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline.c:38:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u reps of %lu\n", _22, 100, _21);
+tests/baseline.c:41:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _24);
+tests/baseline.c:44:5: missed: statement clobbers memory: coo_free (coo_32);
+tests/baseline.c:45:5: missed: statement clobbers memory: csr_free (csr_35);
+tests/baseline.c:46:5: missed: statement clobbers memory: free (rand_vec_38);
+tests/baseline.c:47:5: missed: statement clobbers memory: free (output_40);
+tests/baseline.c:48:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/baseline-ss.c:48:5: missed: couldn't vectorize loop
+tests/baseline-ss.c:48:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline-ss.c:44:30: missed: couldn't vectorize loop
+tests/baseline-ss.c:45:30: missed: statement clobbers memory: _11 = rand ();
+tests/baseline-ss.c:32:31: missed: couldn't vectorize loop
+tests/baseline-ss.c:32:31: missed: not vectorized: number of iterations cannot be computed.
+tests/baseline-ss.c:26:16: missed: statement clobbers memory: coo_41 = coo_new ();
+tests/baseline-ss.c:27:5: missed: statement clobbers memory: coo_generate_random (coo_41, 4096, 4096, 20000000);
+tests/baseline-ss.c:31:13: missed: statement clobbers memory: A_44 = cs_di_spalloc (4096, 4096, 20000000, 1, 0);
+tests/baseline-ss.c:33:9: missed: statement clobbers memory: cs_di_entry (A_44, _9, _7, _5);
+tests/baseline-ss.c:37:13: missed: statement clobbers memory: C_46 = cs_di_compress (A_44);
+tests/baseline-ss.c:38:5: missed: statement clobbers memory: cs_di_spfree (A_44);
+tests/baseline-ss.c:42:35: missed: statement clobbers memory: rand_vec_49 = malloc (32768);
+tests/baseline-ss.c:43:31: missed: statement clobbers memory: output_51 = malloc (32768);
+tests/baseline-ss.c:45:30: missed: statement clobbers memory: _11 = rand ();
+tests/baseline-ss.c:48:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline-ss.c:49:5: missed: statement clobbers memory: cs_di_gaxpy (C_46, rand_vec_49, output_51);
+tests/baseline-ss.c:50:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline-ss.c:51:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u reps of %d\n", _29, 10, 20000000);
+tests/baseline-ss.c:54:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _31);
+tests/baseline-ss.c:57:5: missed: statement clobbers memory: coo_free (coo_41);
+tests/baseline-ss.c:59:5: missed: statement clobbers memory: free (rand_vec_49);
+tests/baseline-ss.c:60:5: missed: statement clobbers memory: free (output_51);
+tests/baseline-ss.c:61:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_conversions.c:6:16: missed: statement clobbers memory: coo_6 = coo_new ();
+tests/test_conversions.c:7:5: missed: statement clobbers memory: coo_generate_random (coo_6, 10, 10, 201);
+tests/test_conversions.c:10:5: missed: statement clobbers memory: coo_sort_in_ascending_order (coo_6);
+tests/test_conversions.c:12:16: missed: statement clobbers memory: csr_10 = csr_new ();
+tests/test_conversions.c:13:5: missed: statement clobbers memory: coo_to_csr (coo_6, csr_10);
+tests/test_conversions.c:15:17: missed: statement clobbers memory: coo2_13 = coo_new ();
+tests/test_conversions.c:16:5: missed: statement clobbers memory: csr_to_coo (csr_10, coo2_13);
+tests/test_conversions.c:28:9: missed: statement clobbers memory: _1 = coo_compare (coo_6, coo2_13);
+tests/test_conversions.c:34:5: missed: statement clobbers memory: coo_free (coo_6);
+tests/test_conversions.c:35:5: missed: statement clobbers memory: coo_free (coo2_13);
+tests/test_conversions.c:36:5: missed: statement clobbers memory: csr_free (csr_10);
+tests/test_conversions.c:38:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_conversions.c:29:9: missed: statement clobbers memory: __builtin_puts (&"error comparing the two matrices"[0]);
+tests/test_load_from_file.c:6:16: missed: statement clobbers memory: coo_8 = coo_new ();
+tests/test_load_from_file.c:9:19: missed: statement clobbers memory: input_10 = fopen ("data/abb313/abb313.mtx", "r");
+tests/test_load_from_file.c:17:14: missed: statement clobbers memory: ret_12 = coo_from_file (input_10, coo_8);
+tests/test_load_from_file.c:29:5: missed: statement clobbers memory: coo_free (coo_8);
+tests/test_load_from_file.c:31:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_load_from_file.c:24:9: missed: statement clobbers memory: __builtin_puts (&"Invalid headers read"[0]);
+tests/test_load_from_file.c:18:9: missed: statement clobbers memory: printf ("error loading from file %d\n", ret_12);
+tests/test_load_from_file.c:11:9: missed: statement clobbers memory: __builtin_puts (&"Error opening file"[0]);
+tests/test_write_and_load.c:7:16: missed: statement clobbers memory: coo_6 = coo_new ();
+tests/test_write_and_load.c:8:5: missed: statement clobbers memory: coo_generate_random (coo_6, 100, 100, 200);
+tests/test_write_and_load.c:11:20: missed: statement clobbers memory: output_9 = fopen ("data/dummy.mtx", "w");
+tests/test_write_and_load.c:18:14: missed: statement clobbers memory: ret_11 = coo_write_to_file (output_9, coo_6);
+tests/test_write_and_load.c:24:17: missed: statement clobbers memory: coo2_13 = coo_new ();
+tests/test_write_and_load.c:25:19: missed: statement clobbers memory: input_15 = fopen ("data/dummy.mtx", "r");
+tests/test_write_and_load.c:31:14: missed: statement clobbers memory: ret_17 = coo_from_file (input_15, coo2_13);
+tests/test_write_and_load.c:36:9: missed: statement clobbers memory: _1 = coo_compare (coo_6, coo2_13);
+tests/test_write_and_load.c:41:5: missed: statement clobbers memory: coo_free (coo_6);
+tests/test_write_and_load.c:42:5: missed: statement clobbers memory: coo_free (coo2_13);
+tests/test_write_and_load.c:43:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_write_and_load.c:37:9: missed: statement clobbers memory: __builtin_puts (&"error comparing the two matrices"[0]);
+tests/test_write_and_load.c:32:9: missed: statement clobbers memory: printf ("error loading from file %d\n", ret_17);
+tests/test_write_and_load.c:19:9: missed: statement clobbers memory: printf ("error writing to file %d\n", ret_11);
+tests/test_write_and_load.c:13:9: missed: statement clobbers memory: __builtin_puts (&"Error opening file"[0]);
+tests/baseline.c:35:5: missed: couldn't vectorize loop
+tests/baseline.c:35:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline.c:32:30: missed: couldn't vectorize loop
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:25:16: missed: statement clobbers memory: coo_32 = coo_new ();
+tests/baseline.c:26:5: missed: statement clobbers memory: coo_generate_random (coo_32, 4096000, 4096000, 20000000);
+tests/baseline.c:27:16: missed: statement clobbers memory: csr_35 = csr_new ();
+tests/baseline.c:28:5: missed: statement clobbers memory: coo_to_csr (coo_32, csr_35);
+tests/baseline.c:30:33: missed: statement clobbers memory: rand_vec_38 = malloc (16384000);
+tests/baseline.c:31:29: missed: statement clobbers memory: output_40 = malloc (16384000);
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:35:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline.c:36:5: missed: statement clobbers memory: spmv_csr_openmp (*csr_35, 4096000, rand_vec_38, output_40);
+tests/baseline.c:37:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline.c:38:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u reps of %lu\n", _22, 100, _21);
+tests/baseline.c:41:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _24);
+tests/baseline.c:44:5: missed: statement clobbers memory: coo_free (coo_32);
+tests/baseline.c:45:5: missed: statement clobbers memory: csr_free (csr_35);
+tests/baseline.c:46:5: missed: statement clobbers memory: free (rand_vec_38);
+tests/baseline.c:47:5: missed: statement clobbers memory: free (output_40);
+tests/baseline.c:48:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/baseline.c:35:5: missed: couldn't vectorize loop
+tests/baseline.c:35:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline.c:32:30: missed: couldn't vectorize loop
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:25:16: missed: statement clobbers memory: coo_32 = coo_new ();
+tests/baseline.c:26:5: missed: statement clobbers memory: coo_generate_random (coo_32, 4096000, 4096000, 20000000);
+tests/baseline.c:27:16: missed: statement clobbers memory: csr_35 = csr_new ();
+tests/baseline.c:28:5: missed: statement clobbers memory: coo_to_csr (coo_32, csr_35);
+tests/baseline.c:30:33: missed: statement clobbers memory: rand_vec_38 = malloc (16384000);
+tests/baseline.c:31:29: missed: statement clobbers memory: output_40 = malloc (16384000);
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:35:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline.c:36:5: missed: statement clobbers memory: spmv_csr_openmp (*csr_35, 4096000, rand_vec_38, output_40);
+tests/baseline.c:37:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline.c:38:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u (avaraged on reps %lu)\n", _22, 100, _21);
+tests/baseline.c:41:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _24);
+tests/baseline.c:44:5: missed: statement clobbers memory: coo_free (coo_32);
+tests/baseline.c:45:5: missed: statement clobbers memory: csr_free (csr_35);
+tests/baseline.c:46:5: missed: statement clobbers memory: free (rand_vec_38);
+tests/baseline.c:47:5: missed: statement clobbers memory: free (output_40);
+tests/baseline.c:48:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/baseline.c:35:5: missed: couldn't vectorize loop
+tests/baseline.c:35:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline.c:32:30: missed: couldn't vectorize loop
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:25:16: missed: statement clobbers memory: coo_32 = coo_new ();
+tests/baseline.c:26:5: missed: statement clobbers memory: coo_generate_random (coo_32, 4096000, 4096000, 200000000);
+tests/baseline.c:27:16: missed: statement clobbers memory: csr_35 = csr_new ();
+tests/baseline.c:28:5: missed: statement clobbers memory: coo_to_csr (coo_32, csr_35);
+tests/baseline.c:30:33: missed: statement clobbers memory: rand_vec_38 = malloc (16384000);
+tests/baseline.c:31:29: missed: statement clobbers memory: output_40 = malloc (16384000);
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:35:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline.c:36:5: missed: statement clobbers memory: spmv_csr_openmp (*csr_35, 4096000, rand_vec_38, output_40);
+tests/baseline.c:37:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline.c:38:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u (avaraged on reps %lu)\n", _22, 100, _21);
+tests/baseline.c:41:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _24);
+tests/baseline.c:44:5: missed: statement clobbers memory: coo_free (coo_32);
+tests/baseline.c:45:5: missed: statement clobbers memory: csr_free (csr_35);
+tests/baseline.c:46:5: missed: statement clobbers memory: free (rand_vec_38);
+tests/baseline.c:47:5: missed: statement clobbers memory: free (output_40);
+tests/baseline.c:48:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/baseline.c:35:5: missed: couldn't vectorize loop
+tests/baseline.c:35:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline.c:32:30: missed: couldn't vectorize loop
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:25:16: missed: statement clobbers memory: coo_32 = coo_new ();
+tests/baseline.c:26:5: missed: statement clobbers memory: coo_generate_random (coo_32, 4194304, 4194304, 20000000);
+tests/baseline.c:27:16: missed: statement clobbers memory: csr_35 = csr_new ();
+tests/baseline.c:28:5: missed: statement clobbers memory: coo_to_csr (coo_32, csr_35);
+tests/baseline.c:30:33: missed: statement clobbers memory: rand_vec_38 = malloc (16777216);
+tests/baseline.c:31:29: missed: statement clobbers memory: output_40 = malloc (16777216);
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:35:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline.c:36:5: missed: statement clobbers memory: spmv_csr_openmp (*csr_35, 4194304, rand_vec_38, output_40);
+tests/baseline.c:37:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline.c:38:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u (avaraged on reps %lu)\n", _22, 100, _21);
+tests/baseline.c:41:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _24);
+tests/baseline.c:44:5: missed: statement clobbers memory: coo_free (coo_32);
+tests/baseline.c:45:5: missed: statement clobbers memory: csr_free (csr_35);
+tests/baseline.c:46:5: missed: statement clobbers memory: free (rand_vec_38);
+tests/baseline.c:47:5: missed: statement clobbers memory: free (output_40);
+tests/baseline.c:48:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/baseline-ss.c:48:5: missed: couldn't vectorize loop
+tests/baseline-ss.c:48:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline-ss.c:44:30: missed: couldn't vectorize loop
+tests/baseline-ss.c:45:30: missed: statement clobbers memory: _11 = rand ();
+tests/baseline-ss.c:32:31: missed: couldn't vectorize loop
+tests/baseline-ss.c:32:31: missed: not vectorized: number of iterations cannot be computed.
+tests/baseline-ss.c:26:16: missed: statement clobbers memory: coo_41 = coo_new ();
+tests/baseline-ss.c:27:5: missed: statement clobbers memory: coo_generate_random (coo_41, 4194304, 4194304, 20000000);
+tests/baseline-ss.c:31:13: missed: statement clobbers memory: A_44 = cs_di_spalloc (4194304, 4194304, 20000000, 1, 0);
+tests/baseline-ss.c:33:9: missed: statement clobbers memory: cs_di_entry (A_44, _9, _7, _5);
+tests/baseline-ss.c:37:13: missed: statement clobbers memory: C_46 = cs_di_compress (A_44);
+tests/baseline-ss.c:38:5: missed: statement clobbers memory: cs_di_spfree (A_44);
+tests/baseline-ss.c:42:35: missed: statement clobbers memory: rand_vec_49 = malloc (33554432);
+tests/baseline-ss.c:43:31: missed: statement clobbers memory: output_51 = malloc (33554432);
+tests/baseline-ss.c:45:30: missed: statement clobbers memory: _11 = rand ();
+tests/baseline-ss.c:48:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline-ss.c:49:5: missed: statement clobbers memory: cs_di_gaxpy (C_46, rand_vec_49, output_51);
+tests/baseline-ss.c:50:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline-ss.c:51:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u reps of %d\n", _29, 10, 20000000);
+tests/baseline-ss.c:54:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _31);
+tests/baseline-ss.c:57:5: missed: statement clobbers memory: coo_free (coo_41);
+tests/baseline-ss.c:59:5: missed: statement clobbers memory: free (rand_vec_49);
+tests/baseline-ss.c:60:5: missed: statement clobbers memory: free (output_51);
+tests/baseline-ss.c:61:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/baseline.c:35:5: missed: couldn't vectorize loop
+tests/baseline.c:35:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline.c:32:30: missed: couldn't vectorize loop
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:25:16: missed: statement clobbers memory: coo_32 = coo_new ();
+tests/baseline.c:26:5: missed: statement clobbers memory: coo_generate_random (coo_32, 65536, 65536, 20000000);
+tests/baseline.c:27:16: missed: statement clobbers memory: csr_35 = csr_new ();
+tests/baseline.c:28:5: missed: statement clobbers memory: coo_to_csr (coo_32, csr_35);
+tests/baseline.c:30:33: missed: statement clobbers memory: rand_vec_38 = malloc (262144);
+tests/baseline.c:31:29: missed: statement clobbers memory: output_40 = malloc (262144);
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:35:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline.c:36:5: missed: statement clobbers memory: spmv_csr_openmp (*csr_35, 65536, rand_vec_38, output_40);
+tests/baseline.c:37:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline.c:38:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u (avaraged on reps %lu)\n", _22, 100, _21);
+tests/baseline.c:41:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _24);
+tests/baseline.c:44:5: missed: statement clobbers memory: coo_free (coo_32);
+tests/baseline.c:45:5: missed: statement clobbers memory: csr_free (csr_35);
+tests/baseline.c:46:5: missed: statement clobbers memory: free (rand_vec_38);
+tests/baseline.c:47:5: missed: statement clobbers memory: free (output_40);
+tests/baseline.c:48:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/baseline-ss.c:48:5: missed: couldn't vectorize loop
+tests/baseline-ss.c:48:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline-ss.c:44:30: missed: couldn't vectorize loop
+tests/baseline-ss.c:45:30: missed: statement clobbers memory: _11 = rand ();
+tests/baseline-ss.c:32:31: missed: couldn't vectorize loop
+tests/baseline-ss.c:32:31: missed: not vectorized: number of iterations cannot be computed.
+tests/baseline-ss.c:26:16: missed: statement clobbers memory: coo_45 = coo_new ();
+tests/baseline-ss.c:27:5: missed: statement clobbers memory: coo_generate_random (coo_45, 4194304, 4194304, 20000000);
+tests/baseline-ss.c:31:13: missed: statement clobbers memory: A_48 = cs_di_spalloc (4194304, 4194304, 20000000, 1, 0);
+tests/baseline-ss.c:33:9: missed: statement clobbers memory: cs_di_entry (A_48, _9, _7, _5);
+tests/baseline-ss.c:37:13: missed: statement clobbers memory: C_50 = cs_di_compress (A_48);
+tests/baseline-ss.c:38:5: missed: statement clobbers memory: cs_di_spfree (A_48);
+tests/baseline-ss.c:42:35: missed: statement clobbers memory: rand_vec_53 = malloc (33554432);
+tests/baseline-ss.c:43:31: missed: statement clobbers memory: output_55 = malloc (369098752);
+tests/baseline-ss.c:45:30: missed: statement clobbers memory: _11 = rand ();
+tests/baseline-ss.c:48:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline-ss.c:49:5: missed: statement clobbers memory: cs_di_gaxpy (C_50, rand_vec_53, _21);
+tests/baseline-ss.c:50:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline-ss.c:51:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u reps of %d\n", _33, 10, 20000000);
+tests/baseline-ss.c:54:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _35);
+tests/baseline-ss.c:57:5: missed: statement clobbers memory: coo_free (coo_45);
+tests/baseline-ss.c:59:5: missed: statement clobbers memory: free (rand_vec_53);
+tests/baseline-ss.c:60:5: missed: statement clobbers memory: free (output_55);
+tests/baseline-ss.c:61:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/baseline.c:35:5: missed: couldn't vectorize loop
+tests/baseline.c:35:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline.c:32:30: missed: couldn't vectorize loop
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:25:16: missed: statement clobbers memory: coo_32 = coo_new ();
+tests/baseline.c:26:5: missed: statement clobbers memory: coo_generate_random (coo_32, 65536, 65536, 20000000);
+tests/baseline.c:27:16: missed: statement clobbers memory: csr_35 = csr_new ();
+tests/baseline.c:28:5: missed: statement clobbers memory: coo_to_csr (coo_32, csr_35);
+tests/baseline.c:30:33: missed: statement clobbers memory: rand_vec_38 = malloc (262144);
+tests/baseline.c:31:29: missed: statement clobbers memory: output_40 = malloc (262144);
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:35:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline.c:36:5: missed: statement clobbers memory: spmv_csr_openmp (*csr_35, 65536, rand_vec_38, output_40);
+tests/baseline.c:37:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline.c:38:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u (avaraged on reps %lu)\n", _22, 100, _21);
+tests/baseline.c:41:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _24);
+tests/baseline.c:44:5: missed: statement clobbers memory: coo_free (coo_32);
+tests/baseline.c:45:5: missed: statement clobbers memory: csr_free (csr_35);
+tests/baseline.c:46:5: missed: statement clobbers memory: free (rand_vec_38);
+tests/baseline.c:47:5: missed: statement clobbers memory: free (output_40);
+tests/baseline.c:48:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/baseline.c:39:33: missed: couldn't vectorize loop
+tests/baseline.c:39:33: missed: not vectorized: unsupported outerloop form.
+tests/baseline.c:40:35: missed: couldn't vectorize loop
+tests/baseline.c:41:22: missed: not vectorized: no vectype for stmt: _30 = *_29;
+ scalar_type: float
+tests/baseline.c:35:5: missed: couldn't vectorize loop
+tests/baseline.c:35:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline.c:32:30: missed: couldn't vectorize loop
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:25:16: missed: statement clobbers memory: coo_50 = coo_new ();
+tests/baseline.c:26:5: missed: statement clobbers memory: coo_generate_random (coo_50, 65536, 65536, 20000000);
+tests/baseline.c:27:16: missed: statement clobbers memory: csr_53 = csr_new ();
+tests/baseline.c:28:5: missed: statement clobbers memory: coo_to_csr (coo_50, csr_53);
+tests/baseline.c:30:33: missed: statement clobbers memory: rand_vec_56 = malloc (262144);
+tests/baseline.c:31:29: missed: statement clobbers memory: output_58 = malloc (26476544);
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:35:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline.c:36:5: missed: statement clobbers memory: spmv_csr_openmp (*csr_53, 65536, rand_vec_56, _13);
+tests/baseline.c:37:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline.c:38:5: missed: statement clobbers memory: spmv_csr (*csr_53, 65536, rand_vec_56, _25);
+tests/baseline.c:48:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u (avaraged on reps %lu)\n", _36, 100, _35);
+tests/baseline.c:51:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _38);
+tests/baseline.c:54:5: missed: statement clobbers memory: coo_free (coo_50);
+tests/baseline.c:55:5: missed: statement clobbers memory: csr_free (csr_53);
+tests/baseline.c:56:5: missed: statement clobbers memory: free (rand_vec_56);
+tests/baseline.c:57:5: missed: statement clobbers memory: free (output_58);
+tests/baseline.c:58:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/baseline.c:42:17: missed: statement clobbers memory: __builtin_puts (&"Error in the output"[0]);
+tests/baseline.c:39:33: missed: couldn't vectorize loop
+tests/baseline.c:39:33: missed: not vectorized: unsupported outerloop form.
+tests/baseline.c:40:35: missed: couldn't vectorize loop
+tests/baseline.c:41:22: missed: statement clobbers memory: .ASAN_CHECK (6, _29, 4, 4);
+tests/baseline.c:35:5: missed: couldn't vectorize loop
+tests/baseline.c:35:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline.c:32:30: missed: couldn't vectorize loop
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:25:16: missed: statement clobbers memory: coo_50 = coo_new ();
+tests/baseline.c:26:5: missed: statement clobbers memory: coo_generate_random (coo_50, 65536, 65536, 20000000);
+tests/baseline.c:27:16: missed: statement clobbers memory: csr_53 = csr_new ();
+tests/baseline.c:28:5: missed: statement clobbers memory: coo_to_csr (coo_50, csr_53);
+tests/baseline.c:30:33: missed: statement clobbers memory: rand_vec_56 = malloc (262144);
+tests/baseline.c:31:29: missed: statement clobbers memory: output_58 = malloc (26476544);
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:33:20: missed: statement clobbers memory: .ASAN_CHECK (7, _8, 4, 4);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_MARK (UNPOISON, &temp_1, 16);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_CHECK (7, &temp_1.tv_sec, 8, 16);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_CHECK (7, &temp_1.tv_usec, 8, 8);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_MARK (UNPOISON, &temp_2, 16);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_CHECK (7, &temp_2.tv_sec, 8, 16);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_CHECK (7, &temp_2.tv_usec, 8, 8);
+tests/baseline.c:35:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline.c:36:5: missed: statement clobbers memory: .ASAN_CHECK (4, csr_53, 48, 8);
+tests/baseline.c:36:5: missed: statement clobbers memory: spmv_csr_openmp (*csr_53, 65536, rand_vec_56, _13);
+tests/baseline.c:37:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline.c:37:5: missed: statement clobbers memory: .ASAN_CHECK (6, &temp_2.tv_sec, 8, 16);
+tests/baseline.c:37:5: missed: statement clobbers memory: .ASAN_CHECK (6, &temp_1.tv_sec, 8, 16);
+tests/baseline.c:37:5: missed: statement clobbers memory: .ASAN_CHECK (6, &temp_2.tv_usec, 8, 8);
+tests/baseline.c:37:5: missed: statement clobbers memory: .ASAN_CHECK (6, &temp_1.tv_usec, 8, 8);
+tests/baseline.c:38:5: missed: statement clobbers memory: .ASAN_CHECK (4, csr_53, 48, 8);
+tests/baseline.c:38:5: missed: statement clobbers memory: spmv_csr (*csr_53, 65536, rand_vec_56, _25);
+tests/baseline.c:41:42: missed: statement clobbers memory: .ASAN_CHECK (6, _33, 4, 4);
+tests/baseline.c:41:22: missed: statement clobbers memory: .ASAN_CHECK (6, _29, 4, 4);
+tests/baseline.c:48:5: missed: statement clobbers memory: .ASAN_CHECK (6, _102, 8, 8);
+tests/baseline.c:48:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u (avaraged on reps %lu)\n", _36, 100, _35);
+tests/baseline.c:51:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _38);
+tests/baseline.c:54:5: missed: statement clobbers memory: coo_free (coo_50);
+tests/baseline.c:55:5: missed: statement clobbers memory: csr_free (csr_53);
+tests/baseline.c:56:5: missed: statement clobbers memory: free (rand_vec_56);
+tests/baseline.c:57:5: missed: statement clobbers memory: free (output_58);
+tests/baseline.c:58:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/baseline.c:42:17: missed: statement clobbers memory: __builtin_puts (&"Error in the output"[0]);
+tests/baseline.c:24:5: missed: statement clobbers memory: .ASAN_MARK (POISON, &temp_1, 16);
+tests/baseline.c:24:5: missed: statement clobbers memory: .ASAN_MARK (POISON, &temp_2, 16);
+tests/baseline.c:61:1: missed: statement clobbers memory: __builtin___asan_unregister_globals (&*.LASAN0, 4);
+tests/baseline.c:61:1: missed: statement clobbers memory: __builtin___asan_init ();
+tests/baseline.c:61:1: missed: statement clobbers memory: __builtin___asan_version_mismatch_check_v8 ();
+tests/baseline.c:61:1: missed: statement clobbers memory: __builtin___asan_register_globals (&*.LASAN0, 4);
+src/lib.c:140:13: missed: statement clobbers memory: .ASAN_CHECK (6, _15, 8, 8);
+src/lib.c:140:28: missed: statement clobbers memory: .ASAN_CHECK (6, _16, 8, 8);
+src/lib.c:143:23: missed: statement clobbers memory: .ASAN_CHECK (6, _17, 8, 8);
+src/lib.c:143:42: missed: statement clobbers memory: .ASAN_CHECK (6, _18, 8, 8);
+src/lib.c:309:12: missed: couldn't vectorize loop
+src/lib.c:309:12: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:310:11: missed: couldn't vectorize loop
+src/lib.c:310:35: missed: statement clobbers memory: .ASAN_CHECK (6, _37, 4, 4);
+src/lib.c:306:36: missed: statement clobbers memory: .ASAN_CHECK (6, _53, 8, 8);
+src/lib.c:306:36: missed: statement clobbers memory: .ASAN_CHECK (6, _6, 8, 8);
+src/lib.c:305:11: missed: statement clobbers memory: .ASAN_CHECK (6, _113, 8, 8);
+src/lib.c:305:11: missed: statement clobbers memory: .ASAN_CHECK (6, _112, 8, 8);
+src/lib.c:309:33: missed: statement clobbers memory: .ASAN_CHECK (6, _111, 8, 8);
+src/lib.c:310:31: missed: statement clobbers memory: .ASAN_CHECK (6, _110, 8, 8);
+src/lib.c:310:53: missed: statement clobbers memory: .ASAN_CHECK (6, _109, 8, 8);
+src/lib.c:309:41: missed: statement clobbers memory: .ASAN_CHECK (6, _26, 8, 8);
+src/lib.c:309:61: missed: statement clobbers memory: .ASAN_CHECK (6, _30, 8, 8);
+src/lib.c:310:21: missed: statement clobbers memory: .ASAN_CHECK (6, _33, 4, 4);
+src/lib.c:310:35: missed: statement clobbers memory: .ASAN_CHECK (6, _37, 4, 4);
+src/lib.c:310:61: missed: statement clobbers memory: .ASAN_CHECK (6, _41, 8, 8);
+src/lib.c:310:49: missed: statement clobbers memory: .ASAN_CHECK (6, _44, 4, 4);
+src/lib.c:310:25: missed: statement clobbers memory: .ASAN_CHECK (7, _33, 4, 4);
+src/lib.c:37:31: missed: couldn't vectorize loop
+src/lib.c:37:31: missed: not vectorized: loop nest containing two or more consecutive inner loops cannot be vectorized
+src/lib.c:50:5: missed: couldn't vectorize loop
+src/lib.c:50:5: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:50:5: missed: couldn't vectorize loop
+src/lib.c:50:5: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:42:5: missed: couldn't vectorize loop
+src/lib.c:42:5: missed: not vectorized: could not determine main exit from loop with multiple exits.
+src/lib.c:32:34: missed: statement clobbers memory: tmp_set_201 = malloc (_2);
+src/lib.c:33:13: missed: statement clobbers memory: .ASAN_CHECK (7, _364, 8, 8);
+src/lib.c:34:13: missed: statement clobbers memory: .ASAN_CHECK (7, _382, 8, 8);
+src/lib.c:59:38: missed: statement clobbers memory: .ASAN_CHECK (6, _466, 8, 8);
+src/lib.c:59:27: missed: statement clobbers memory: _356 = realloc (_355, _213);
+src/lib.c:59:13: missed: statement clobbers memory: .ASAN_CHECK (7, _461, 8, 8);
+src/lib.c:60:12: missed: statement clobbers memory: .ASAN_CHECK (7, _460, 8, 8);
+src/lib.c:38:39: missed: statement clobbers memory: _3 = rand ();
+src/lib.c:38:8: missed: statement clobbers memory: .ASAN_CHECK (6, _459, 8, 8);
+src/lib.c:38:22: missed: statement clobbers memory: .ASAN_CHECK (7, _458, 8, 8);
+src/lib.c:39:39: missed: statement clobbers memory: _9 = rand ();
+src/lib.c:39:8: missed: statement clobbers memory: .ASAN_CHECK (6, _457, 8, 8);
+src/lib.c:39:22: missed: statement clobbers memory: .ASAN_CHECK (7, _456, 8, 8);
+src/lib.c:40:14: missed: statement clobbers memory: .ASAN_MARK (UNPOISON, &key, 8);
+src/lib.c:40:20: missed: statement clobbers memory: .ASAN_CHECK (6, _455, 8, 8);
+src/lib.c:40:20: missed: statement clobbers memory: .ASAN_CHECK (6, _454, 8, 8);
+src/lib.c:40:14: missed: statement clobbers memory: .ASAN_CHECK (7, &key, 8, 8);
+src/lib.c:42:5: missed: statement clobbers memory: .ASAN_CHECK (6, _452, 8, 8);
+src/lib.c:42:5: missed: statement clobbers memory: .ASAN_CHECK (6, _451, 4, 8);
+src/lib.c:42:5: missed: statement clobbers memory: .ASAN_CHECK (6, _450, 8, 8);
+src/lib.c:42:5: missed: statement clobbers memory: .ASAN_CHECK (6, _449, 8, 8);
+src/lib.c:42:5: missed: statement clobbers memory: .ASAN_CHECK (6, _448, 8, 8);
+src/lib.c:42:5: missed: statement clobbers memory: .ASAN_CHECK (6, _447, 4, 4);
+src/lib.c:42:5: missed: statement clobbers memory: .ASAN_CHECK (6, _418, 4, 8);
+src/lib.c:42:5: missed: statement clobbers memory: .ASAN_CHECK (6, _417, 8, 8);
+src/lib.c:42:5: missed: statement clobbers memory: _54 = memcmp (_53, &key, 8);
+src/lib.c:42:5: missed: statement clobbers memory: .ASAN_CHECK (6, _416, 8, 8);
+src/lib.c:48:20: missed: statement clobbers memory: .ASAN_CHECK (7, _415, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _414, 4, 4);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _413, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _412, 4, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _389, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _388, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _387, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _386, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _385, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _384, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _381, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _379, 4, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _378, 4, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _377, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _411, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _410, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: _94 = malloc (64);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _409, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: memset (_354, 0, 48);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _408, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _393, 4, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _392, 4, 4);
+src/lib.c:50:5: missed: statement clobbers memory: _96 = malloc (512);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _391, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _390, 4, 8);
+src/lib.c:50:5: missed: statement clobbers memory: memset (_96, 0, 512);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _376, 4, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _375, 4, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _374, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _373, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _372, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _370, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _262, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _261, 4, 4);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _260, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _259, 4, 4);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _258, 4, 8);
+src/lib.c:50:5: missed: statement clobbers memory: _he_new_buckets_320 = malloc (_126);
+src/lib.c:50:5: missed: statement clobbers memory: memset (_he_new_buckets_320, 0, _126);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _256, 4, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _255, 4, 4);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _254, 4, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _251, 4, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _223, 4, 4);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _222, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _190, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _184, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _183, 4, 4);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _182, 4, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _176, 4, 4);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _58, 4, 4);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _57, 4, 4);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _56, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _50, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _49, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _48, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _343, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: free (pretmp_467);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _221, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _220, 4, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _219, 4, 4);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _217, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _216, 4, 4);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _215, 4, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _309, 4, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, _442, 4, 8);
+src/lib.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (7, _438, 4, 4);
+src/lib.c:51:32: missed: statement clobbers memory: _161 = rand ();
+src/lib.c:51:8: missed: statement clobbers memory: .ASAN_CHECK (6, _419, 8, 8);
+src/lib.c:51:22: missed: statement clobbers memory: .ASAN_CHECK (7, _421, 4, 8);
+src/lib.c:25:6: missed: statement clobbers memory: .ASAN_MARK (POISON, &key, 8);
+src/lib.c:46:7: missed: statement clobbers memory: .ASAN_MARK (POISON, &key, 8);
+src/lib.c:37:36: missed: statement clobbers memory: .ASAN_CHECK (6, _423, 8, 8);
+src/lib.c:50:5: missed: statement clobbers memory: __builtin___asan_handle_no_return ();
+src/lib.c:50:5: missed: statement clobbers memory: exit (-1);
+src/lib.c:53:3: missed: statement clobbers memory: .ASAN_CHECK (6, _425, 8, 8);
+src/lib.c:53:3: missed: statement clobbers memory: .ASAN_CHECK (6, _427, 8, 8);
+src/lib.c:53:3: missed: statement clobbers memory: free (_170);
+src/lib.c:53:3: missed: statement clobbers memory: .ASAN_CHECK (6, _429, 8, 8);
+src/lib.c:53:3: missed: statement clobbers memory: free (_171);
+src/lib.c:54:3: missed: statement clobbers memory: free (tmp_set_201);
+src/lib.c:28:5: missed: statement clobbers memory: __builtin_puts (&"Error: nnz cannot be greater than rows * cols"[0]);
+src/lib.c:29:5: missed: statement clobbers memory: __builtin___asan_handle_no_return ();
+src/lib.c:29:5: missed: statement clobbers memory: exit (1);
+src/lib.c:59:38: missed: statement clobbers memory: .ASAN_CHECK (6, _10, 8, 8);
+src/lib.c:59:27: missed: statement clobbers memory: _3 = realloc (_2, _1);
+src/lib.c:59:13: missed: statement clobbers memory: .ASAN_CHECK (7, _11, 8, 8);
+src/lib.c:60:12: missed: statement clobbers memory: .ASAN_CHECK (7, _12, 8, 8);
+src/lib.c:64:12: missed: statement clobbers memory: .ASAN_CHECK (7, _23, 8, 8);
+src/lib.c:65:13: missed: statement clobbers memory: .ASAN_CHECK (7, _24, 8, 8);
+src/lib.c:68:10: missed: statement clobbers memory: .ASAN_CHECK (6, _25, 8, 8);
+src/lib.c:67:35: missed: statement clobbers memory: _4 = realloc (_3, _2);
+src/lib.c:67:16: missed: statement clobbers memory: .ASAN_CHECK (7, _26, 8, 8);
+src/lib.c:70:35: missed: statement clobbers memory: .ASAN_CHECK (6, _27, 8, 8);
+src/lib.c:70:24: missed: statement clobbers memory: _7 = realloc (_6, _5);
+src/lib.c:69:16: missed: statement clobbers memory: .ASAN_CHECK (7, _28, 8, 8);
+src/lib.c:71:34: missed: statement clobbers memory: .ASAN_CHECK (6, _29, 8, 8);
+src/lib.c:71:23: missed: statement clobbers memory: _10 = realloc (_9, _8);
+src/lib.c:71:12: missed: statement clobbers memory: .ASAN_CHECK (7, _30, 8, 8);
+src/lib.c:105:31: missed: couldn't vectorize loop
+src/lib.c:105:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:101:31: missed: couldn't vectorize loop
+src/lib.c:102:27: missed: statement clobbers memory: .ASAN_CHECK (6, _32, 8, 8);
+src/lib.c:93:31: missed: couldn't vectorize loop
+src/lib.c:93:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:89:31: missed: couldn't vectorize loop
+src/lib.c:89:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:85:31: missed: couldn't vectorize loop
+src/lib.c:85:31: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:80:18: missed: statement clobbers memory: .ASAN_CHECK (6, _126, 8, 8);
+src/lib.c:80:13: missed: statement clobbers memory: .ASAN_CHECK (7, _168, 8, 8);
+src/lib.c:82:3: missed: statement clobbers memory: .ASAN_CHECK (6, _167, 8, 8);
+src/lib.c:82:3: missed: statement clobbers memory: .ASAN_CHECK (6, _166, 8, 8);
+src/lib.c:64:12: missed: statement clobbers memory: .ASAN_CHECK (7, _165, 8, 8);
+src/lib.c:65:13: missed: statement clobbers memory: .ASAN_CHECK (7, _164, 8, 8);
+src/lib.c:68:10: missed: statement clobbers memory: .ASAN_CHECK (6, _163, 8, 8);
+src/lib.c:67:35: missed: statement clobbers memory: _84 = realloc (_83, _82);
+src/lib.c:67:16: missed: statement clobbers memory: .ASAN_CHECK (7, _158, 8, 8);
+src/lib.c:70:35: missed: statement clobbers memory: .ASAN_CHECK (6, _157, 8, 8);
+src/lib.c:70:24: missed: statement clobbers memory: _87 = realloc (_86, _85);
+src/lib.c:69:16: missed: statement clobbers memory: .ASAN_CHECK (7, _156, 8, 8);
+src/lib.c:71:34: missed: statement clobbers memory: .ASAN_CHECK (6, _155, 8, 8);
+src/lib.c:71:23: missed: statement clobbers memory: _90 = realloc (_89, _88);
+src/lib.c:71:12: missed: statement clobbers memory: .ASAN_CHECK (7, _154, 8, 8);
+src/lib.c:86:8: missed: statement clobbers memory: .ASAN_CHECK (6, _153, 8, 8);
+src/lib.c:86:21: missed: statement clobbers memory: .ASAN_CHECK (7, _6, 8, 8);
+src/lib.c:85:37: missed: statement clobbers memory: .ASAN_CHECK (6, _152, 8, 8);
+src/lib.c:89:36: missed: statement clobbers memory: .ASAN_CHECK (6, _151, 8, 8);
+src/lib.c:90:21: missed: statement clobbers memory: .ASAN_CHECK (6, _150, 8, 8);
+src/lib.c:90:30: missed: statement clobbers memory: .ASAN_CHECK (6, _149, 8, 8);
+src/lib.c:90:17: missed: statement clobbers memory: .ASAN_CHECK (6, _15, 8, 8);
+src/lib.c:89:36: missed: statement clobbers memory: .ASAN_CHECK (6, _148, 8, 8);
+src/lib.c:93:36: missed: statement clobbers memory: .ASAN_CHECK (6, _147, 8, 8);
+src/lib.c:98:24: missed: statement clobbers memory: temp_55 = malloc (0);
+src/lib.c:94:17: missed: statement clobbers memory: .ASAN_CHECK (6, _22, 8, 8);
+src/lib.c:94:40: missed: statement clobbers memory: .ASAN_CHECK (6, _25, 8, 8);
+src/lib.c:93:36: missed: statement clobbers memory: .ASAN_CHECK (6, _146, 8, 8);
+src/lib.c:98:24: missed: statement clobbers memory: temp_67 = malloc (_29);
+src/lib.c:102:27: missed: statement clobbers memory: .ASAN_CHECK (6, _32, 8, 8);
+src/lib.c:102:13: missed: statement clobbers memory: .ASAN_CHECK (7, _33, 8, 8);
+src/lib.c:105:36: missed: statement clobbers memory: .ASAN_CHECK (6, _145, 8, 8);
+src/lib.c:106:28: missed: statement clobbers memory: .ASAN_CHECK (6, _144, 8, 8);
+src/lib.c:108:8: missed: statement clobbers memory: .ASAN_CHECK (6, _143, 8, 8);
+src/lib.c:106:19: missed: statement clobbers memory: .ASAN_CHECK (6, _142, 8, 8);
+src/lib.c:107:29: missed: statement clobbers memory: .ASAN_CHECK (6, _39, 8, 8);
+src/lib.c:108:37: missed: statement clobbers memory: .ASAN_CHECK (6, _141, 8, 8);
+src/lib.c:108:23: missed: statement clobbers memory: .ASAN_CHECK (7, _44, 8, 8);
+src/lib.c:109:33: missed: statement clobbers memory: .ASAN_CHECK (6, _140, 4, 8);
+src/lib.c:109:19: missed: statement clobbers memory: .ASAN_CHECK (7, _48, 4, 4);
+src/lib.c:105:36: missed: statement clobbers memory: .ASAN_CHECK (6, _139, 8, 8);
+src/lib.c:112:3: missed: statement clobbers memory: free (temp_59);
+src/lib.c:124:31: missed: couldn't vectorize loop
+src/lib.c:124:31: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:126:47: missed: couldn't vectorize loop
+src/lib.c:126:47: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:120:18: missed: statement clobbers memory: .ASAN_CHECK (6, _67, 8, 8);
+src/lib.c:120:13: missed: statement clobbers memory: .ASAN_CHECK (7, _66, 8, 8);
+src/lib.c:121:18: missed: statement clobbers memory: .ASAN_CHECK (6, _65, 8, 8);
+src/lib.c:121:13: missed: statement clobbers memory: .ASAN_CHECK (7, _64, 8, 8);
+src/lib.c:122:3: missed: statement clobbers memory: .ASAN_CHECK (6, _63, 8, 8);
+src/lib.c:59:38: missed: statement clobbers memory: .ASAN_CHECK (6, _62, 8, 8);
+src/lib.c:59:27: missed: statement clobbers memory: _38 = realloc (_37, _36);
+src/lib.c:59:13: missed: statement clobbers memory: .ASAN_CHECK (7, _61, 8, 8);
+src/lib.c:60:12: missed: statement clobbers memory: .ASAN_CHECK (7, _60, 8, 8);
+src/lib.c:124:36: missed: statement clobbers memory: .ASAN_CHECK (6, _59, 8, 8);
+src/lib.c:126:31: missed: statement clobbers memory: .ASAN_CHECK (6, _58, 8, 8);
+src/lib.c:126:24: missed: statement clobbers memory: .ASAN_CHECK (6, _6, 8, 8);
+src/lib.c:126:61: missed: statement clobbers memory: .ASAN_CHECK (6, _49, 8, 8);
+src/lib.c:129:29: missed: statement clobbers memory: .ASAN_CHECK (6, _51, 8, 8);
+src/lib.c:130:29: missed: statement clobbers memory: .ASAN_CHECK (6, _46, 8, 8);
+src/lib.c:128:24: missed: statement clobbers memory: .ASAN_CHECK (7, _45, 8, 8);
+src/lib.c:129:38: missed: statement clobbers memory: .ASAN_CHECK (6, _11, 8, 8);
+src/lib.c:129:24: missed: statement clobbers memory: .ASAN_CHECK (7, _43, 8, 8);
+src/lib.c:130:34: missed: statement clobbers memory: .ASAN_CHECK (6, _15, 4, 4);
+src/lib.c:130:24: missed: statement clobbers memory: .ASAN_CHECK (7, _42, 4, 8);
+src/lib.c:126:61: missed: statement clobbers memory: .ASAN_CHECK (6, _49, 8, 8);
+src/lib.c:149:20: missed: statement clobbers memory: .ASAN_CHECK (6, _6, 8, 8);
+src/lib.c:149:12: missed: statement clobbers memory: .ASAN_CHECK (6, _7, 8, 8);
+src/lib.c:149:3: missed: statement clobbers memory: qsort (_2, _1, 24, compare_cooEntry);
+src/lib.c:155:11: missed: statement clobbers memory: .ASAN_CHECK (6, _6, 8, 8);
+src/lib.c:155:3: missed: statement clobbers memory: free (_1);
+src/lib.c:157:3: missed: statement clobbers memory: free (coo_3(D));
+src/lib.c:163:11: missed: statement clobbers memory: .ASAN_CHECK (6, _10, 8, 8);
+src/lib.c:163:3: missed: statement clobbers memory: free (_1);
+src/lib.c:164:11: missed: statement clobbers memory: .ASAN_CHECK (6, _11, 8, 8);
+src/lib.c:164:3: missed: statement clobbers memory: free (_2);
+src/lib.c:165:11: missed: statement clobbers memory: .ASAN_CHECK (6, _12, 8, 8);
+src/lib.c:165:3: missed: statement clobbers memory: free (_3);
+src/lib.c:169:3: missed: statement clobbers memory: free (csr_5(D));
+src/lib.c:174:21: missed: statement clobbers memory: coo_3 = malloc (32);
+src/lib.c:175:13: missed: statement clobbers memory: .ASAN_CHECK (7, _8, 8, 8);
+src/lib.c:176:12: missed: statement clobbers memory: .ASAN_CHECK (7, _9, 8, 8);
+src/lib.c:177:13: missed: statement clobbers memory: .ASAN_CHECK (7, _10, 8, 8);
+src/lib.c:178:13: missed: statement clobbers memory: .ASAN_CHECK (7, _11, 8, 8);
+src/lib.c:184:21: missed: statement clobbers memory: csr_3 = malloc (48);
+src/lib.c:185:16: missed: statement clobbers memory: .ASAN_CHECK (7, _10, 8, 8);
+src/lib.c:186:16: missed: statement clobbers memory: .ASAN_CHECK (7, _11, 8, 8);
+src/lib.c:187:12: missed: statement clobbers memory: .ASAN_CHECK (7, _12, 8, 8);
+src/lib.c:188:12: missed: statement clobbers memory: .ASAN_CHECK (7, _13, 8, 8);
+src/lib.c:189:13: missed: statement clobbers memory: .ASAN_CHECK (7, _14, 8, 8);
+src/lib.c:190:13: missed: statement clobbers memory: .ASAN_CHECK (7, _15, 8, 8);
+src/lib.c:226:30: missed: couldn't vectorize loop
+src/lib.c:226:30: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:195:15: missed: statement clobbers memory: .ASAN_MARK (UNPOISON, &matcode, 4);
+src/lib.c:197:7: missed: statement clobbers memory: _1 = mm_read_banner (input_32(D), &matcode);
+src/lib.c:205:8: missed: statement clobbers memory: .ASAN_CHECK (6, &matcode[0], 1, 8);
+src/lib.c:205:34: missed: statement clobbers memory: .ASAN_CHECK (6, &matcode[1], 1, 1);
+src/lib.c:212:7: missed: statement clobbers memory: .ASAN_MARK (UNPOISON, &M, 4);
+src/lib.c:212:10: missed: statement clobbers memory: .ASAN_MARK (UNPOISON, &N, 4);
+src/lib.c:212:13: missed: statement clobbers memory: .ASAN_MARK (UNPOISON, &nnz, 4);
+src/lib.c:213:7: missed: statement clobbers memory: _5 = mm_read_mtx_crd_size (input_32(D), &M, &N, &nnz);
+src/lib.c:215:13: missed: statement clobbers memory: .ASAN_CHECK (6, &M, 4, 8);
+src/lib.c:215:13: missed: statement clobbers memory: .ASAN_CHECK (7, _28, 8, 8);
+src/lib.c:216:13: missed: statement clobbers memory: .ASAN_CHECK (6, &N, 4, 8);
+src/lib.c:216:13: missed: statement clobbers memory: .ASAN_CHECK (7, _66, 8, 8);
+src/lib.c:217:12: missed: statement clobbers memory: .ASAN_CHECK (6, &nnz, 4, 8);
+src/lib.c:217:12: missed: statement clobbers memory: .ASAN_CHECK (7, _73, 8, 8);
+src/lib.c:59:38: missed: statement clobbers memory: .ASAN_CHECK (6, _74, 8, 8);
+src/lib.c:59:27: missed: statement clobbers memory: _60 = realloc (_59, _58);
+src/lib.c:59:13: missed: statement clobbers memory: .ASAN_CHECK (7, _75, 8, 8);
+src/lib.c:60:12: missed: statement clobbers memory: .ASAN_CHECK (7, _76, 8, 8);
+src/lib.c:227:5: missed: statement clobbers memory: fscanf (input_32(D), "%lu %lu %f\n", _17, _16, _15);
+src/lib.c:229:8: missed: statement clobbers memory: .ASAN_CHECK (6, _78, 8, 8);
+src/lib.c:229:17: missed: statement clobbers memory: .ASAN_CHECK (6, _79, 8, 8);
+src/lib.c:230:17: missed: statement clobbers memory: .ASAN_CHECK (6, _80, 8, 8);
+src/lib.c:226:35: missed: statement clobbers memory: .ASAN_CHECK (6, _81, 8, 8);
+src/lib.c:233:13: missed: statement clobbers memory: .ASAN_CHECK (6, &stdin, 8, 8);
+src/lib.c:234:5: missed: statement clobbers memory: fclose (input_32(D));
+src/lib.c:194:5: missed: statement clobbers memory: .ASAN_MARK (POISON, &matcode, 4);
+src/lib.c:194:5: missed: statement clobbers memory: .ASAN_MARK (POISON, &M, 4);
+src/lib.c:194:5: missed: statement clobbers memory: .ASAN_MARK (POISON, &N, 4);
+src/lib.c:194:5: missed: statement clobbers memory: .ASAN_MARK (POISON, &nnz, 4);
+src/lib.c:214:5: missed: statement clobbers memory: __builtin___asan_handle_no_return ();
+src/lib.c:214:5: missed: statement clobbers memory: exit (1);
+src/lib.c:206:5: missed: statement clobbers memory: printf ("Sorry, this application does not support ");
+src/lib.c:207:5: missed: statement clobbers memory: _4 = mm_typecode_to_str (&matcode);
+src/lib.c:207:5: missed: statement clobbers memory: printf ("Market Market type: [%s]\n", _4);
+src/lib.c:208:5: missed: statement clobbers memory: __builtin___asan_handle_no_return ();
+src/lib.c:208:5: missed: statement clobbers memory: exit (1);
+src/lib.c:198:5: missed: statement clobbers memory: __builtin_puts (&"Could not process Matrix Market banner."[0]);
+src/lib.c:199:5: missed: statement clobbers memory: __builtin___asan_handle_no_return ();
+src/lib.c:199:5: missed: statement clobbers memory: exit (1);
+src/lib.c:253:17: missed: couldn't vectorize loop
+src/lib.c:253:17: missed: not vectorized: number of iterations cannot be computed.
+src/lib.c:239:15: missed: statement clobbers memory: .ASAN_MARK (UNPOISON, &matcode, 4);
+src/lib.c:242:3: missed: statement clobbers memory: .ASAN_CHECK (7, &matcode[3], 1, 1);
+src/lib.c:243:3: missed: statement clobbers memory: .ASAN_CHECK (7, &matcode[0], 1, 8);
+src/lib.c:244:3: missed: statement clobbers memory: .ASAN_CHECK (7, &matcode[1], 1, 1);
+src/lib.c:245:3: missed: statement clobbers memory: .ASAN_CHECK (7, &matcode[2], 1, 2);
+src/lib.c:247:3: missed: statement clobbers memory: mm_write_banner (output_25(D), &matcode);
+src/lib.c:248:58: missed: statement clobbers memory: .ASAN_CHECK (6, _41, 8, 8);
+src/lib.c:248:47: missed: statement clobbers memory: .ASAN_CHECK (6, _40, 8, 8);
+src/lib.c:248:36: missed: statement clobbers memory: .ASAN_CHECK (6, _39, 8, 8);
+src/lib.c:248:3: missed: statement clobbers memory: mm_write_mtx_crd_size (output_25(D), _6, _4, _2);
+src/lib.c:253:22: missed: statement clobbers memory: .ASAN_CHECK (6, _34, 8, 8);
+src/lib.c:255:38: missed: statement clobbers memory: .ASAN_CHECK (6, _33, 8, 8);
+src/lib.c:255:47: missed: statement clobbers memory: .ASAN_CHECK (6, _18, 4, 8);
+src/lib.c:255:25: missed: statement clobbers memory: .ASAN_CHECK (6, _17, 8, 8);
+src/lib.c:254:53: missed: statement clobbers memory: .ASAN_CHECK (6, _47, 8, 8);
+src/lib.c:254:5: missed: statement clobbers memory: fprintf (output_25(D), "%ld %ld %10.3f\n", _15, _13, _11);
+src/lib.c:253:22: missed: statement clobbers memory: .ASAN_CHECK (6, _48, 8, 8);
+src/lib.c:256:3: missed: statement clobbers memory: fclose (output_25(D));
+src/lib.c:238:5: missed: statement clobbers memory: .ASAN_MARK (POISON, &matcode, 4);
+src/lib.c:270:31: missed: couldn't vectorize loop
+src/lib.c:271:22: missed: statement clobbers memory: .ASAN_CHECK (6, _26, 8, 8);
+src/lib.c:261:11: missed: statement clobbers memory: .ASAN_CHECK (6, _54, 8, 8);
+src/lib.c:261:24: missed: statement clobbers memory: .ASAN_CHECK (6, _53, 8, 8);
+src/lib.c:261:37: missed: statement clobbers memory: .ASAN_CHECK (6, _36, 8, 8);
+src/lib.c:262:11: missed: statement clobbers memory: .ASAN_CHECK (6, _35, 8, 8);
+src/lib.c:261:51: missed: statement clobbers memory: .ASAN_CHECK (6, _3, 8, 8);
+src/lib.c:262:25: missed: statement clobbers memory: .ASAN_CHECK (6, _68, 8, 8);
+src/lib.c:149:12: missed: statement clobbers memory: .ASAN_CHECK (6, _22, 8, 8);
+src/lib.c:149:3: missed: statement clobbers memory: qsort (_49, _1, 24, compare_cooEntry);
+src/lib.c:149:20: missed: statement clobbers memory: .ASAN_CHECK (6, _58, 8, 8);
+src/lib.c:149:12: missed: statement clobbers memory: .ASAN_CHECK (6, _55, 8, 8);
+src/lib.c:149:3: missed: statement clobbers memory: qsort (_48, _47, 24, compare_cooEntry);
+src/lib.c:270:37: missed: statement clobbers memory: .ASAN_CHECK (6, _57, 8, 8);
+src/lib.c:271:13: missed: statement clobbers memory: .ASAN_CHECK (6, _56, 8, 8);
+src/lib.c:271:34: missed: statement clobbers memory: .ASAN_CHECK (6, _59, 8, 8);
+src/lib.c:271:22: missed: statement clobbers memory: .ASAN_CHECK (6, _26, 8, 8);
+src/lib.c:271:43: missed: statement clobbers memory: .ASAN_CHECK (6, _28, 8, 8);
+src/lib.c:272:22: missed: statement clobbers memory: .ASAN_CHECK (6, _63, 8, 8);
+src/lib.c:273:22: missed: statement clobbers memory: .ASAN_CHECK (6, _60, 4, 8);
+src/lib.c:272:43: missed: statement clobbers memory: .ASAN_CHECK (6, _62, 8, 8);
+src/lib.c:273:42: missed: statement clobbers memory: .ASAN_CHECK (6, _61, 4, 8);
+src/lib.c:274:7: missed: statement clobbers memory: printf ("coo1 %ld %ld %f\n", _117, pretmp_118, _27);
+src/lib.c:277:18: missed: statement clobbers memory: .ASAN_CHECK (6, _64, 8, 8);
+src/lib.c:277:27: missed: statement clobbers memory: .ASAN_CHECK (6, _7, 4, 8);
+src/lib.c:276:7: missed: statement clobbers memory: .ASAN_CHECK (6, _8, 8, 8);
+src/lib.c:276:7: missed: statement clobbers memory: .ASAN_CHECK (6, _71, 8, 8);
+src/lib.c:276:7: missed: statement clobbers memory: printf ("coo2 %ld %ld %f\n", _34, _33, _32);
+src/lib.c:263:5: missed: statement clobbers memory: printf ("coo1 %ld %ld %ld\n", pretmp_69, pretmp_70, _1);
+src/lib.c:264:5: missed: statement clobbers memory: .ASAN_CHECK (6, _5, 8, 8);
+src/lib.c:264:5: missed: statement clobbers memory: .ASAN_CHECK (6, _20, 8, 8);
+src/lib.c:264:5: missed: statement clobbers memory: .ASAN_CHECK (6, _65, 8, 8);
+src/lib.c:264:5: missed: statement clobbers memory: printf ("coo2 %ld %ld %ld\n", _11, _10, _9);
+src/lib.c:292:31: missed: couldn't vectorize loop
+src/lib.c:292:31: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:293:48: missed: couldn't vectorize loop
+src/lib.c:294:35: missed: statement clobbers memory: .ASAN_CHECK (6, _9, 4, 4);
+src/lib.c:289:13: missed: statement clobbers memory: .ASAN_CHECK (6, &csr.ncol, 8, 8);
+src/lib.c:292:36: missed: statement clobbers memory: .ASAN_CHECK (6, &csr.nrow, 8, 8);
+src/lib.c:293:33: missed: statement clobbers memory: .ASAN_CHECK (6, &csr.row_idx, 8, 8);
+src/lib.c:294:31: missed: statement clobbers memory: .ASAN_CHECK (6, &csr.val, 8, 8);
+src/lib.c:294:53: missed: statement clobbers memory: .ASAN_CHECK (6, &csr.col_idx, 8, 8);
+src/lib.c:293:26: missed: statement clobbers memory: .ASAN_CHECK (6, _3, 8, 8);
+src/lib.c:293:61: missed: statement clobbers memory: .ASAN_CHECK (6, _46, 8, 8);
+src/lib.c:294:21: missed: statement clobbers memory: .ASAN_CHECK (6, _5, 4, 4);
+src/lib.c:294:35: missed: statement clobbers memory: .ASAN_CHECK (6, _9, 4, 4);
+src/lib.c:294:61: missed: statement clobbers memory: .ASAN_CHECK (6, _13, 8, 8);
+src/lib.c:294:49: missed: statement clobbers memory: .ASAN_CHECK (6, _16, 4, 4);
+src/lib.c:294:25: missed: statement clobbers memory: .ASAN_CHECK (7, _5, 4, 4);
+src/lib.c:302:13: missed: statement clobbers memory: .ASAN_CHECK (6, &csr.ncol, 8, 8);
+src/lib.c:305:11: missed: statement clobbers memory: .ASAN_CHECK (7, &.omp_data_o.8.output_vec, 8, 16);
+src/lib.c:305:11: missed: statement clobbers memory: .ASAN_CHECK (7, &.omp_data_o.8.input_vec, 8, 8);
+src/lib.c:305:11: missed: statement clobbers memory: .ASAN_CHECK (7, &.omp_data_o.8.csr, 8, 16);
+src/lib.c:301:5: missed: statement clobbers memory: __builtin_GOMP_parallel (spmv_csr_openmp._omp_fn.0, &.omp_data_o.8, 0, 0);
+src/lib.c:292:31: missed: couldn't vectorize loop
+src/lib.c:292:31: missed: not vectorized: unsupported control flow in loop.
+src/lib.c:293:48: missed: couldn't vectorize loop
+src/lib.c:294:35: missed: statement clobbers memory: .ASAN_CHECK (6, _19, 4, 4);
+src/lib.c:289:13: missed: statement clobbers memory: .ASAN_CHECK (6, &csr.ncol, 8, 8);
+src/lib.c:292:36: missed: statement clobbers memory: .ASAN_CHECK (6, &csr.nrow, 8, 8);
+src/lib.c:293:33: missed: statement clobbers memory: .ASAN_CHECK (6, &csr.row_idx, 8, 8);
+src/lib.c:294:53: missed: statement clobbers memory: .ASAN_CHECK (6, &csr.col_idx, 8, 8);
+src/lib.c:294:31: missed: statement clobbers memory: .ASAN_CHECK (6, &csr.val, 8, 8);
+src/lib.c:293:26: missed: statement clobbers memory: .ASAN_CHECK (6, _11, 8, 8);
+src/lib.c:293:61: missed: statement clobbers memory: .ASAN_CHECK (6, _47, 8, 8);
+src/lib.c:294:21: missed: statement clobbers memory: .ASAN_CHECK (6, _14, 4, 4);
+src/lib.c:294:35: missed: statement clobbers memory: .ASAN_CHECK (6, _19, 4, 4);
+src/lib.c:294:61: missed: statement clobbers memory: .ASAN_CHECK (6, _23, 8, 8);
+src/lib.c:294:49: missed: statement clobbers memory: .ASAN_CHECK (6, _26, 4, 4);
+src/lib.c:294:25: missed: statement clobbers memory: .ASAN_CHECK (7, _14, 4, 4);
+src/lib.c:363:1: missed: statement clobbers memory: __builtin___asan_unregister_globals (&*.LASAN0, 10);
+src/lib.c:363:1: missed: statement clobbers memory: __builtin___asan_init ();
+src/lib.c:363:1: missed: statement clobbers memory: __builtin___asan_version_mismatch_check_v8 ();
+src/lib.c:363:1: missed: statement clobbers memory: __builtin___asan_register_globals (&*.LASAN0, 10);
+tests/baseline.c:39:33: missed: couldn't vectorize loop
+tests/baseline.c:39:33: missed: not vectorized: unsupported outerloop form.
+tests/baseline.c:40:35: missed: couldn't vectorize loop
+tests/baseline.c:41:22: missed: statement clobbers memory: .ASAN_CHECK (6, _29, 4, 4);
+tests/baseline.c:35:5: missed: couldn't vectorize loop
+tests/baseline.c:35:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline.c:32:30: missed: couldn't vectorize loop
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:25:16: missed: statement clobbers memory: coo_50 = coo_new ();
+tests/baseline.c:26:5: missed: statement clobbers memory: coo_generate_random (coo_50, 65536, 65536, 20000000);
+tests/baseline.c:27:16: missed: statement clobbers memory: csr_53 = csr_new ();
+tests/baseline.c:28:5: missed: statement clobbers memory: coo_to_csr (coo_50, csr_53);
+tests/baseline.c:30:33: missed: statement clobbers memory: rand_vec_56 = malloc (262144);
+tests/baseline.c:31:29: missed: statement clobbers memory: output_58 = malloc (26476544);
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:33:20: missed: statement clobbers memory: .ASAN_CHECK (7, _8, 4, 4);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_MARK (UNPOISON, &temp_1, 16);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_CHECK (7, &temp_1.tv_sec, 8, 16);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_CHECK (7, &temp_1.tv_usec, 8, 8);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_MARK (UNPOISON, &temp_2, 16);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_CHECK (7, &temp_2.tv_sec, 8, 16);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_CHECK (7, &temp_2.tv_usec, 8, 8);
+tests/baseline.c:35:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline.c:36:5: missed: statement clobbers memory: .ASAN_CHECK (4, csr_53, 48, 8);
+tests/baseline.c:36:5: missed: statement clobbers memory: spmv_csr_openmp (*csr_53, 65536, rand_vec_56, _13);
+tests/baseline.c:37:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline.c:37:5: missed: statement clobbers memory: .ASAN_CHECK (6, &temp_2.tv_sec, 8, 16);
+tests/baseline.c:37:5: missed: statement clobbers memory: .ASAN_CHECK (6, &temp_1.tv_sec, 8, 16);
+tests/baseline.c:37:5: missed: statement clobbers memory: .ASAN_CHECK (6, &temp_2.tv_usec, 8, 8);
+tests/baseline.c:37:5: missed: statement clobbers memory: .ASAN_CHECK (6, &temp_1.tv_usec, 8, 8);
+tests/baseline.c:38:5: missed: statement clobbers memory: .ASAN_CHECK (4, csr_53, 48, 8);
+tests/baseline.c:38:5: missed: statement clobbers memory: spmv_csr (*csr_53, 65536, rand_vec_56, _25);
+tests/baseline.c:41:42: missed: statement clobbers memory: .ASAN_CHECK (6, _33, 4, 4);
+tests/baseline.c:41:22: missed: statement clobbers memory: .ASAN_CHECK (6, _29, 4, 4);
+tests/baseline.c:48:5: missed: statement clobbers memory: .ASAN_CHECK (6, _102, 8, 8);
+tests/baseline.c:48:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u (avaraged on reps %lu)\n", _36, 100, _35);
+tests/baseline.c:51:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _38);
+tests/baseline.c:54:5: missed: statement clobbers memory: coo_free (coo_50);
+tests/baseline.c:55:5: missed: statement clobbers memory: csr_free (csr_53);
+tests/baseline.c:56:5: missed: statement clobbers memory: free (rand_vec_56);
+tests/baseline.c:57:5: missed: statement clobbers memory: free (output_58);
+tests/baseline.c:58:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/baseline.c:42:17: missed: statement clobbers memory: __builtin_puts (&"Error in the output"[0]);
+tests/baseline.c:24:5: missed: statement clobbers memory: .ASAN_MARK (POISON, &temp_1, 16);
+tests/baseline.c:24:5: missed: statement clobbers memory: .ASAN_MARK (POISON, &temp_2, 16);
+tests/baseline.c:61:1: missed: statement clobbers memory: __builtin___asan_unregister_globals (&*.LASAN0, 4);
+tests/baseline.c:61:1: missed: statement clobbers memory: __builtin___asan_init ();
+tests/baseline.c:61:1: missed: statement clobbers memory: __builtin___asan_version_mismatch_check_v8 ();
+tests/baseline.c:61:1: missed: statement clobbers memory: __builtin___asan_register_globals (&*.LASAN0, 4);
+tests/baseline-ss.c:48:5: missed: couldn't vectorize loop
+tests/baseline-ss.c:48:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline-ss.c:44:30: missed: couldn't vectorize loop
+tests/baseline-ss.c:45:30: missed: statement clobbers memory: _11 = rand ();
+tests/baseline-ss.c:32:31: missed: couldn't vectorize loop
+tests/baseline-ss.c:32:31: missed: not vectorized: number of iterations cannot be computed.
+tests/baseline-ss.c:26:16: missed: statement clobbers memory: coo_45 = coo_new ();
+tests/baseline-ss.c:27:5: missed: statement clobbers memory: coo_generate_random (coo_45, 4194304, 4194304, 20000000);
+tests/baseline-ss.c:31:13: missed: statement clobbers memory: A_48 = cs_di_spalloc (4194304, 4194304, 20000000, 1, 0);
+tests/baseline-ss.c:32:35: missed: statement clobbers memory: .ASAN_CHECK (6, _106, 8, 8);
+tests/baseline-ss.c:33:60: missed: statement clobbers memory: .ASAN_CHECK (6, _105, 8, 8);
+tests/baseline-ss.c:33:69: missed: statement clobbers memory: .ASAN_CHECK (6, _104, 4, 8);
+tests/baseline-ss.c:33:51: missed: statement clobbers memory: .ASAN_CHECK (6, _103, 8, 8);
+tests/baseline-ss.c:33:33: missed: statement clobbers memory: .ASAN_CHECK (6, _102, 8, 8);
+tests/baseline-ss.c:33:9: missed: statement clobbers memory: cs_di_entry (A_48, _9, _7, _5);
+tests/baseline-ss.c:32:35: missed: statement clobbers memory: .ASAN_CHECK (6, _101, 8, 8);
+tests/baseline-ss.c:37:13: missed: statement clobbers memory: C_50 = cs_di_compress (A_48);
+tests/baseline-ss.c:38:5: missed: statement clobbers memory: cs_di_spfree (A_48);
+tests/baseline-ss.c:42:35: missed: statement clobbers memory: rand_vec_53 = malloc (33554432);
+tests/baseline-ss.c:43:31: missed: statement clobbers memory: output_55 = malloc (369098752);
+tests/baseline-ss.c:45:30: missed: statement clobbers memory: _11 = rand ();
+tests/baseline-ss.c:45:20: missed: statement clobbers memory: .ASAN_CHECK (7, _16, 8, 8);
+tests/baseline-ss.c:48:5: missed: statement clobbers memory: .ASAN_MARK (UNPOISON, &temp_1, 16);
+tests/baseline-ss.c:48:5: missed: statement clobbers memory: .ASAN_CHECK (7, &temp_1.tv_sec, 8, 16);
+tests/baseline-ss.c:48:5: missed: statement clobbers memory: .ASAN_CHECK (7, &temp_1.tv_usec, 8, 8);
+tests/baseline-ss.c:48:5: missed: statement clobbers memory: .ASAN_MARK (UNPOISON, &temp_2, 16);
+tests/baseline-ss.c:48:5: missed: statement clobbers memory: .ASAN_CHECK (7, &temp_2.tv_sec, 8, 16);
+tests/baseline-ss.c:48:5: missed: statement clobbers memory: .ASAN_CHECK (7, &temp_2.tv_usec, 8, 8);
+tests/baseline-ss.c:48:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline-ss.c:49:5: missed: statement clobbers memory: cs_di_gaxpy (C_50, rand_vec_53, _21);
+tests/baseline-ss.c:50:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline-ss.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, &temp_2.tv_sec, 8, 16);
+tests/baseline-ss.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, &temp_1.tv_sec, 8, 16);
+tests/baseline-ss.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, &temp_2.tv_usec, 8, 8);
+tests/baseline-ss.c:50:5: missed: statement clobbers memory: .ASAN_CHECK (6, &temp_1.tv_usec, 8, 8);
+tests/baseline-ss.c:51:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u reps of %d\n", _33, 10, 20000000);
+tests/baseline-ss.c:54:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _35);
+tests/baseline-ss.c:57:5: missed: statement clobbers memory: coo_free (coo_45);
+tests/baseline-ss.c:59:5: missed: statement clobbers memory: free (rand_vec_53);
+tests/baseline-ss.c:60:5: missed: statement clobbers memory: free (output_55);
+tests/baseline-ss.c:61:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/baseline-ss.c:25:5: missed: statement clobbers memory: .ASAN_MARK (POISON, &temp_1, 16);
+tests/baseline-ss.c:25:5: missed: statement clobbers memory: .ASAN_MARK (POISON, &temp_2, 16);
+tests/baseline-ss.c:64:1: missed: statement clobbers memory: __builtin___asan_unregister_globals (&*.LASAN0, 3);
+tests/baseline-ss.c:64:1: missed: statement clobbers memory: __builtin___asan_init ();
+tests/baseline-ss.c:64:1: missed: statement clobbers memory: __builtin___asan_version_mismatch_check_v8 ();
+tests/baseline-ss.c:64:1: missed: statement clobbers memory: __builtin___asan_register_globals (&*.LASAN0, 3);
+tests/test_conversions.c:6:16: missed: statement clobbers memory: coo_6 = coo_new ();
+tests/test_conversions.c:7:5: missed: statement clobbers memory: coo_generate_random (coo_6, 10, 10, 201);
+tests/test_conversions.c:10:5: missed: statement clobbers memory: coo_sort_in_ascending_order (coo_6);
+tests/test_conversions.c:12:16: missed: statement clobbers memory: csr_10 = csr_new ();
+tests/test_conversions.c:13:5: missed: statement clobbers memory: coo_to_csr (coo_6, csr_10);
+tests/test_conversions.c:15:17: missed: statement clobbers memory: coo2_13 = coo_new ();
+tests/test_conversions.c:16:5: missed: statement clobbers memory: csr_to_coo (csr_10, coo2_13);
+tests/test_conversions.c:28:9: missed: statement clobbers memory: _1 = coo_compare (coo_6, coo2_13);
+tests/test_conversions.c:34:5: missed: statement clobbers memory: coo_free (coo_6);
+tests/test_conversions.c:35:5: missed: statement clobbers memory: coo_free (coo2_13);
+tests/test_conversions.c:36:5: missed: statement clobbers memory: csr_free (csr_10);
+tests/test_conversions.c:38:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_conversions.c:29:9: missed: statement clobbers memory: __builtin_puts (&"error comparing the two matrices"[0]);
+tests/test_conversions.c:41:1: missed: statement clobbers memory: __builtin___asan_unregister_globals (&*.LASAN0, 2);
+tests/test_conversions.c:41:1: missed: statement clobbers memory: __builtin___asan_init ();
+tests/test_conversions.c:41:1: missed: statement clobbers memory: __builtin___asan_version_mismatch_check_v8 ();
+tests/test_conversions.c:41:1: missed: statement clobbers memory: __builtin___asan_register_globals (&*.LASAN0, 2);
+tests/test_load_from_file.c:6:16: missed: statement clobbers memory: coo_8 = coo_new ();
+tests/test_load_from_file.c:9:19: missed: statement clobbers memory: input_10 = fopen ("data/abb313/abb313.mtx", "r");
+tests/test_load_from_file.c:17:14: missed: statement clobbers memory: ret_12 = coo_from_file (input_10, coo_8);
+tests/test_load_from_file.c:23:11: missed: statement clobbers memory: .ASAN_CHECK (6, _18, 8, 8);
+tests/test_load_from_file.c:23:31: missed: statement clobbers memory: .ASAN_CHECK (6, _19, 8, 8);
+tests/test_load_from_file.c:23:51: missed: statement clobbers memory: .ASAN_CHECK (6, _20, 8, 8);
+tests/test_load_from_file.c:29:5: missed: statement clobbers memory: coo_free (coo_8);
+tests/test_load_from_file.c:31:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_load_from_file.c:24:9: missed: statement clobbers memory: __builtin_puts (&"Invalid headers read"[0]);
+tests/test_load_from_file.c:18:9: missed: statement clobbers memory: printf ("error loading from file %d\n", ret_12);
+tests/test_load_from_file.c:11:9: missed: statement clobbers memory: __builtin_puts (&"Error opening file"[0]);
+tests/test_load_from_file.c:34:1: missed: statement clobbers memory: __builtin___asan_unregister_globals (&*.LASAN0, 6);
+tests/test_load_from_file.c:34:1: missed: statement clobbers memory: __builtin___asan_init ();
+tests/test_load_from_file.c:34:1: missed: statement clobbers memory: __builtin___asan_version_mismatch_check_v8 ();
+tests/test_load_from_file.c:34:1: missed: statement clobbers memory: __builtin___asan_register_globals (&*.LASAN0, 6);
+tests/test_write_and_load.c:7:16: missed: statement clobbers memory: coo_6 = coo_new ();
+tests/test_write_and_load.c:8:5: missed: statement clobbers memory: coo_generate_random (coo_6, 100, 100, 200);
+tests/test_write_and_load.c:11:20: missed: statement clobbers memory: output_9 = fopen ("data/dummy.mtx", "w");
+tests/test_write_and_load.c:18:14: missed: statement clobbers memory: ret_11 = coo_write_to_file (output_9, coo_6);
+tests/test_write_and_load.c:24:17: missed: statement clobbers memory: coo2_13 = coo_new ();
+tests/test_write_and_load.c:25:19: missed: statement clobbers memory: input_15 = fopen ("data/dummy.mtx", "r");
+tests/test_write_and_load.c:31:14: missed: statement clobbers memory: ret_17 = coo_from_file (input_15, coo2_13);
+tests/test_write_and_load.c:36:9: missed: statement clobbers memory: _1 = coo_compare (coo_6, coo2_13);
+tests/test_write_and_load.c:41:5: missed: statement clobbers memory: coo_free (coo_6);
+tests/test_write_and_load.c:42:5: missed: statement clobbers memory: coo_free (coo2_13);
+tests/test_write_and_load.c:43:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/test_write_and_load.c:37:9: missed: statement clobbers memory: __builtin_puts (&"error comparing the two matrices"[0]);
+tests/test_write_and_load.c:32:9: missed: statement clobbers memory: printf ("error loading from file %d\n", ret_17);
+tests/test_write_and_load.c:19:9: missed: statement clobbers memory: printf ("error writing to file %d\n", ret_11);
+tests/test_write_and_load.c:13:9: missed: statement clobbers memory: __builtin_puts (&"Error opening file"[0]);
+tests/test_write_and_load.c:46:1: missed: statement clobbers memory: __builtin___asan_unregister_globals (&*.LASAN0, 8);
+tests/test_write_and_load.c:46:1: missed: statement clobbers memory: __builtin___asan_init ();
+tests/test_write_and_load.c:46:1: missed: statement clobbers memory: __builtin___asan_version_mismatch_check_v8 ();
+tests/test_write_and_load.c:46:1: missed: statement clobbers memory: __builtin___asan_register_globals (&*.LASAN0, 8);
+tests/baseline.c:39:33: missed: couldn't vectorize loop
+tests/baseline.c:39:33: missed: not vectorized: unsupported outerloop form.
+tests/baseline.c:40:35: missed: couldn't vectorize loop
+tests/baseline.c:41:22: missed: statement clobbers memory: .ASAN_CHECK (6, _29, 4, 4);
+tests/baseline.c:35:5: missed: couldn't vectorize loop
+tests/baseline.c:35:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline.c:32:30: missed: couldn't vectorize loop
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:25:16: missed: statement clobbers memory: coo_50 = coo_new ();
+tests/baseline.c:26:5: missed: statement clobbers memory: coo_generate_random (coo_50, 65536, 65536, 20000000);
+tests/baseline.c:27:16: missed: statement clobbers memory: csr_53 = csr_new ();
+tests/baseline.c:28:5: missed: statement clobbers memory: coo_to_csr (coo_50, csr_53);
+tests/baseline.c:30:33: missed: statement clobbers memory: rand_vec_56 = malloc (262144);
+tests/baseline.c:31:29: missed: statement clobbers memory: output_58 = malloc (26476544);
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:33:20: missed: statement clobbers memory: .ASAN_CHECK (7, _8, 4, 4);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_MARK (UNPOISON, &temp_1, 16);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_CHECK (7, &temp_1.tv_sec, 8, 16);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_CHECK (7, &temp_1.tv_usec, 8, 8);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_MARK (UNPOISON, &temp_2, 16);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_CHECK (7, &temp_2.tv_sec, 8, 16);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_CHECK (7, &temp_2.tv_usec, 8, 8);
+tests/baseline.c:35:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline.c:36:5: missed: statement clobbers memory: .ASAN_CHECK (4, csr_53, 48, 8);
+tests/baseline.c:36:5: missed: statement clobbers memory: spmv_csr (*csr_53, 65536, rand_vec_56, _13);
+tests/baseline.c:37:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline.c:37:5: missed: statement clobbers memory: .ASAN_CHECK (6, &temp_2.tv_sec, 8, 16);
+tests/baseline.c:37:5: missed: statement clobbers memory: .ASAN_CHECK (6, &temp_1.tv_sec, 8, 16);
+tests/baseline.c:37:5: missed: statement clobbers memory: .ASAN_CHECK (6, &temp_2.tv_usec, 8, 8);
+tests/baseline.c:37:5: missed: statement clobbers memory: .ASAN_CHECK (6, &temp_1.tv_usec, 8, 8);
+tests/baseline.c:38:5: missed: statement clobbers memory: .ASAN_CHECK (4, csr_53, 48, 8);
+tests/baseline.c:38:5: missed: statement clobbers memory: spmv_csr (*csr_53, 65536, rand_vec_56, _25);
+tests/baseline.c:41:42: missed: statement clobbers memory: .ASAN_CHECK (6, _33, 4, 4);
+tests/baseline.c:41:22: missed: statement clobbers memory: .ASAN_CHECK (6, _29, 4, 4);
+tests/baseline.c:48:5: missed: statement clobbers memory: .ASAN_CHECK (6, _102, 8, 8);
+tests/baseline.c:48:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u (avaraged on reps %lu)\n", _36, 100, _35);
+tests/baseline.c:51:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _38);
+tests/baseline.c:54:5: missed: statement clobbers memory: coo_free (coo_50);
+tests/baseline.c:55:5: missed: statement clobbers memory: csr_free (csr_53);
+tests/baseline.c:56:5: missed: statement clobbers memory: free (rand_vec_56);
+tests/baseline.c:57:5: missed: statement clobbers memory: free (output_58);
+tests/baseline.c:58:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/baseline.c:42:17: missed: statement clobbers memory: __builtin_puts (&"Error in the output"[0]);
+tests/baseline.c:24:5: missed: statement clobbers memory: .ASAN_MARK (POISON, &temp_1, 16);
+tests/baseline.c:24:5: missed: statement clobbers memory: .ASAN_MARK (POISON, &temp_2, 16);
+tests/baseline.c:61:1: missed: statement clobbers memory: __builtin___asan_unregister_globals (&*.LASAN0, 4);
+tests/baseline.c:61:1: missed: statement clobbers memory: __builtin___asan_init ();
+tests/baseline.c:61:1: missed: statement clobbers memory: __builtin___asan_version_mismatch_check_v8 ();
+tests/baseline.c:61:1: missed: statement clobbers memory: __builtin___asan_register_globals (&*.LASAN0, 4);
+tests/baseline.c:39:33: missed: couldn't vectorize loop
+tests/baseline.c:39:33: missed: not vectorized: unsupported outerloop form.
+tests/baseline.c:40:35: missed: couldn't vectorize loop
+tests/baseline.c:41:22: missed: statement clobbers memory: .ASAN_CHECK (6, _30, 4, 4);
+tests/baseline.c:35:5: missed: couldn't vectorize loop
+tests/baseline.c:35:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline.c:32:30: missed: couldn't vectorize loop
+tests/baseline.c:33:29: missed: statement clobbers memory: _2 = rand ();
+tests/baseline.c:25:16: missed: statement clobbers memory: coo_51 = coo_new ();
+tests/baseline.c:26:5: missed: statement clobbers memory: coo_generate_random (coo_51, 65536, 65536, 20000000);
+tests/baseline.c:27:16: missed: statement clobbers memory: csr_54 = csr_new ();
+tests/baseline.c:28:5: missed: statement clobbers memory: coo_to_csr (coo_51, csr_54);
+tests/baseline.c:30:33: missed: statement clobbers memory: rand_vec_57 = malloc (262144);
+tests/baseline.c:31:29: missed: statement clobbers memory: _1 = malloc (29097984);
+tests/baseline.c:33:29: missed: statement clobbers memory: _2 = rand ();
+tests/baseline.c:33:20: missed: statement clobbers memory: .ASAN_CHECK (7, _9, 4, 4);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_MARK (UNPOISON, &temp_1, 16);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_CHECK (7, &temp_1.tv_sec, 8, 16);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_CHECK (7, &temp_1.tv_usec, 8, 8);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_MARK (UNPOISON, &temp_2, 16);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_CHECK (7, &temp_2.tv_sec, 8, 16);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_CHECK (7, &temp_2.tv_usec, 8, 8);
+tests/baseline.c:35:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline.c:36:5: missed: statement clobbers memory: .ASAN_CHECK (4, csr_54, 48, 8);
+tests/baseline.c:36:5: missed: statement clobbers memory: spmv_csr (*csr_54, 65536, rand_vec_57, _14);
+tests/baseline.c:37:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline.c:37:5: missed: statement clobbers memory: .ASAN_CHECK (6, &temp_2.tv_sec, 8, 16);
+tests/baseline.c:37:5: missed: statement clobbers memory: .ASAN_CHECK (6, &temp_1.tv_sec, 8, 16);
+tests/baseline.c:37:5: missed: statement clobbers memory: .ASAN_CHECK (6, &temp_2.tv_usec, 8, 8);
+tests/baseline.c:37:5: missed: statement clobbers memory: .ASAN_CHECK (6, &temp_1.tv_usec, 8, 8);
+tests/baseline.c:38:5: missed: statement clobbers memory: .ASAN_CHECK (4, csr_54, 48, 8);
+tests/baseline.c:38:5: missed: statement clobbers memory: spmv_csr (*csr_54, 65536, rand_vec_57, _26);
+tests/baseline.c:41:42: missed: statement clobbers memory: .ASAN_CHECK (6, _34, 4, 4);
+tests/baseline.c:41:22: missed: statement clobbers memory: .ASAN_CHECK (6, _30, 4, 4);
+tests/baseline.c:48:5: missed: statement clobbers memory: .ASAN_CHECK (6, _103, 8, 8);
+tests/baseline.c:48:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u (avaraged on reps %lu)\n", _37, 100, _36);
+tests/baseline.c:51:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _39);
+tests/baseline.c:54:5: missed: statement clobbers memory: coo_free (coo_51);
+tests/baseline.c:55:5: missed: statement clobbers memory: csr_free (csr_54);
+tests/baseline.c:56:5: missed: statement clobbers memory: free (rand_vec_57);
+tests/baseline.c:57:5: missed: statement clobbers memory: free (output_59);
+tests/baseline.c:58:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/baseline.c:42:17: missed: statement clobbers memory: __builtin_puts (&"Error in the output"[0]);
+tests/baseline.c:24:5: missed: statement clobbers memory: .ASAN_MARK (POISON, &temp_1, 16);
+tests/baseline.c:24:5: missed: statement clobbers memory: .ASAN_MARK (POISON, &temp_2, 16);
+tests/baseline.c:61:1: missed: statement clobbers memory: __builtin___asan_unregister_globals (&*.LASAN0, 4);
+tests/baseline.c:61:1: missed: statement clobbers memory: __builtin___asan_init ();
+tests/baseline.c:61:1: missed: statement clobbers memory: __builtin___asan_version_mismatch_check_v8 ();
+tests/baseline.c:61:1: missed: statement clobbers memory: __builtin___asan_register_globals (&*.LASAN0, 4);
+tests/baseline.c:43:33: missed: couldn't vectorize loop
+tests/baseline.c:43:33: missed: not vectorized: unsupported outerloop form.
+tests/baseline.c:44:35: missed: couldn't vectorize loop
+tests/baseline.c:45:22: missed: statement clobbers memory: .ASAN_CHECK (6, _28, 4, 4);
+tests/baseline.c:35:5: missed: couldn't vectorize loop
+tests/baseline.c:35:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline.c:35:5: missed: couldn't vectorize loop
+tests/baseline.c:35:5: missed: not vectorized: unsupported control flow in loop.
+tests/baseline.c:32:30: missed: couldn't vectorize loop
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:25:16: missed: statement clobbers memory: coo_50 = coo_new ();
+tests/baseline.c:26:5: missed: statement clobbers memory: coo_generate_random (coo_50, 65536, 65536, 20000000);
+tests/baseline.c:27:16: missed: statement clobbers memory: csr_53 = csr_new ();
+tests/baseline.c:28:5: missed: statement clobbers memory: coo_to_csr (coo_50, csr_53);
+tests/baseline.c:30:33: missed: statement clobbers memory: rand_vec_56 = malloc (262144);
+tests/baseline.c:31:29: missed: statement clobbers memory: output_58 = malloc (29097984);
+tests/baseline.c:33:29: missed: statement clobbers memory: _1 = rand ();
+tests/baseline.c:33:20: missed: statement clobbers memory: .ASAN_CHECK (7, _8, 4, 4);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_MARK (UNPOISON, &temp_1, 16);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_CHECK (7, &temp_1.tv_sec, 8, 16);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_CHECK (7, &temp_1.tv_usec, 8, 8);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_MARK (UNPOISON, &temp_2, 16);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_CHECK (7, &temp_2.tv_sec, 8, 16);
+tests/baseline.c:35:5: missed: statement clobbers memory: .ASAN_CHECK (7, &temp_2.tv_usec, 8, 8);
+tests/baseline.c:35:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline.c:40:5: missed: statement clobbers memory: .ASAN_CHECK (4, csr_53, 48, 8);
+tests/baseline.c:40:5: missed: statement clobbers memory: spmv_csr (*csr_53, 65536, rand_vec_56, output_58);
+tests/baseline.c:35:5: missed: statement clobbers memory: gettimeofday (&temp_1, 0B);
+tests/baseline.c:40:5: missed: statement clobbers memory: .ASAN_CHECK (4, csr_53, 48, 8);
+tests/baseline.c:40:5: missed: statement clobbers memory: spmv_csr (*csr_53, 65536, rand_vec_56, out_125);
+tests/baseline.c:41:5: missed: statement clobbers memory: gettimeofday (&temp_2, 0B);
+tests/baseline.c:41:5: missed: statement clobbers memory: .ASAN_CHECK (6, &temp_2.tv_sec, 8, 16);
+tests/baseline.c:41:5: missed: statement clobbers memory: .ASAN_CHECK (6, &temp_1.tv_sec, 8, 16);
+tests/baseline.c:41:5: missed: statement clobbers memory: .ASAN_CHECK (6, &temp_2.tv_usec, 8, 8);
+tests/baseline.c:41:5: missed: statement clobbers memory: .ASAN_CHECK (6, &temp_1.tv_usec, 8, 8);
+tests/baseline.c:42:5: missed: statement clobbers memory: .ASAN_CHECK (4, csr_53, 48, 8);
+tests/baseline.c:42:5: missed: statement clobbers memory: spmv_csr (*csr_53, 65536, rand_vec_56, _24);
+tests/baseline.c:45:42: missed: statement clobbers memory: .ASAN_CHECK (6, _32, 4, 4);
+tests/baseline.c:45:22: missed: statement clobbers memory: .ASAN_CHECK (6, _28, 4, 4);
+tests/baseline.c:52:5: missed: statement clobbers memory: .ASAN_CHECK (6, _89, 8, 8);
+tests/baseline.c:52:5: missed: statement clobbers memory: printf ("Elapsed time: %f\n in order to do %u (avaraged on reps %lu)\n", _35, 100, _34);
+tests/baseline.c:55:5: missed: statement clobbers memory: printf ("computed Gflops = %f\n", _37);
+tests/baseline.c:58:5: missed: statement clobbers memory: coo_free (coo_50);
+tests/baseline.c:59:5: missed: statement clobbers memory: csr_free (csr_53);
+tests/baseline.c:60:5: missed: statement clobbers memory: free (rand_vec_56);
+tests/baseline.c:61:5: missed: statement clobbers memory: free (output_58);
+tests/baseline.c:62:5: missed: statement clobbers memory: __builtin_puts (&"test passed"[0]);
+tests/baseline.c:46:17: missed: statement clobbers memory: __builtin_puts (&"Error in the output"[0]);
+tests/baseline.c:24:5: missed: statement clobbers memory: .ASAN_MARK (POISON, &temp_1, 16);
+tests/baseline.c:24:5: missed: statement clobbers memory: .ASAN_MARK (POISON, &temp_2, 16);
+tests/baseline.c:65:1: missed: statement clobbers memory: __builtin___asan_unregister_globals (&*.LASAN0, 4);
+tests/baseline.c:65:1: missed: statement clobbers memory: __builtin___asan_init ();
+tests/baseline.c:65:1: missed: statement clobbers memory: __builtin___asan_version_mismatch_check_v8 ();
+tests/baseline.c:65:1: missed: statement clobbers memory: __builtin___asan_register_globals (&*.LASAN0, 4);

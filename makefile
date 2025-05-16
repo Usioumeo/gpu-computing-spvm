@@ -1,12 +1,13 @@
 CC=gcc
 
-FLAGS=-g -fsanitize=address -O0 -Wall -Wextra -Wpedantic 
+FLAGS=-g  -O0 -Wall -Wextra -Wpedantic #-fsanitize=address
 #-Wshadow -Wfloat-equal -Wconversion -Wsign-conversion -Wnull-dereference 
-#-Wdouble-promotion -Wformat=2
-LIBS=-L/opt/shares/openfoam/software/OpenBLAS/0.3.23-GCC-12.3.0/lib 
-INCLUDES=-I/opt/shares/openfoam/software/OpenBLAS/0.3.23-GCC-12.3.0/include -Iinclude
-LIB_FLAGS=-lm -lopenblas 
-
+#-Wdouble-promotion -Wformat=2 -I/usr/include/suitesparse
+LIBS=#-L/opt/shares/openfoam/software/OpenBLAS/0.3.23-GCC-12.3.0/lib 
+INCLUDES=-I/usr/include/suitesparse -Iinclude
+LIB_FLAGS=-lm   -lsuitesparseconfig -lcxsparse  \
+-ftree-vectorize -msse3 -mfpmath=sse -ftree-vectorizer-verbose=5 -fopt-info-vec-missed=output.miss -fopenmp -O3 #-fsanitize=address
+#-fopenmp  -lopenblas
 
 BIN_FOLDER := bin
 OBJ_FOLDER := obj
@@ -21,11 +22,18 @@ MAIN_SRC=$(SRC_FOLDER)/$(MAIN_NAME).c
 
 LIB_NAME=lib
 
-
-
 OBJECTS = $(OBJ_FOLDER)/$(LIB_NAME).o $(OBJ_FOLDER)/mmio.o
 
+
+TEST_FOLDER=tests
+TEST_SOURCES := $(wildcard $(TEST_FOLDER)/*.c)
+TEST_OBJECTS := $(patsubst $(TEST_FOLDER)/%.c, $(OBJ_FOLDER)/tests/%.o, $(TEST_SOURCES))
+TEST_BINS := $(patsubst $(TEST_FOLDER)/%.c, $(BIN_FOLDER)/tests/%, $(TEST_SOURCES))
+
+
 all: $(BIN_FOLDER)/$(MAIN_BIN) $(BIN_FOLDER)/$(MAIN_TEST) 
+
+
 
 
 # build object files
@@ -47,15 +55,16 @@ clean:
 
 
 
-# 	
+# @if ! [ -f $(DATA_FOLDER)/hollywood.tar.gz ]; then \
+	#	echo "Downloading dataset..."; \
+	#	curl -L --output $(DATA_FOLDER)/hollywood.tar.gz https://suitesparse-collection-website.herokuapp.com/MM/LAW/hollywood-2009.tar.gz; \
+	#	echo "Unpacking dataset..."; \
+	#	tar -xzf $(DATA_FOLDER)/hollywood.tar.gz -C $(DATA_FOLDER); \
+	#fi
+
 datasets:
 	@mkdir -p $(DATA_FOLDER)
-	@if ! [ -f $(DATA_FOLDER)/hollywood.tar.gz ]; then \
-		echo "Downloading dataset..."; \
-		curl -L --output $(DATA_FOLDER)/hollywood.tar.gz https://suitesparse-collection-website.herokuapp.com/MM/LAW/hollywood-2009.tar.gz; \
-		echo "Unpacking dataset..."; \
-		tar -xzf $(DATA_FOLDER)/hollywood.tar.gz -C $(DATA_FOLDER); \
-	fi
+	
 	@if ! [ -f $(DATA_FOLDER)/abb313.tar.gz ]; then \
 		echo "Downloading dataset..."; \
 		curl -L --output $(DATA_FOLDER)/abb313.tar.gz https://suitesparse-collection-website.herokuapp.com/MM/HB/abb313.tar.gz; \
@@ -65,13 +74,22 @@ datasets:
 	
 
 
-TEST_FOLDER := tests
-TEST_SOURCES := $(wildcard $(TEST_FOLDER)/*.c)
-TEST_OBJECTS := $(patsubst $(TEST_FOLDER)/%.c, $(OBJ_FOLDER)/%.o, $(TEST_SOURCES))
-TEST_BINS := $(patsubst $(TEST_FOLDER)/%.c, $(BIN_FOLDER)/%, $(TEST_SOURCES))
+
+# Build test object files
+$(OBJ_FOLDER)/tests/%.o: $(TEST_FOLDER)/%.c
+	@mkdir -p $(OBJ_FOLDER)/tests
+	$(CC) $(FLAGS) -c $< -o $@ $(LIBS) $(INCLUDES) $(LIB_FLAGS)
+
+# Build test bins
+$(BIN_FOLDER)/tests/%: $(OBJ_FOLDER)/tests/%.o $(OBJECTS)
+	@mkdir -p $(BIN_FOLDER)/tests
+	$(CC) $(FLAGS) $^ -o $@ $(LIBS) $(INCLUDES) $(LIB_FLAGS)
+
+
+build_tests: $(TEST_BINS) datasets
 
 # Add a test target
-test: $(TEST_BINS) datasets
+run_tests: build_tests
 	@echo "Running tests..."
 	@echo "Test binaries: $(TEST_BINS)"
 	@for test_bin in $(TEST_BINS); do \
@@ -83,12 +101,3 @@ test: $(TEST_BINS) datasets
 	done
 	@echo "All tests passed!"
 
-# Build test object files
-$(OBJ_FOLDER)/%.o: $(TEST_FOLDER)/%.c
-	@mkdir -p $(OBJ_FOLDER)
-	$(CC) $(FLAGS) -c $< -o $@ $(LIBS) $(INCLUDES) $(LIB_FLAGS)
-
-# Build test executables
-$(BIN_FOLDER)/%: $(OBJ_FOLDER)/%.o $(OBJECTS)
-	@mkdir -p $(BIN_FOLDER)
-	$(CC) $(FLAGS) $^ -o $@ $(LIBS) $(INCLUDES) $(LIB_FLAGS)

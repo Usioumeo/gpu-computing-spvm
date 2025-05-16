@@ -1,0 +1,1 @@
+make build_test && valgrind --tool=cachegrind --cache-sim=yes --cachegrind-out-file=cachegrind.out ./bin/test/baseline && cg_annotate --auto=yes --show=Ir,I1mr,D1mr,D1mw cachegrind.out

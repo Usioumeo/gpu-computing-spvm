@@ -97,4 +97,10 @@ int compare_cooEntry(const void *a, const void *b);
 int coo_write_to_file(FILE *output, COO *coo);
 
 int coo_compare(COO *coo1, COO *coo2);
+// Function to reserve memory for CSR matrix
+void csr_reserve(CSR *csr, unsigned long nnz, unsigned long nrow);
+
+// default implementation, it should be the correct version
+int spmv_csr(CSR csr, unsigned long n, float *input_vec, float * output_vec);
+int spmv_csr_openmp(CSR csr, unsigned long n, float *input_vec, float * output_vec);
 #endif

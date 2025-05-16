@@ -5,58 +5,81 @@ Entry to COO
 
 #include "headers/lib.h"
 #include "headers/mmio.h"
+#include "headers/uthash.h"
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+typedef struct {
+  UT_hash_handle hh;
+ uint64_t key;
+} CooDedup;
 
+uint64_t key_gen(unsigned long row, unsigned long col) {
+  uint64_t key = 0;
+  key |= (uint64_t)row << 32;
+  key |= (uint64_t)col;
+  return key;
+}
 // Function to generate random sparse matrix in COO format
 void coo_generate_random(COO *coo, unsigned long rows, unsigned long cols,
                          unsigned long nnz) {
+if (nnz > rows * cols) {
+    printf("Error: nnz cannot be greater than rows * cols\n");
+    exit(1);
+  }
+  CooDedup *set = NULL, *entry;
+  CooDedup *tmp_set = (CooDedup*)malloc(nnz * sizeof(CooDedup)); 
   coo->nrow = rows;
   coo->ncol = cols;
   coo_reserve(coo, nnz);
+
   for (unsigned long i = 0; i < coo->nnz; ++i) {
     coo->data[i].row = (unsigned long)rand() % rows;
     coo->data[i].col = (unsigned long)rand() % cols;
+    uint64_t key = key_gen(coo->data[i].row, coo->data[i].col);
+    CooDedup *entry;
+    HASH_FIND(hh, set, &key, sizeof(uint64_t), entry);
+    if(entry){
+      // Duplicate found, decrement nnz and continue
+      i--;
+      continue;
+    }
+    tmp_set[i].key = key;
+    entry = &tmp_set[i];
+    HASH_ADD(hh, set, key, sizeof(uint64_t), entry);    
     coo->data[i].val = (float)(rand() % 2001 - 1000) / 1000.0f; // Random value
   }
-  // there could be duplicates, sort and remove them
-  coo_sort_in_ascending_order(coo);
-  COOEntry *tmp = (COOEntry *)malloc(coo->nnz * sizeof(COOEntry));
-  COOEntry *index = tmp;
-  tmp[0] = coo->data[0];
-  index++;
-  for (unsigned long i = 1; i < coo->nnz; ++i) {
-    if (coo->data[i].row != index->row || coo->data[i].col != index->col) {
-      *index = coo->data[i];
-      index++;
-    }
-  }
-  coo_reserve(coo, index - tmp);
-  mempcpy(coo->data, tmp, (index - tmp) * sizeof(COOEntry));
-  free(tmp);
+  HASH_CLEAR(hh, set);
+  free(tmp_set);
 }
 
-
+// Function to reserve memory for COO matrix
 void coo_reserve(COO *coo, unsigned long nnz) {
   coo->data = (COOEntry *)realloc(coo->data, nnz * sizeof(COOEntry));
   coo->nnz = nnz;
 }
+// Function to reserve memory for CSR matrix
+void csr_reserve(CSR *csr, unsigned long nnz, unsigned long nrow) {
+  csr->nnz = nnz;
+  csr->nrow = nrow;
+  // resize csr arrays
+  csr->row_idx = (unsigned long *)realloc(
+      csr->row_idx, (nrow + 1) * sizeof(unsigned long));
+  csr->col_idx =
+      (unsigned long *)realloc(csr->col_idx, nnz * sizeof(unsigned long));
+  csr->val = (float *)realloc(csr->val, nnz * sizeof(float));
+}
+
 
 // Function to convert COO to CSR
 //
 // assumes that the csr matrix is already allocated and big enough
 // it doesn't destroy the orifinal coo matrix
 void coo_to_csr(COO *coo, CSR *csr) {
-  csr->nnz = coo->nnz;
-  csr->nrow = coo->nrow;
   csr->ncol = coo->ncol;
   // resize csr arrays
-  csr->row_idx = (unsigned long *)realloc(
-      csr->row_idx, (coo->nrow + 1) * sizeof(unsigned long));
-  csr->col_idx =
-      (unsigned long *)realloc(csr->col_idx, coo->nnz * sizeof(unsigned long));
-  csr->val = (float *)realloc(csr->val, coo->nnz * sizeof(float));
+  csr_reserve(csr, coo->nnz, coo->nrow);
 
   // initialize row_idx to 0
   for (unsigned long i = 0; i <= csr->nrow; ++i)
@@ -254,6 +277,87 @@ int coo_compare(COO *coo1, COO *coo2) {
              coo2->data[i].val);
       return 1;
     }
+  }
+  return 0;
+}
+
+
+
+
+// default implementation, it should be the correct version
+int spmv_csr(CSR csr, unsigned long n, float *input_vec, float * output_vec){
+  if (n!=csr.ncol){
+    return 1;
+  }
+  for (unsigned long i = 0; i < csr.nrow; ++i) {
+      for (unsigned long j = csr.row_idx[i]; j < csr.row_idx[i + 1]; ++j) {
+          output_vec[i] += csr.val[j]* input_vec[csr.col_idx[j]];
+      }
+  }
+  
+  return 0;
+}
+
+int spmv_csr_openmp(CSR csr, unsigned long n, float *input_vec, float * output_vec){
+  if (n!=csr.ncol){
+    return 1;
+  }
+  #pragma omp parallel for
+  for (unsigned long i = 0; i < csr.nrow; ++i) {
+      // no race conditions, because each thread writes on a different index of the output vector
+      #pragma omp simd
+      for (unsigned long j = csr.row_idx[i]; j < csr.row_idx[i + 1]; ++j) {
+          output_vec[i] += csr.val[j]* input_vec[csr.col_idx[j]];
+      }
+  }
+  return 0;
+}
+/*
+void csr_inverse(CSR *input, CSR *output){
+  output->ncol=input->nrow;
+  csr_reserve(output, input->nnz, input->ncol);
+
+  // initialize row_idx to 0
+  for (unsigned long i = 0; i <= csr->nrow; ++i)
+    csr->row_idx[i] = 0;
+
+  // count the number of non-zero elements in each row
+  for (unsigned long i = 0; i < coo->nnz; ++i)
+    csr->row_idx[coo->data[i].row + 1]++;
+
+  // compute the prefix sum to get the row pointers
+  for (unsigned long i = 0; i < csr->nrow; ++i)
+    csr->row_idx[i + 1] += csr->row_idx[i];
+
+  // temporary array to keep track of the current index in each row
+  unsigned long *temp =
+      (unsigned long *)malloc(csr->nrow * sizeof(unsigned long));
+
+  // initialize temp to the row pointers
+  for (unsigned long i = 0; i < csr->nrow; ++i)
+    temp[i] = csr->row_idx[i];
+
+  // fill the col_idx and val arrays
+  for (unsigned long i = 0; i < csr->nnz; ++i) {
+    unsigned long row = coo->data[i].row;
+    unsigned long idx = temp[row]++;
+    csr->col_idx[idx] = coo->data[i].col;
+    csr->val[idx] = coo->data[i].val;
+  }
+  // free the temporary array
+  free(temp);
+
+}*/
+
+int spmv_csr_inverse(CSR csr, unsigned long n, float *input_vec, float * output_vec){
+  if (n!=csr.ncol){
+    return 1;
+  }
+  for (unsigned long i = 0; i < csr.nrow; ++i) {
+      for (unsigned long j = csr.row_idx[i]; j < csr.row_idx[i + 1]; ++j) {
+        //printf("%lu\n", j);
+          output_vec[i] += csr.val[j]* input_vec[csr.col_idx[j]];
+      }
   }
   return 0;
 }
