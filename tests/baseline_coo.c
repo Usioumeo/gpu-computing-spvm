@@ -6,8 +6,8 @@
 #define COLS (1<<13)
 #define NNZ (1<<24)
 
-#define WARMUPS 10
-#define REPS 100
+#define WARMUPS 40
+#define REPS 1000
 
 
 #define START_TIMER                                                            \
@@ -31,7 +31,7 @@ int main(){
     float *rand_vec = (float * )malloc(sizeof(float)*COLS);
     float *output = (float*)malloc(sizeof(float)*COLS*(REPS+1));
     memset(output, 0, sizeof(float)*COLS*(REPS+1));
-    for(unsigned long i =0; i<COLS; i++){
+    for(unsigned i =0; i<COLS; i++){
         rand_vec[i]=(float)(rand()%2001-1000)*0.001;
     }
     //CSR *temp=csr_new();
@@ -52,8 +52,8 @@ int main(){
     printf("computed Gflops = %f\n", flops/1.0e9);
 
     //printf("output %lu\n", out-output);
-    for (unsigned long j = 0; j < COLS; j++) {
-        for(unsigned long i = 0; i<REPS; i++){
+    for (unsigned j = 0; j < COLS; j++) {
+        for(unsigned i = 0; i<REPS; i++){
             if(output[i*COLS+j]- output[REPS*COLS+j]>0.00001){
                 printf("Error in the output %lu %lu %f %f %lu %lu\n", i, j, output[i*COLS+j], output[REPS*COLS+j], i*COLS+j, REPS*COLS+j);
                 return -1;

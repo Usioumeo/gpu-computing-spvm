@@ -573,7 +573,7 @@ do {                                                                            
 do {                                                                             \
   unsigned _klen = fieldlen;                                                     \
   write(HASH_EMIT_KEYS, &_klen, sizeof(_klen));                                  \
-  write(HASH_EMIT_KEYS, keyptr, (unsigned long)fieldlen);                        \
+  write(HASH_EMIT_KEYS, keyptr, (unsigned)fieldlen);                        \
 } while (0)
 #else
 #define HASH_EMIT_KEY(hh,head,keyptr,fieldlen)

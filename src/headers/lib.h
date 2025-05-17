@@ -5,9 +5,9 @@
 #include <stdlib.h>
 typedef struct {
     // row index (0 indexed)
-    unsigned long row;
+    unsigned row;
     // col index (0 indexed)
-    unsigned long col;
+    unsigned col;
     // value contained
     float val; 
 } COOEntry;
@@ -19,11 +19,11 @@ typedef struct {
     // multiple COO entries
     COOEntry *data;
     //non-zero elements, aka number of COO entries,
-    unsigned long nnz;
+    unsigned nnz;
     // how many rows
-    unsigned long nrow;
+    unsigned nrow;
     // how many columns
-    unsigned long ncol;
+    unsigned ncol;
 }COO;
 
 
@@ -33,21 +33,21 @@ to obtain the number of non-
 */
 typedef struct{
     // one row index for each row +1 (and value refers to col_idx and val)
-    unsigned long *row_idx;
+    unsigned *row_idx;
     // array of columns, there is one for each non-zero element
-    unsigned long *col_idx;
+    unsigned *col_idx;
     // array of values, there is one for each non-zero element
     float *val;
     // how many rows
-    unsigned long nrow;
+    unsigned nrow;
     // how many columns
-    unsigned long ncol;
+    unsigned ncol;
     // how many non-zero elements (its not strictly necessary to store it, it can be computed as row_idx[nrow])
-    unsigned long nnz;
+    unsigned nnz;
 }CSR;
 
 // Function to generate random sparse matrix in COO format
-void coo_generate_random(COO *coo, unsigned long rows, unsigned long cols, unsigned long nnz);
+void coo_generate_random(COO *coo, unsigned rows, unsigned cols, unsigned nnz);
 
 // Function to convert COO to CSR
 // 
@@ -86,7 +86,7 @@ COO* coo_new();
 // Function to create a new empty CSR matrix
 CSR* csr_new();
 
-void coo_reserve(COO *coo, unsigned long nnz);
+void coo_reserve(COO *coo, unsigned nnz);
 
 int coo_from_file(FILE *input, COO *coo);
 
@@ -98,16 +98,17 @@ int coo_write_to_file(FILE *output, COO *coo);
 
 int coo_compare(COO *coo1, COO *coo2);
 // Function to reserve memory for CSR matrix
-void csr_reserve(CSR *csr, unsigned long nnz, unsigned long nrow);
+void csr_reserve(CSR *csr, unsigned nnz, unsigned nrow);
 
-int spmv_coo(COO coo, unsigned long n, float *input_vec, float * output_vec);
+int spmv_coo(COO coo, unsigned n, float *input_vec, float * output_vec);
 
 // default implementation, it should be the correct version
-int spmv_csr(CSR csr, unsigned long n, float *input_vec, float * output_vec);
-int spmv_csr_openmp(CSR csr, unsigned long n, float *input_vec, float * output_vec);
+int spmv_csr(CSR csr, unsigned n, float *input_vec, float * output_vec);
+int spmv_csr_openmp(CSR csr, unsigned n, float *input_vec, float * output_vec);
 
-int spmv_csr_block(CSR csr, unsigned long n, float *input_vec, float * output_vec);
-int spmv_csr_transpose(CSR csr, CSR transpose, unsigned long n, float *input_vec, float * output_vec);
-int spmv_csr_sort(CSR csr, unsigned long n, float *input_vec, float * output_vec);
+int spmv_csr_block(CSR csr, unsigned n, float *input_vec, float * output_vec);
+int spmv_csr_transpose(CSR csr, CSR transpose, unsigned n, float *input_vec, float * output_vec);
+int spmv_csr_openmp_simd(CSR csr, unsigned n, float *input_vec, float * output_vec);
+int spmv_csr_sort(CSR csr, unsigned n, float *input_vec, float * output_vec);
 void csr_sort_in_ascending_order(CSR csr);
 #endif

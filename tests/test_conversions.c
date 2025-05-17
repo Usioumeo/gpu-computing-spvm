@@ -17,12 +17,12 @@ int main(){
     // the second should already be sorted
 
     
-    /*for(unsigned long i = 0; i < coo->nnz; ++i){
-        printf("coo %ld %ld %f\n", coo->data[i].row, coo->data[i].col, coo->data[i].val);
+    /*for(unsigned i = 0; i < coo->nnz; ++i){
+        printf("coo %u %u %f\n", coo->data[i].row, coo->data[i].col, coo->data[i].val);
     }
     printf("\n");
-    for(unsigned long i = 0; i < coo2->nnz; ++i){
-        printf("coo2 %ld %ld %f\n", coo2->data[i].row, coo2->data[i].col, coo2->data[i].val);
+    for(unsigned i = 0; i < coo2->nnz; ++i){
+        printf("coo2 %u %u %f\n", coo2->data[i].row, coo2->data[i].col, coo2->data[i].val);
     }*/
 
     if (coo_compare(coo, coo2)!=0){

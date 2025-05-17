@@ -1,6 +1,6 @@
 CC=gcc
 
-FLAGS=-O2 -Wall -Wextra -Wpedantic #-fsanitize=address
+FLAGS=-O2 -Wall -Wextra -Wpedantic -mavx2 #-fsanitize=address
 #-Wshadow -Wfloat-equal -Wconversion -Wsign-conversion -Wnull-dereference 
 #-Wdouble-promotion -Wformat=2 -I/usr/include/suitesparse
 LIBS=#-L/opt/shares/openfoam/software/OpenBLAS/0.3.23-GCC-12.3.0/lib 
