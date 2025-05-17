@@ -1,12 +1,12 @@
 CC=gcc
 
-FLAGS=-g  -O0 -Wall -Wextra -Wpedantic #-fsanitize=address
+FLAGS=-O2 -Wall -Wextra -Wpedantic #-fsanitize=address
 #-Wshadow -Wfloat-equal -Wconversion -Wsign-conversion -Wnull-dereference 
 #-Wdouble-promotion -Wformat=2 -I/usr/include/suitesparse
 LIBS=#-L/opt/shares/openfoam/software/OpenBLAS/0.3.23-GCC-12.3.0/lib 
 INCLUDES=-I/usr/include/suitesparse -Iinclude
 LIB_FLAGS=-lm   -lsuitesparseconfig -lcxsparse  \
--ftree-vectorize -msse3 -mfpmath=sse -ftree-vectorizer-verbose=5 -fopt-info-vec-missed=output.miss -fopenmp -O3 #-fsanitize=address
+-ftree-vectorize -msse3 -mfpmath=sse -ftree-vectorizer-verbose=5 -fopt-info-vec-missed=output.miss -fopenmp #-fsanitize=address
 #-fopenmp  -lopenblas
 
 BIN_FOLDER := bin
@@ -51,7 +51,7 @@ $(BIN_FOLDER)/$(MAIN_BIN): $(MAIN_SRC) $(OBJECTS)
 
 
 clean:
-	rm -rf $(BIN_FOLDER) $(OBJ_FOLDER) $(DATA_FOLDER)
+	rm -rf $(BIN_FOLDER) $(OBJ_FOLDER) $(DATA_FOLDER) output.miss
 
 
 

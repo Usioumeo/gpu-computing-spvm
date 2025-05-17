@@ -137,10 +137,10 @@ int compare_cooEntry(const void *a, const void *b) {
   COOEntry *entryA = (COOEntry *)a;
   COOEntry *entryB = (COOEntry *)b;
 
-  if (entryA->row != entryB->row) {
-    return (int)entryA->row - (int)entryB->row;
-  } else {
+  if (entryA->col != entryB->col) {
     return (int)entryA->col - (int)entryB->col;
+  } else {
+    return (int)entryA->row - (int)entryB->row;
   }
 }
 
@@ -281,6 +281,18 @@ int coo_compare(COO *coo1, COO *coo2) {
   return 0;
 }
 
+int spmv_coo(COO coo, unsigned long n, float *input_vec, float *output_vec) {
+  if (n != coo.ncol) {
+    return 1;
+  }
+  for(int i=0; i<coo.nrow; i++){
+    output_vec[i] = 0.0;
+  }
+  for (unsigned long i = 0; i < coo.nnz; ++i) {
+    output_vec[coo.data[i].row] += coo.data[i].val * input_vec[coo.data[i].col];
+  }
+  return 0;
+}
 
 
 
@@ -290,12 +302,84 @@ int spmv_csr(CSR csr, unsigned long n, float *input_vec, float * output_vec){
     return 1;
   }
   for (unsigned long i = 0; i < csr.nrow; ++i) {
+    output_vec[i] = 0.0;
       for (unsigned long j = csr.row_idx[i]; j < csr.row_idx[i + 1]; ++j) {
           output_vec[i] += csr.val[j]* input_vec[csr.col_idx[j]];
       }
   }
   
   return 0;
+}
+#define BLOCK_SIZE 8
+int spmv_csr_block(CSR csr, unsigned long n, float *input_vec, float * output_vec){
+  if (n!=csr.ncol){
+    return 1;
+  }
+  for (unsigned long block_start = 0; block_start < csr.nrow; block_start += BLOCK_SIZE) {
+    unsigned long block_max = (block_start + BLOCK_SIZE < csr.nrow) ? (block_start + BLOCK_SIZE) : csr.nrow;
+    for (unsigned long i = block_start; i < block_max; ++i) {
+      output_vec[i] = 0.0;
+
+      for (unsigned long j = csr.row_idx[i]; j < csr.row_idx[i + 1]; ++j) {
+          output_vec[i] += csr.val[j]* input_vec[csr.col_idx[j]];
+      }
+    }
+  }
+  
+  return 0;
+}
+
+typedef struct {
+  float val;
+  unsigned long col;
+} TmpStruct;
+
+int compare_tmpStruct(const void *a, const void *b) {
+  TmpStruct *entryA = (TmpStruct *)a;
+  TmpStruct *entryB = (TmpStruct *)b;
+
+
+  return (int)entryA->col - (int)entryB->col;
+  
+}
+
+int spmv_csr_sort(CSR csr, unsigned long n, float *input_vec, float * output_vec){
+  if (n!=csr.ncol){
+    return 1;
+  }
+  TmpStruct *tmp = (TmpStruct*)malloc(csr.nrow*sizeof(TmpStruct));
+  for (unsigned long i = 0; i < csr.nrow; ++i) {
+    output_vec[i] = 0.0;
+    unsigned int start = csr.row_idx[i];
+    unsigned int end = csr.row_idx[i + 1];
+    for(unsigned long j = start; j < end; ++j) {
+      tmp[j-start].val = csr.val[j];
+      tmp[j-start].col = csr.col_idx[j];
+    }
+    qsort(tmp, end -start, sizeof(TmpStruct), compare_tmpStruct);
+    for (unsigned long j = start; j < end; ++j) {
+        output_vec[i] += tmp[j-start].val* input_vec[tmp[j-start].col];
+    }
+  }
+  free(tmp);
+  
+  return 0;
+}
+void csr_sort_in_ascending_order(CSR csr) {
+  TmpStruct *tmp = (TmpStruct*)malloc(csr.nrow*sizeof(TmpStruct));
+  for (unsigned long i = 0; i < csr.nrow; ++i) {
+    unsigned int start = csr.row_idx[i];
+    unsigned int end = csr.row_idx[i + 1];
+    for(unsigned long j = start; j < end; ++j) {
+      tmp[j-start].val = csr.val[j];
+      tmp[j-start].col = csr.col_idx[j];
+    }
+    qsort(tmp, end -start, sizeof(TmpStruct), compare_tmpStruct);
+    for (unsigned long j = start; j < end; ++j) {
+        csr.val[j] = tmp[j-start].val;
+        csr.col_idx[j] = tmp[j-start].col;
+    }
+  }
 }
 
 int spmv_csr_openmp(CSR csr, unsigned long n, float *input_vec, float * output_vec){
@@ -304,60 +388,82 @@ int spmv_csr_openmp(CSR csr, unsigned long n, float *input_vec, float * output_v
   }
   #pragma omp parallel for
   for (unsigned long i = 0; i < csr.nrow; ++i) {
+      output_vec[i] = 0;
       // no race conditions, because each thread writes on a different index of the output vector
-      #pragma omp simd
+      #pragma omp simd 
       for (unsigned long j = csr.row_idx[i]; j < csr.row_idx[i + 1]; ++j) {
           output_vec[i] += csr.val[j]* input_vec[csr.col_idx[j]];
       }
   }
   return 0;
 }
-/*
-void csr_inverse(CSR *input, CSR *output){
-  output->ncol=input->nrow;
-  csr_reserve(output, input->nnz, input->ncol);
-
-  // initialize row_idx to 0
-  for (unsigned long i = 0; i <= csr->nrow; ++i)
-    csr->row_idx[i] = 0;
-
-  // count the number of non-zero elements in each row
-  for (unsigned long i = 0; i < coo->nnz; ++i)
-    csr->row_idx[coo->data[i].row + 1]++;
-
-  // compute the prefix sum to get the row pointers
-  for (unsigned long i = 0; i < csr->nrow; ++i)
-    csr->row_idx[i + 1] += csr->row_idx[i];
-
-  // temporary array to keep track of the current index in each row
-  unsigned long *temp =
-      (unsigned long *)malloc(csr->nrow * sizeof(unsigned long));
-
-  // initialize temp to the row pointers
-  for (unsigned long i = 0; i < csr->nrow; ++i)
-    temp[i] = csr->row_idx[i];
-
-  // fill the col_idx and val arrays
-  for (unsigned long i = 0; i < csr->nnz; ++i) {
-    unsigned long row = coo->data[i].row;
-    unsigned long idx = temp[row]++;
-    csr->col_idx[idx] = coo->data[i].col;
-    csr->val[idx] = coo->data[i].val;
-  }
-  // free the temporary array
-  free(temp);
-
-}*/
-
-int spmv_csr_inverse(CSR csr, unsigned long n, float *input_vec, float * output_vec){
+int spmv_csr_order(CSR csr, unsigned long n, float *input_vec, float * output_vec){
   if (n!=csr.ncol){
     return 1;
   }
+  #pragma omp parallel for
   for (unsigned long i = 0; i < csr.nrow; ++i) {
+      output_vec[i] = 0;
+      // no race conditions, because each thread writes on a different index of the output vector
+      #pragma omp simd 
+      for (unsigned long j = csr.row_idx[i]; j < csr.row_idx[i + 1]; ++j) {
+          output_vec[i] += csr.val[j]* input_vec[csr.col_idx[j]];
+      }
+  }
+  return 0;
+}
+
+//int* out_row_ptr, int* out_col_ind, double* out_values
+void csr_transpose(
+  CSR input, CSR* output
+    
+) {
+    csr_reserve(output, input.nnz, input.ncol);
+    output->nrow = input.ncol;
+    // Step 1: Count number of entries per column (which become rows in the transpose)
+    int* col_counts = malloc(input.ncol*sizeof(int));
+    for (int i = 0; i < input.nnz; i++) {
+        col_counts[input.col_idx[i]]++;
+    }
+
+    // Step 2: Compute row_ptr for transpose
+    output->row_idx[0] = 0;
+    for (int i = 0; i < input.ncol; i++) {
+        output->row_idx[i + 1] = output->row_idx[i] + col_counts[i];
+    }
+
+    // Temporary working array to keep track of fill-in position
+    int* current_position = malloc(input.ncol * sizeof(int));
+    memcpy(current_position, output->row_idx, input.ncol * sizeof(int));
+
+    // Step 3: Fill in col_ind and values for the transpose
+    for (int row = 0; row < input.nrow; row++) {
+        for (int idx = input.row_idx[row]; idx < input.row_idx[row + 1]; idx++) {
+            int col = input.col_idx[idx];
+            int dest_pos = current_position[col];
+
+            output->col_idx[dest_pos] = row;        // transpose: col becomes row
+            output->val[dest_pos] = input.val[idx];
+
+            current_position[col]++;
+        }
+    }
+
+    free(col_counts);
+    free(current_position);
+}
+
+int spmv_csr_transpose(CSR csr, CSR transpose, unsigned long n, float *input_vec, float * output_vec){
+  if (n!=csr.ncol){
+    return 1;
+  }
+  csr_transpose(csr, &transpose);
+
+  /*for (unsigned long i = 0; i < csr.nrow; ++i) {
       for (unsigned long j = csr.row_idx[i]; j < csr.row_idx[i + 1]; ++j) {
         //printf("%lu\n", j);
           output_vec[i] += csr.val[j]* input_vec[csr.col_idx[j]];
       }
-  }
+  }*/
   return 0;
 }
