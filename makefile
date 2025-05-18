@@ -1,97 +1,95 @@
+### CONFIG ZONE ###
 CC=gcc
+NVCC=nvcc
 
-FLAGS=-O3 -Wall -Wextra -Wpedantic -mavx2 -march=native #-fsanitize=address
+FLAGS=-Wall -Wextra -Wpedantic -mavx2 -march=native -DUSE_OPENMP #-fsanitize=address
 #-Wshadow -Wfloat-equal -Wconversion -Wsign-conversion -Wnull-dereference 
-#-Wdouble-promotion -Wformat=2 -I/usr/include/suitesparse
-LIBS=#-L/opt/shares/openfoam/software/OpenBLAS/0.3.23-GCC-12.3.0/lib 
 INCLUDES=-I/usr/include/suitesparse  -Isrc/headers
-CUDA_FLAGS=-O2  -DUSE_CUDA #-Wall -Wextra -Wpedantic -mavx2
-#-Iinclude
+CUDA_FLAGS=-DUSE_CUDA -Wno-deprecated-gpu-targets #-Wall -Wextra -Wpedantic -mavx2
+
 LIB_FLAGS=-lm   -lsuitesparseconfig -lcxsparse  \
 -ftree-vectorize -msse3 -mfpmath=sse -ftree-vectorizer-verbose=5 -fopt-info-vec-missed=output.miss -fopenmp #-fsanitize=address
 #-fopenmp  -lopenblas
 
 
 BUILD_FOLDER := build
-BIN_FOLDER := $(BUILD_FOLDER)/bin
-OBJ_FOLDER := $(BUILD_FOLDER)/obj
+TEST_SRC_FOLDER=tests
+BENCH_FOLDER=benchmarks
 SRC_FOLDER := src
 DATA_FOLDER := data
-#BATCH_OUT_FOLDER := outputs
 
-#LIB_NAME=lib
-
+### AUTOMAGICALLY GENERATED ZONE ###
 LIBS_SRC = $(wildcard $(SRC_FOLDER)/*.c)
+#TEST_OBJECTS := $(patsubst $(TEST_FOLDER)/%.c, $(OBJ_FOLDER)/tests/%.o, $(TEST_SOURCES))
 
-OBJECTS = $(patsubst $(SRC_FOLDER)/%.c, $(OBJ_FOLDER)/%.o, $(LIBS_SRC)) 
-#$(OBJ_FOLDER)/$(LIB_NAME).o $(OBJ_FOLDER)/mmio.o
-CUDA_OBJECTS = $(patsubst $(SRC_FOLDER)/%.c, $(OBJ_FOLDER)/cuda/%.o, $(LIBS_SRC)) 
-
-TEST_FOLDER=tests
-TEST_SOURCES := $(wildcard $(TEST_FOLDER)/*.c)
-TEST_CUDA_SOURCES := $(wildcard $(TEST_FOLDER)/*.cu)
-TEST_OBJECTS := $(patsubst $(TEST_FOLDER)/%.c, $(OBJ_FOLDER)/tests/%.o, $(TEST_SOURCES))
-TEST_BINS := $(patsubst $(TEST_FOLDER)/%.c, $(BIN_FOLDER)/tests/%, $(TEST_SOURCES))
-TEST_CUDA_BINS := $(patsubst $(TEST_FOLDER)/%.cu, $(BIN_FOLDER)/cuda/%, $(TEST_CUDA_SOURCES))
-
-all: build_tests 
+all:
 
 clean:
 	rm -rf $(BUILD_FOLDER)
+# 1=path to parent folder, 2 compiler, 3 flags, 4 OPT
+define BUILD_OBJ_LIB_TEMPLATE
+$(1)/obj_lib/%$(4).o: $(SRC_FOLDER)/%.c
+	@mkdir -p $(1)/obj_lib
+	$(2) $(if $(4),-$(4),) $(3) -c $$< -o $$@ $(INCLUDES)
+endef
+
+# 1=path to parent folder, 2 compiler, 3 flags, 4 path source folders, 5 extension, 6 OPT
+define BUILD_OBJ_TEMPLATE
+$(1)/obj/%$(6).o: $(4)/%.$(5)
+	@echo $$@ 
+	@mkdir -p $(1)/obj 
+	$(2) $(if $(6),-$(6),) $(3) -c $$< -o $$@ $(INCLUDES)
+endef
+
+# 1=path to parent folder, 2 compiler, 3 flags, 4 obj dependencies, 5 linker flags , 6 OPT
+define BUILD_BIN_TEMPLATE
+$(1)/bins/%$(6): $(1)/obj/%$(6).o $(4)
+	@echo $$@ 
+	@mkdir -p $(1)/bins 
+	$(2) $(if $(6),-$(6),) $(3)  $$^ -o $$@ $(INCLUDES) $(5)
+endef
 
 
-############### NORMAL COMPILATION SECTION ###############
-
-# build object files from libs
-$(OBJ_FOLDER)/%.o: $(SRC_FOLDER)/%.c
-	@mkdir -p $(BIN_FOLDER) $(OBJ_FOLDER)
-	$(CC) -DUSE_OPENMP $(FLAGS) -c $< -o $@ $(LIB_FLAGS) $(INCLUDES)
+### INSTANCING PART####
 
 
+#std_tests
+$(eval $(call BUILD_OBJ_LIB_TEMPLATE,$(BUILD_FOLDER)/tests/std,$(CC),$(FLAGS)))
+$(eval $(call BUILD_OBJ_TEMPLATE,$(BUILD_FOLDER)/tests/std,$(CC),$(FLAGS),$(TEST_SRC_FOLDER),c))
+
+OBJ_LIB_DEPS := $(patsubst $(SRC_FOLDER)/%.c, $(BUILD_FOLDER)/tests/std/obj_lib/%.o, $(LIBS_SRC))
+
+$(eval $(call BUILD_BIN_TEMPLATE,$(BUILD_FOLDER)/tests/std,$(CC),$(FLAGS),$(OBJ_LIB_DEPS),$(LIB_FLAGS)))
+
+TEST_SOURCES := $(wildcard $(TEST_SRC_FOLDER)/*.c)
+STD_TESTS := $(patsubst $(TEST_SRC_FOLDER)/%.c, $(BUILD_FOLDER)/tests/std/bins/%, $(TEST_SOURCES))
+build_std_tests: $(STD_TESTS)
 
 
+#cuda_tests
+$(eval $(call BUILD_OBJ_LIB_TEMPLATE,$(BUILD_FOLDER)/tests/cuda,$(NVCC),$(CUDA_FLAGS)))
+$(eval $(call BUILD_OBJ_TEMPLATE,$(BUILD_FOLDER)/tests/cuda,$(NVCC),$(CUDA_FLAGS),$(TEST_SRC_FOLDER),cu))
+OBJ_LIB_DEPS_CUDA := $(patsubst $(SRC_FOLDER)/%.cu, $(BUILD_FOLDER)/tests/cuda/obj_lib/%.o, $(LIBS_SRC))
+$(eval $(call BUILD_BIN_TEMPLATE,$(BUILD_FOLDER)/tests/cuda,$(NVCC),$(CUDA_FLAGS),$(OBJ_LIB_DEPS_CUDA)))
 
+TEST_SOURCES_CUDA := $(wildcard $(TEST_SRC_FOLDER)/*.cu)
+CUDA_TESTS := $(patsubst $(TEST_SRC_FOLDER)/%.cu, $(BUILD_FOLDER)/tests/cuda/bins/%, $(TEST_SOURCES_CUDA))
+build_cuda_tests: $(CUDA_TESTS)
 
+build_tests: build_std_tests build_cuda_tests
 
-############################ Download datasets ############################
-# @if ! [ -f $(DATA_FOLDER)/hollywood.tar.gz ]; then \
-	#	echo "Downloading dataset..."; \
-	#	curl -L --output $(DATA_FOLDER)/hollywood.tar.gz https://suitesparse-collection-website.herokuapp.com/MM/LAW/hollywood-2009.tar.gz; \
-	#	echo "Unpacking dataset..."; \
-	#	tar -xzf $(DATA_FOLDER)/hollywood.tar.gz -C $(DATA_FOLDER); \
-	#fi
-
-datasets:
-	@mkdir -p $(DATA_FOLDER)
-	@if ! [ -f $(DATA_FOLDER)/abb313.tar.gz ]; then \
-		echo "Downloading dataset..."; \
-		curl -L --output $(DATA_FOLDER)/abb313.tar.gz https://suitesparse-collection-website.herokuapp.com/MM/HB/abb313.tar.gz; \
-		echo "Unpacking dataset..."; \
-		tar -xzf $(DATA_FOLDER)/abb313.tar.gz -C $(DATA_FOLDER); \
-	fi
-	
-
-
-############################## Test BUILDING SECTION ##############################
-
-# BUILD TEST OBJECT FILES
-$(OBJ_FOLDER)/tests/%.o: $(TEST_FOLDER)/%.c
-	@mkdir -p $(OBJ_FOLDER)/tests
-	$(CC) -DUSE_OPENMP $(FLAGS) -c $< -o $@ $(LIBS) $(INCLUDES) $(LIB_FLAGS)
-
-# BUILD TEST BINS
-$(BIN_FOLDER)/tests/%: $(OBJ_FOLDER)/tests/%.o $(OBJECTS)
-	@mkdir -p $(BIN_FOLDER)/tests
-	$(CC) -DUSE_OPENMP $(FLAGS) $^ -o $@ $(LIBS) $(INCLUDES) $(LIB_FLAGS)
-
-
-build_tests: $(TEST_BINS) $(TEST_CUDA_BINS)
-
-# Add a test target
 run_tests: build_tests
 	@echo "Running tests..."
-	@echo "Test binaries: $(TEST_BINS)"
-	@for test_bin in $(TEST_BINS); do \
+	@echo "Test binaries: $(STD_TESTS)"
+	@for test_bin in $(STD_TESTS); do \
+		echo "Running $$test_bin..."; \
+		if ! ./$$test_bin; then \
+			echo "Test $$test_bin failed!" >&2; \
+			exit 1; \
+		fi; \
+	done
+	@echo "Test binaries: $(CUDA_TESTS)"
+	@for test_bin in $(CUDA_TESTS); do \
 		echo "Running $$test_bin..."; \
 		if ! ./$$test_bin; then \
 			echo "Test $$test_bin failed!" >&2; \
@@ -100,21 +98,19 @@ run_tests: build_tests
 	done
 	@echo "All tests passed!"
 
-############################ CUDA TESTING SECTION ##############################
+
+#std_bench
+$(eval $(call BUILD_OBJ_LIB_TEMPLATE,$(BUILD_FOLDER)/bench/std,$(CC),$(FLAGS),O0))
+$(eval $(call BUILD_OBJ_TEMPLATE,$(BUILD_FOLDER)/bench/std,$(CC),$(FLAGS),$(BENCH_FOLDER),c,O0))
+OBJ_LIB_DEPSO0 := $(patsubst $(SRC_FOLDER)/%.c, $(BUILD_FOLDER)/bench/std/obj_lib/%O0.o, $(LIBS_SRC))
+
+$(eval $(call BUILD_BIN_TEMPLATE,$(BUILD_FOLDER)/bench/std,$(CC),$(FLAGS),$(OBJ_LIB_DEPSO0),$(LIB_FLAGS),O0))
+#$(eval $(call BUILD_BIN_TEMPLATE,$(BUILD_FOLDER)/tests/std,$(CC),$(FLAGS),$(OBJ_LIB_DEPS),$(LIB_FLAGS)))
 
 
 
-$(OBJ_FOLDER)/cuda/%.o: $(SRC_FOLDER)/%.c
-	@mkdir -p $(OBJ_FOLDER)/cuda
-	nvcc $(CUDA_FLAGS) -c $< -o $@ $(LIBS) $(INCLUDES)
-
-# Build test cuda object files
-$(OBJ_FOLDER)/cuda/%.o: $(TEST_FOLDER)/%.cu
-	@mkdir -p $(OBJ_FOLDER)/cuda
-	nvcc $(CUDA_FLAGS) -c $< -o $@ $(LIBS) $(INCLUDES)
-
-# Build cuda bins
-$(BIN_FOLDER)/cuda/%: $(OBJ_FOLDER)/cuda/%.o $(CUDA_OBJECTS)
-	@mkdir -p $(BIN_FOLDER)/cuda
-	nvcc $(CUDA_FLAGS) $^ -o $@ $(LIBS) $(INCLUDES)
-
+BENCH_SOURCES := $(wildcard $(BENCH_FOLDER)/*.c)
+STD_BENCH := $(patsubst $(BENCH_FOLDER)/%.c, $(BUILD_FOLDER)/bench/std/bins/%O0, $(BENCH_SOURCES))
+debug:
+	@echo $(STD_BENCH)
+build_std_bench: $(STD_BENCH)
