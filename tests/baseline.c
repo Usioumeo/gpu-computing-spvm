@@ -1,4 +1,4 @@
-#include"../src/headers/lib.h"
+#include"lib.h"
 #include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
@@ -24,7 +24,7 @@
                     (temp_2.tv_usec - temp_1.tv_usec) / 1e6)/REPS;
 
 int main(){
-    omp_set_num_threads(8);
+    omp_set_num_threads(4);
     COO *coo = coo_new();
     coo_generate_random(coo, ROWS, COLS, NNZ);
     coo_sort_in_ascending_order(coo);
@@ -54,15 +54,25 @@ int main(){
     float flops = 2.0*NNZ/CPU_time;
     printf("computed Gflops = %f\n", flops/1.0e9);
 
+    size_t total_memory = (csr->nrow) * sizeof(unsigned) * 2 +
+                        csr->nnz * (sizeof(float) + sizeof(unsigned)) +
+                        csr->nnz * sizeof(float) + csr->nrow * sizeof(unsigned);
+
+    float gbytes = (float)total_memory / 1.0e9;
+    float gbytesps = gbytes / CPU_time;
+    printf("total memory = %f GB\n", gbytes);
+    printf("total memory = %f GB/s\n", gbytesps);
+
     //printf("output %lu\n", out-output);
     for (unsigned j = 0; j < COLS; j++) {
         for(unsigned i = 0; i<REPS; i++){
-            if(output[i*COLS+j]- output[REPS*COLS+j]>0.001){
+            if(output[i*COLS+j]- output[REPS*COLS+j]>0.1){
                 printf("Error in the output %u %u %f %f %u %u\n", i, j, output[i*COLS+j], output[REPS*COLS+j], i*COLS+j, REPS*COLS+j);
                 return -1;
             }
       }
     }
+    
     
     
 

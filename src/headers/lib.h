@@ -104,11 +104,13 @@ int spmv_coo(COO coo, unsigned n, float *input_vec, float * output_vec);
 
 // default implementation, it should be the correct version
 int spmv_csr(CSR csr, unsigned n, float *input_vec, float * output_vec);
-int spmv_csr_openmp(CSR csr, unsigned n, float *input_vec, float * output_vec);
+
 
 int spmv_csr_block(CSR csr, unsigned n, float *input_vec, float * output_vec);
-int spmv_csr_transpose(CSR csr, CSR transpose, unsigned n, float *input_vec, float * output_vec);
+#ifdef USE_OPENMP
+int spmv_csr_openmp(CSR csr, unsigned n, float *input_vec, float * output_vec);
 int spmv_csr_openmp_simd(CSR csr, unsigned n, float *input_vec, float * output_vec);
+#endif
 int spmv_csr_sort(CSR csr, unsigned n, float *input_vec, float * output_vec);
 void csr_sort_in_ascending_order(CSR csr);
 #endif

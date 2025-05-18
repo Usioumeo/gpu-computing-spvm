@@ -3,9 +3,9 @@
 Entry to COO
 */
 
-#include "headers/lib.h"
-#include "headers/mmio.h"
-#include "headers/uthash.h"
+#include <lib.h>
+#include "mmio.h"
+#include "uthash.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -60,7 +60,9 @@ void coo_reserve(COO *coo, unsigned nnz) {
   coo->data = (COOEntry *)realloc(coo->data, nnz * sizeof(COOEntry));
   coo->nnz = nnz;
 }
-// Function to reserve memory for CSR matrix
+
+#ifndef USE_CUDA
+  // Function to reserve memory for CSR matrix
 void csr_reserve(CSR *csr, unsigned nnz, unsigned nrow) {
   csr->nnz = nnz;
   csr->nrow = nrow;
@@ -71,6 +73,33 @@ void csr_reserve(CSR *csr, unsigned nnz, unsigned nrow) {
       (unsigned *)realloc(csr->col_idx, nnz * sizeof(unsigned));
   csr->val = (float *)realloc(csr->val, nnz * sizeof(float));
 }
+
+// Function to free the memory allocated for CSR matrix
+// IT ALSO FREES THE POINTER
+void csr_free(CSR *csr) {
+  free(csr->row_idx);
+  free(csr->col_idx);
+  free(csr->val);
+  csr->row_idx = NULL;
+  csr->col_idx = NULL;
+  csr->val = NULL;
+  free(csr);
+}
+
+// Function to create a new empty CSR matrix
+CSR *csr_new() {
+  CSR *csr = (CSR *)malloc(sizeof(CSR));
+  csr->row_idx = NULL;
+  csr->col_idx = NULL;
+  csr->val = NULL;
+  csr->nnz = 0;
+  csr->nrow = 0;
+  csr->ncol = 0;
+  return csr;
+}
+
+#endif
+
 
 
 // Function to convert COO to CSR
@@ -161,17 +190,7 @@ void coo_free(COO *coo) {
   free(coo);
 }
 
-// Function to free the memory allocated for CSR matrix
-// IT ALSO FREES THE POINTER
-void csr_free(CSR *csr) {
-  free(csr->row_idx);
-  free(csr->col_idx);
-  free(csr->val);
-  /*csr->row_idx = NULL;
-  csr->col_idx = NULL;
-  csr->val = NULL;*/
-  free(csr);
-}
+
 
 // Function to create a new empty COO matrix
 COO *coo_new() {
@@ -183,17 +202,7 @@ COO *coo_new() {
   return coo;
 }
 
-// Function to create a new empty CSR matrix
-CSR *csr_new() {
-  CSR *csr = (CSR *)malloc(sizeof(CSR));
-  csr->row_idx = NULL;
-  csr->col_idx = NULL;
-  csr->val = NULL;
-  csr->nnz = 0;
-  csr->nrow = 0;
-  csr->ncol = 0;
-  return csr;
-}
+
 
 int coo_from_file(FILE *input, COO *coo) {
   MM_typecode matcode;
@@ -385,6 +394,7 @@ void csr_sort_in_ascending_order(CSR csr) {
     }
   }
 }
+#ifdef USE_OPENMP
 #include <immintrin.h>
 int spmv_csr_openmp(CSR csr, unsigned n, float *input_vec, float * output_vec){
   if (n!=csr.ncol){
@@ -439,6 +449,7 @@ int spmv_csr_openmp_simd(CSR csr, unsigned n, float *input_vec, float * output_v
   }
   return 0;
 }
+
 int spmv_csr_order(CSR csr, unsigned n, float *input_vec, float * output_vec){
   if (n!=csr.ncol){
     return 1;
@@ -454,3 +465,4 @@ int spmv_csr_order(CSR csr, unsigned n, float *input_vec, float * output_vec){
   }
   return 0;
 }
+#endif
