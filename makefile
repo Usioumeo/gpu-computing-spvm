@@ -22,8 +22,8 @@ DATA_FOLDER := data
 LIBS_SRC = $(wildcard $(SRC_FOLDER)/*.c)
 #TEST_OBJECTS := $(patsubst $(TEST_FOLDER)/%.c, $(OBJ_FOLDER)/tests/%.o, $(TEST_SOURCES))
 
-all:
-
+all: build_tests build_bench
+#TODO add data
 clean:
 	rm -rf $(BUILD_FOLDER)
 # 1=path to parent folder, 2 compiler, 3 flags, 4 OPT
@@ -73,12 +73,12 @@ OBJ_LIB_DEPS_CUDA := $(patsubst $(SRC_FOLDER)/%.cu, $(BUILD_FOLDER)/tests/cuda/o
 $(eval $(call BUILD_BIN_TEMPLATE,$(BUILD_FOLDER)/tests/cuda,$(NVCC),$(CUDA_FLAGS),$(OBJ_LIB_DEPS_CUDA)))
 
 TEST_SOURCES_CUDA := $(wildcard $(TEST_SRC_FOLDER)/*.cu)
-CUDA_TESTS := $(patsubst $(TEST_SRC_FOLDER)/%.cu, $(BUILD_FOLDER)/tests/cuda/bins/%, $(TEST_SOURCES_CUDA))
+CUDA_TESTS := $(patsubst $(TEST_SRC_FOLDER)/%.cu, $(BUILD_FOLDER)/tests/cuda/bins/%,$(TEST_SOURCES_CUDA))
 build_cuda_tests: $(CUDA_TESTS)
 
 build_tests: build_std_tests build_cuda_tests
 
-run_tests: build_tests
+run_tests: build_tests datasets
 	@echo "Running tests..."
 	@echo "Test binaries: $(STD_TESTS)"
 	@for test_bin in $(STD_TESTS); do \
@@ -100,17 +100,55 @@ run_tests: build_tests
 
 
 #std_bench
-$(eval $(call BUILD_OBJ_LIB_TEMPLATE,$(BUILD_FOLDER)/bench/std,$(CC),$(FLAGS),O0))
-$(eval $(call BUILD_OBJ_TEMPLATE,$(BUILD_FOLDER)/bench/std,$(CC),$(FLAGS),$(BENCH_FOLDER),c,O0))
-OBJ_LIB_DEPSO0 := $(patsubst $(SRC_FOLDER)/%.c, $(BUILD_FOLDER)/bench/std/obj_lib/%O0.o, $(LIBS_SRC))
+define BUILD_BENCH_TEMPLATE
+$(eval $(call BUILD_OBJ_LIB_TEMPLATE,$(BUILD_FOLDER)/bench/std,$(CC),$(FLAGS),O$(1)))
+$(eval $(call BUILD_OBJ_TEMPLATE,$(BUILD_FOLDER)/bench/std,$(CC),$(FLAGS),$(BENCH_FOLDER),c,O$(1)))
+$(eval OBJ_LIB_DEPSO$(1) := $(patsubst $(SRC_FOLDER)/%.c, $(BUILD_FOLDER)/bench/std/obj_lib/%O$(1).o, $(LIBS_SRC)))
+$(eval $(call BUILD_BIN_TEMPLATE,$(BUILD_FOLDER)/bench/std,$(CC),$(FLAGS),$(OBJ_LIB_DEPSO$(1)),$(LIB_FLAGS),O$(1)))
 
-$(eval $(call BUILD_BIN_TEMPLATE,$(BUILD_FOLDER)/bench/std,$(CC),$(FLAGS),$(OBJ_LIB_DEPSO0),$(LIB_FLAGS),O0))
-#$(eval $(call BUILD_BIN_TEMPLATE,$(BUILD_FOLDER)/tests/std,$(CC),$(FLAGS),$(OBJ_LIB_DEPS),$(LIB_FLAGS)))
 
+$(eval $(call BUILD_OBJ_LIB_TEMPLATE,$(BUILD_FOLDER)/bench/cuda,$(NVCC),$(CUDA_FLAGS),O$(1)))
+$(eval $(call BUILD_OBJ_TEMPLATE,$(BUILD_FOLDER)/bench/cuda,$(NVCC),$(CUDA_FLAGS),$(BENCH_FOLDER),cu,O$(1)))
+$(eval OBJ_LIB_DEPS_CUDAO$(1) := $(patsubst $(SRC_FOLDER)/%.cu, $(BUILD_FOLDER)/bench/cuda/obj_lib/%O$(1).o, $(LIBS_SRC)))
+$(eval $(call BUILD_BIN_TEMPLATE,$(BUILD_FOLDER)/bench/cuda,$(NVCC),$(CUDA_FLAGS),$(OBJ_LIB_DEPS_CUDAO$(1)),,O$(1)))
+endef
 
+$(foreach opt,0 1 2 3,$(eval $(call BUILD_BENCH_TEMPLATE,$(opt))))
 
 BENCH_SOURCES := $(wildcard $(BENCH_FOLDER)/*.c)
-STD_BENCH := $(patsubst $(BENCH_FOLDER)/%.c, $(BUILD_FOLDER)/bench/std/bins/%O0, $(BENCH_SOURCES))
-debug:
-	@echo $(STD_BENCH)
+BENCH_CUDA_SOURCES := $(wildcard $(BENCH_FOLDER)/*.cu)
+
+STD_BENCH := \
+	$(foreach opt,0 1 2 3, \
+		$(patsubst $(BENCH_FOLDER)/%.c, $(BUILD_FOLDER)/bench/std/bins/%O$(opt), $(BENCH_SOURCES)) \
+	)
+
+CUDA_BENCH := \
+	$(foreach opt,0 1 2 3, \
+		$(patsubst $(BENCH_FOLDER)/%.cu, $(BUILD_FOLDER)/bench/cuda/bins/%O$(opt), $(BENCH_CUDA_SOURCES)) \
+	)
+
+
+
 build_std_bench: $(STD_BENCH)
+build_cuda_bench: $(CUDA_BENCH)
+
+build_bench: build_std_bench build_cuda_bench
+
+
+# 
+
+datasets:
+	@mkdir -p $(DATA_FOLDER)
+	@if ! [ -f $(DATA_FOLDER)/abb313.tar.gz ]; then \
+		echo "Downloading dataset..."; \
+		curl -L --output $(DATA_FOLDER)/abb313.tar.gz https://suitesparse-collection-website.herokuapp.com/MM/HB/abb313.tar.gz; \
+		echo "Unpacking dataset..."; \
+		tar -xzf $(DATA_FOLDER)/abb313.tar.gz -C $(DATA_FOLDER); \
+	fi
+	@if ! [ -f $(DATA_FOLDER)/hollywood.tar.gz ]; then \
+		echo "Downloading dataset..."; \
+		curl -L --output $(DATA_FOLDER)/hollywood.tar.gz https://suitesparse-collection-website.herokuapp.com/MM/LAW/hollywood-2009.tar.gz; \
+		echo "Unpacking dataset..."; \
+		tar -xzf $(DATA_FOLDER)/hollywood.tar.gz -C $(DATA_FOLDER); \
+	fi

@@ -1,3 +1,5 @@
+//USELESS DEFINE, MAKES HAPPY THE LINTER
+#define USE_OPENMP
 #include"lib.h"
 #include <stdio.h>
 #include <string.h>
@@ -45,7 +47,7 @@ int main(){
       if (i<0){
           out = output;
       }
-      spmv_csr(*csr, COLS, rand_vec, out);
+      spmv_csr_openmp_simd(*csr, COLS, rand_vec, out);
     END_TIMER
 
     spmv_csr(*csr, COLS, rand_vec, &output[REPS*COLS]);

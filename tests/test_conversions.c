@@ -4,7 +4,7 @@
 
 int main(){
     COO *coo = coo_new();
-    coo_generate_random(coo, 10, 10, 201);
+    coo_generate_random(coo, 10, 10, 100);
     
 
     coo_sort_in_ascending_order(coo);
