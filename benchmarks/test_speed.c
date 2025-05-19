@@ -1,4 +1,4 @@
-
+#include "lib.h"
 #include <omp.h>
 #include <time.h>
 #include <stdio.h>
@@ -8,20 +8,17 @@
 #define SIZE 100000000
 #define WARMUPS 40
 #define REPS 500
+#define TEST_FUNCTION(func) \
+     \
+        START_TIMER \
+        float output = func(a, b); \
+        if (i >= 0) { \
+            out[i] = output; \
+        } \
+        END_TIMER \
+        float elapsed = (temp_2.tv_sec - temp_1.tv_sec) + (temp_2.tv_usec - temp_1.tv_usec) / 1e6;
 
-#define START_TIMER                                                            \
-  struct timeval temp_1 = {0, 0}, temp_2 = {0, 0};                             \
-  for (int i = -WARMUPS; i < REPS; i++) {                                      \
-    if (i == 0) {                                                              \
-      gettimeofday(&temp_1, NULL);                                             \
-    }
-
-#define END_TIMER                                                              \
-  }                                                                            \
-  gettimeofday(&temp_2, NULL);                                                 \
-  float CPU_time = ((temp_2.tv_sec - temp_1.tv_sec) +                          \
-                    (temp_2.tv_usec - temp_1.tv_usec) / 1e6)/REPS;
-
+    
 float dummy_sum(float *a, float *b) {
     float val = 0;
     for(int i = 0; i < SIZE; ++i) {

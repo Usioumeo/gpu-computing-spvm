@@ -5,7 +5,7 @@ NVCC=nvcc
 FLAGS=-Wall -Wextra -Wpedantic -mavx2 -march=native -DUSE_OPENMP #-fsanitize=address
 #-Wshadow -Wfloat-equal -Wconversion -Wsign-conversion -Wnull-dereference 
 INCLUDES=-I/usr/include/suitesparse  -Isrc/headers
-CUDA_FLAGS=-DUSE_CUDA -Wno-deprecated-gpu-targets #-Wall -Wextra -Wpedantic -mavx2
+CUDA_FLAGS=-DUSE_CUDA -Wno-deprecated-gpu-targets -rdc=true #-Wall -Wextra -Wpedantic -mavx2
 
 LIB_FLAGS=-lm   -lsuitesparseconfig -lcxsparse  \
 -ftree-vectorize -msse3 -mfpmath=sse -ftree-vectorizer-verbose=5 -fopt-info-vec-missed=output.miss -fopenmp #-fsanitize=address
@@ -19,18 +19,20 @@ SRC_FOLDER := src
 DATA_FOLDER := data
 
 ### AUTOMAGICALLY GENERATED ZONE ###
+MAKEFLAGS += -j
 LIBS_SRC = $(wildcard $(SRC_FOLDER)/*.c)
+LIBS_SRC_CUDA = $(wildcard $(SRC_FOLDER)/*.cu)
 #TEST_OBJECTS := $(patsubst $(TEST_FOLDER)/%.c, $(OBJ_FOLDER)/tests/%.o, $(TEST_SOURCES))
 
 all: build_tests build_bench
 #TODO add data
 clean:
 	rm -rf $(BUILD_FOLDER)
-# 1=path to parent folder, 2 compiler, 3 flags, 4 OPT
+# 1=path to parent folder, 2 compiler, 3 flags, 4 extension, 5 OPT
 define BUILD_OBJ_LIB_TEMPLATE
-$(1)/obj_lib/%$(4).o: $(SRC_FOLDER)/%.c
+$(1)/obj_lib/%$(5).o: $(SRC_FOLDER)/%.$(4)
 	@mkdir -p $(1)/obj_lib
-	$(2) $(if $(4),-$(4),) $(3) -c $$< -o $$@ $(INCLUDES)
+	$(2) $(if $(5),-$(5),) $(3) -c $$< -o $$@ $(INCLUDES)
 endef
 
 # 1=path to parent folder, 2 compiler, 3 flags, 4 path source folders, 5 extension, 6 OPT
@@ -40,6 +42,7 @@ $(1)/obj/%$(6).o: $(4)/%.$(5)
 	@mkdir -p $(1)/obj 
 	$(2) $(if $(6),-$(6),) $(3) -c $$< -o $$@ $(INCLUDES)
 endef
+
 
 # 1=path to parent folder, 2 compiler, 3 flags, 4 obj dependencies, 5 linker flags , 6 OPT
 define BUILD_BIN_TEMPLATE
@@ -54,12 +57,12 @@ endef
 
 
 #std_tests
-$(eval $(call BUILD_OBJ_LIB_TEMPLATE,$(BUILD_FOLDER)/tests/std,$(CC),$(FLAGS)))
-$(eval $(call BUILD_OBJ_TEMPLATE,$(BUILD_FOLDER)/tests/std,$(CC),$(FLAGS),$(TEST_SRC_FOLDER),c))
+$(eval $(call BUILD_OBJ_LIB_TEMPLATE,$(BUILD_FOLDER)/tests/std,$(CC),$(FLAGS) -g -fsanitize=address,c))
+$(eval $(call BUILD_OBJ_TEMPLATE,$(BUILD_FOLDER)/tests/std,$(CC),$(FLAGS) -g -fsanitize=address,$(TEST_SRC_FOLDER),c))
 
 OBJ_LIB_DEPS := $(patsubst $(SRC_FOLDER)/%.c, $(BUILD_FOLDER)/tests/std/obj_lib/%.o, $(LIBS_SRC))
 
-$(eval $(call BUILD_BIN_TEMPLATE,$(BUILD_FOLDER)/tests/std,$(CC),$(FLAGS),$(OBJ_LIB_DEPS),$(LIB_FLAGS)))
+$(eval $(call BUILD_BIN_TEMPLATE,$(BUILD_FOLDER)/tests/std,$(CC),$(FLAGS) -g -fsanitize=address,$(OBJ_LIB_DEPS),$(LIB_FLAGS)))
 
 TEST_SOURCES := $(wildcard $(TEST_SRC_FOLDER)/*.c)
 STD_TESTS := $(patsubst $(TEST_SRC_FOLDER)/%.c, $(BUILD_FOLDER)/tests/std/bins/%, $(TEST_SOURCES))
@@ -67,9 +70,10 @@ build_std_tests: $(STD_TESTS)
 
 
 #cuda_tests
-$(eval $(call BUILD_OBJ_LIB_TEMPLATE,$(BUILD_FOLDER)/tests/cuda,$(NVCC),$(CUDA_FLAGS)))
+$(eval $(call BUILD_OBJ_LIB_TEMPLATE,$(BUILD_FOLDER)/tests/cuda,$(NVCC),$(CUDA_FLAGS),c))
+$(eval $(call BUILD_OBJ_LIB_TEMPLATE,$(BUILD_FOLDER)/tests/cuda,$(NVCC),$(CUDA_FLAGS),cu))
 $(eval $(call BUILD_OBJ_TEMPLATE,$(BUILD_FOLDER)/tests/cuda,$(NVCC),$(CUDA_FLAGS),$(TEST_SRC_FOLDER),cu))
-OBJ_LIB_DEPS_CUDA := $(patsubst $(SRC_FOLDER)/%.cu, $(BUILD_FOLDER)/tests/cuda/obj_lib/%.o, $(LIBS_SRC))
+OBJ_LIB_DEPS_CUDA := $(patsubst $(SRC_FOLDER)/%.cu, $(BUILD_FOLDER)/tests/cuda/obj_lib/%.o, $(LIBS_SRC_CUDA)) $(patsubst $(SRC_FOLDER)/%.c, $(BUILD_FOLDER)/tests/cuda/obj_lib/%.o, $(LIBS_SRC))
 $(eval $(call BUILD_BIN_TEMPLATE,$(BUILD_FOLDER)/tests/cuda,$(NVCC),$(CUDA_FLAGS),$(OBJ_LIB_DEPS_CUDA)))
 
 TEST_SOURCES_CUDA := $(wildcard $(TEST_SRC_FOLDER)/*.cu)
@@ -101,15 +105,17 @@ run_tests: build_tests datasets
 
 #std_bench
 define BUILD_BENCH_TEMPLATE
-$(eval $(call BUILD_OBJ_LIB_TEMPLATE,$(BUILD_FOLDER)/bench/std,$(CC),$(FLAGS),O$(1)))
+$(eval $(call BUILD_OBJ_LIB_TEMPLATE,$(BUILD_FOLDER)/bench/std,$(CC),$(FLAGS),c,O$(1)))
 $(eval $(call BUILD_OBJ_TEMPLATE,$(BUILD_FOLDER)/bench/std,$(CC),$(FLAGS),$(BENCH_FOLDER),c,O$(1)))
 $(eval OBJ_LIB_DEPSO$(1) := $(patsubst $(SRC_FOLDER)/%.c, $(BUILD_FOLDER)/bench/std/obj_lib/%O$(1).o, $(LIBS_SRC)))
 $(eval $(call BUILD_BIN_TEMPLATE,$(BUILD_FOLDER)/bench/std,$(CC),$(FLAGS),$(OBJ_LIB_DEPSO$(1)),$(LIB_FLAGS),O$(1)))
 
 
-$(eval $(call BUILD_OBJ_LIB_TEMPLATE,$(BUILD_FOLDER)/bench/cuda,$(NVCC),$(CUDA_FLAGS),O$(1)))
+$(eval $(call BUILD_OBJ_LIB_TEMPLATE,$(BUILD_FOLDER)/bench/cuda,$(NVCC),$(CUDA_FLAGS),c,O$(1)))
+$(eval $(call BUILD_OBJ_LIB_TEMPLATE,$(BUILD_FOLDER)/bench/cuda,$(NVCC),$(CUDA_FLAGS),cu,O$(1)))
 $(eval $(call BUILD_OBJ_TEMPLATE,$(BUILD_FOLDER)/bench/cuda,$(NVCC),$(CUDA_FLAGS),$(BENCH_FOLDER),cu,O$(1)))
-$(eval OBJ_LIB_DEPS_CUDAO$(1) := $(patsubst $(SRC_FOLDER)/%.cu, $(BUILD_FOLDER)/bench/cuda/obj_lib/%O$(1).o, $(LIBS_SRC)))
+
+$(eval OBJ_LIB_DEPS_CUDAO$(1) := $(patsubst $(SRC_FOLDER)/%.cu, $(BUILD_FOLDER)/bench/cuda/obj_lib/%O$(1).o, $(LIBS_SRC_CUDA)) $(patsubst $(SRC_FOLDER)/%.c, $(BUILD_FOLDER)/bench/cuda/obj_lib/%O$(1).o, $(LIBS_SRC)))
 $(eval $(call BUILD_BIN_TEMPLATE,$(BUILD_FOLDER)/bench/cuda,$(NVCC),$(CUDA_FLAGS),$(OBJ_LIB_DEPS_CUDAO$(1)),,O$(1)))
 endef
 
@@ -146,9 +152,15 @@ datasets:
 		echo "Unpacking dataset..."; \
 		tar -xzf $(DATA_FOLDER)/abb313.tar.gz -C $(DATA_FOLDER); \
 	fi
-	@if ! [ -f $(DATA_FOLDER)/hollywood.tar.gz ]; then \
+	@if ! [ -f $(DATA_FOLDER)/mawi_201512020330.tar.gz ]; then \
 		echo "Downloading dataset..."; \
-		curl -L --output $(DATA_FOLDER)/hollywood.tar.gz https://suitesparse-collection-website.herokuapp.com/MM/LAW/hollywood-2009.tar.gz; \
+		curl -L --output $(DATA_FOLDER)/mawi_201512020330.tar.gz https://suitesparse-collection-website.herokuapp.com/MM/MAWI/mawi_201512020330.tar.gz; \
 		echo "Unpacking dataset..."; \
-		tar -xzf $(DATA_FOLDER)/hollywood.tar.gz -C $(DATA_FOLDER); \
+		tar -xzf $(DATA_FOLDER)/mawi_201512020330.tar.gz -C $(DATA_FOLDER); \
+	fi
+	@if ! [ -f $(DATA_FOLDER)/mawi_201512020000.tar.gz ]; then \
+		echo "Downloading dataset..."; \
+		curl -L --output $(DATA_FOLDER)/mawi_201512020000.tar.gz https://suitesparse-collection-website.herokuapp.com/MM/MAWI/mawi_201512020000.tar.gz; \
+		echo "Unpacking dataset..."; \
+		tar -xzf $(DATA_FOLDER)/mawi_201512020000.tar.gz -C $(DATA_FOLDER); \
 	fi

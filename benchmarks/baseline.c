@@ -12,19 +12,6 @@
 #define WARMUPS 40
 #define REPS 500
 
-#define START_TIMER                                                            \
-  struct timeval temp_1 = {0, 0}, temp_2 = {0, 0};                             \
-  for (int i = -WARMUPS; i < REPS; i++) {                                      \
-    if (i == 0) {                                                              \
-      gettimeofday(&temp_1, NULL);                                             \
-    }
-
-#define END_TIMER                                                              \
-  }                                                                            \
-  gettimeofday(&temp_2, NULL);                                                 \
-  float CPU_time = ((temp_2.tv_sec - temp_1.tv_sec) +                          \
-                    (temp_2.tv_usec - temp_1.tv_usec) / 1e6)/REPS;
-
 int main(){
     omp_set_num_threads(4);
     COO *coo = coo_new();

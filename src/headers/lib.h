@@ -3,6 +3,40 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+
+#define START_TIMER                                                            \
+  struct timeval temp_1 = {0, 0}, temp_2 = {0, 0};                             \
+  for (int i = -WARMUPS; i < REPS; i++) {                                      \
+    if (i == 0) {                                                              \
+      gettimeofday(&temp_1, NULL);                                             \
+    }
+
+#define END_TIMER                                                              \
+  }                                                                            \
+  gettimeofday(&temp_2, NULL);                                                 \
+  float CPU_time = ((temp_2.tv_sec - temp_1.tv_sec) +                          \
+                    (temp_2.tv_usec - temp_1.tv_usec) / 1e6)/REPS;
+
+#define TEST_FUNCTION(func) \
+        START_TIMER \
+        func; \
+        END_TIMER \
+  printf("Elapsed time: %f\n", CPU_time); \
+  printf("Total reps: %u\n", REPS); \
+  printf("Nrow: %u\n", csr->nrow); \
+  printf("Ncol: %u\n", csr->ncol); \
+  printf("Nnz: %u\n", csr->nnz); \
+  float flops = 2.0 * csr->nnz / CPU_time; \
+  printf("Gflops: %f\n", flops / 1.0e9);\
+  size_t total_memory = (csr->nrow) * sizeof(unsigned) * 2 + \
+                        csr->nnz * (sizeof(float) + sizeof(unsigned)) +\
+                        csr->nnz * sizeof(float) + csr->nrow * sizeof(unsigned);\
+  float gbytes = (float)total_memory / 1.0e9;\
+  float gbytesps = gbytes / CPU_time;\
+  printf("Total memory moved = %f GB\n", gbytes);\
+  printf("Total bandwidth = %f GB/s\n", gbytesps);
+
 typedef struct {
     // row index (0 indexed)
     unsigned row;
@@ -113,4 +147,5 @@ int spmv_csr_openmp_simd(CSR csr, unsigned n, float *input_vec, float * output_v
 #endif
 int spmv_csr_sort(CSR csr, unsigned n, float *input_vec, float * output_vec);
 void csr_sort_in_ascending_order(CSR csr);
+int relative_error_compare(float *a, float *b, unsigned n);
 #endif
