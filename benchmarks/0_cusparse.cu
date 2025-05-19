@@ -38,9 +38,11 @@ int main(int argc, char *argv[]) {
   CSR *csr = csr_new();
   coo_to_csr(coo, csr);
 
-  float *rand_vec = (float *)malloc(sizeof(float) * csr->ncol);
-  float *output = (float *)malloc(sizeof(float) * csr->ncol * 2);
-  memset(output, 0, sizeof(float) * csr->ncol * 2);
+  float *rand_vec;// = (float *)malloc(sizeof(float) * csr->ncol);
+  cudaMallocManaged(&rand_vec, sizeof(float) * csr->ncol);
+  float *output; //= (float *)malloc(sizeof(float) * csr->ncol * 2);
+  cudaMallocManaged(&output, sizeof(float) * csr->ncol * 2);
+  cudaMemset(output, 0, sizeof(float) * csr->ncol * 2);
   for (unsigned i = 0; i < csr->ncol; i++) {
     rand_vec[i] = (float)(rand() % 2001 - 1000) * 0.001;
   }
