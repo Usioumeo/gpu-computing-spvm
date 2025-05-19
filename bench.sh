@@ -10,6 +10,9 @@
 #SBATCH --error=test-%j.err
 module load CUDA/12.1
 make all
+srun ./build/bench/cuda/bins/1_baseline_single_coreO3
+srun ./build/bench/cuda/bins/1_simd_ilpO3
+srun ./build/bench/cuda/bins/1_simd_ilp_openmpO3
 srun ./build/bench/cuda/bins/gpu_with_inputO0 ./data/mawi_201512020000/mawi_201512020000.mtx
 srun ./build/bench/cuda/bins/gpu_with_inputO1 ./data/mawi_201512020000/mawi_201512020000.mtx
 srun ./build/bench/cuda/bins/gpu_with_inputO2 ./data/mawi_201512020000/mawi_201512020000.mtx

@@ -136,7 +136,6 @@ void coo_to_csr(COO *coo, CSR *csr) {
   }
   // free the temporary array
   free(temp);
-  printf("almost finished\n");
   // sort the CSR matrix in ascending order
   csr_sort_in_ascending_order(*csr);
 }
@@ -366,6 +365,7 @@ void csr_sort_in_ascending_order(CSR csr) {
       csr.col_idx[j] = tmp[j - start].col;
     }
   }
+  free(tmp);
 }
 #ifdef USE_OPENMP
 #include <immintrin.h>
@@ -445,7 +445,7 @@ int spmv_csr_order(CSR csr, unsigned n, float *input_vec, float *output_vec) {
 int relative_error_compare(float *a, float *b, unsigned n) {
   for (unsigned j = 0; j < n; j++) {
 
-    if ((a[j] - b[j])/(fabs(a[j])+0.0001) > 0.001 &&fabs(a[j] - b[j])>0.00001) {
+    if (!((a[j] - b[j])/(fabs(a[j])+0.0001) < 0.001 ||fabs(a[j] - b[j])<0.0001)) {
       printf("The two output are not the same: %f!=%f (%u)\n", a[j],
              b[j], j);
       return -1;

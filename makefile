@@ -1,13 +1,13 @@
 ### CONFIG ZONE ###
 CC=gcc
 NVCC=nvcc
-
-FLAGS=-Wall -Wextra -Wpedantic -mavx2 -march=native -DUSE_OPENMP #-fsanitize=address
+ADDITIONAL_FLAGS :=# -fsanitize=address -g
+FLAGS=-Wall -Wextra -Wpedantic -mavx2 -march=native -DUSE_OPENMP -fopenmp $(ADDITIONAL_FLAGS)#-fsanitize=address
 #-Wshadow -Wfloat-equal -Wconversion -Wsign-conversion -Wnull-dereference 
 INCLUDES=-I/usr/include/suitesparse  -Isrc/headers
-CUDA_FLAGS=-DUSE_CUDA -Wno-deprecated-gpu-targets -rdc=true #-Wall -Wextra -Wpedantic -mavx2
+CUDA_FLAGS=-DUSE_CUDA -Wno-deprecated-gpu-targets -rdc=true -lcusparse #-Wall -Wextra -Wpedantic -mavx2
 
-LIB_FLAGS=-lm -ftree-vectorize -msse3 -mfpmath=sse -ftree-vectorizer-verbose=5 -fopt-info-vec-missed=output.miss -fopenmp #-fsanitize=address
+LIB_FLAGS=-lm -ftree-vectorize -msse3 -mfpmath=sse -ftree-vectorizer-verbose=5 -fopt-info-vec-missed=output.miss  #-fsanitize=address
 #-fopenmp  -lopenblas -lsuitesparseconfig -lcxsparse  
 
 
