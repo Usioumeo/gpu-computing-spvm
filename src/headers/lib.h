@@ -34,8 +34,8 @@
                         csr->nnz * sizeof(float) + csr->nrow * sizeof(unsigned);\
   float gbytes = (float)total_memory / 1.0e9;\
   float gbytesps = gbytes / CPU_time;\
-  printf("Total memory moved = %f GB\n", gbytes);\
-  printf("Total bandwidth = %f GB/s\n", gbytesps);
+  printf("Total memory moved: %f GB\n", gbytes);\
+  printf("Total bandwidth: %f GB/s\n", gbytesps);
 
 typedef struct {
     // row index (0 indexed)

@@ -1,39 +1,106 @@
 // USELESS DEFINE, MAKES HAPPY THE LINTER
 
 #include "lib.h"
+#include <immintrin.h>
 #include <omp.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
-#include <immintrin.h>
 #define ROWS (1 << 13)
 #define COLS (1 << 13)
 #define NNZ (1 << 24)
 
-#define WARMUPS 40
-#define REPS 100
+#define WARMUPS 4
+#define REPS 10
 
+#define BLOCK_SIZE 512
+#define BLOCK_ADV 16
+typedef struct {
+  float cur;
+  unsigned row;
+  unsigned *col_index_cur;
+  unsigned *col_index_end;
+  unsigned *col_index_aligned_end;
+  float *val_cur;
+} BlockData;
 
+inline static void process_step(BlockData *blocks, float *input_vec) {
+  blocks->cur += *blocks->val_cur++ * input_vec[*blocks->col_index_cur++];
+}
 int spmv_csr_simd_ilp_openmp(CSR csr, unsigned n, float *input_vec,
-                         float *output_vec) {
-                         
+                             float *output_vec) {
+
   if (n != csr.ncol) {
     return 1;
   }
-  #pragma omp parallel for schedule(static, 1)
-  for (unsigned i = 0; i < csr.nrow; ++i) {
+  unsigned blocks = (csr.nrow + BLOCK_SIZE - 1) / BLOCK_SIZE;
+#pragma omp parallel for schedule(dynamic)
+  for (int b = 0; b < blocks; b++) {
+    // init blocks
+    BlockData blocks[BLOCK_SIZE];
+    unsigned nblocks = BLOCK_SIZE;
+    for (int i = 0; i < BLOCK_SIZE; i++) {
+      unsigned row = b * BLOCK_SIZE + i;
+      blocks[i].cur = 0.0;
+      blocks[i].row = row;
+      blocks[i].col_index_cur = &csr.col_idx[csr.row_idx[row]];
+      blocks[i].col_index_end = &csr.col_idx[csr.row_idx[row + 1]];
+      blocks[i].col_index_aligned_end = &csr.col_idx[csr.row_idx[row + 1] & ~7];
+      blocks[i].val_cur = &csr.val[csr.row_idx[blocks[i].row]];
+      if (row >= csr.nrow) {
+        nblocks = i;
+        break;
+      }
+    }
+    // process small
+    /*for (unsigned bi = 0; bi < nblocks; bi++) {
+      if (blocks[bi].col_index_end - blocks[bi].col_index_cur <= 8) {
+        while (blocks[bi].col_index_cur < blocks[bi].col_index_end) {
+          process_step(&blocks[bi], input_vec);
+        }
+        output_vec[blocks[bi].row] = blocks[bi].cur;
+      }
+    }
+    // align blocks
+    for (unsigned bi = 0; bi < nblocks; bi++) {
+      unsigned *aligned_start =
+          (unsigned *)(((uintptr_t)blocks[bi].col_index_cur + 7) &
+                       ~((uintptr_t)7));
+      while (blocks[bi].col_index_cur < aligned_start) {
+        process_step(&blocks[bi], input_vec);
+      }
+    }*/
+    // process remaining
+    while (nblocks > 0) {
+      for (int bi = 0; bi < nblocks; bi++) {
+        for (int kd = 0; kd < BLOCK_ADV; kd++) {
+
+          if (blocks[bi].col_index_cur < blocks[bi].col_index_end) {
+            process_step(&blocks[bi], input_vec);
+          } else {
+            output_vec[blocks[bi].row] = blocks[bi].cur;
+            blocks[bi] = blocks[--nblocks];
+            bi--;
+            break;
+          }
+        }
+      }
+    }
+  }
+  /*for (unsigned i = 0; i < csr.nrow; ++i) {
     output_vec[i] = 0.0;
     unsigned start = csr.row_idx[i];
     unsigned aligned_start = (start + 7) & ~7;
     unsigned end = csr.row_idx[i + 1];
     unsigned aligned_end = end & ~7;
-    if (aligned_start > aligned_end){
+    if (aligned_start > aligned_end) {
       for (unsigned k = start; k < end; k++) {
         output_vec[i] += csr.val[k] * input_vec[csr.col_idx[k]];
       }
       continue;
     }
-      
+
     for (unsigned k = start; k < aligned_start; k++) {
       output_vec[i] += csr.val[k] * input_vec[csr.col_idx[k]];
     }
@@ -54,43 +121,42 @@ int spmv_csr_simd_ilp_openmp(CSR csr, unsigned n, float *input_vec,
     for (int j = 0; j < 8; j++) {
       output_vec[i] += temp[j];
     }
-    
+
     for (unsigned j = aligned_end; j < end; ++j) {
       output_vec[i] += csr.val[j] * input_vec[csr.col_idx[j]];
     }
-  }
+  }*/
   return 0;
 }
-
 
 int main(int argc, char *argv[]) {
   printf("simd ilp openmp\n");
   COO *coo = coo_new();
-  if(argc > 2) {
+  if (argc > 2) {
     printf("Usage: %s <input_file>\n", argv[0]);
     return -1;
   }
-  if (argc==2) {
+  if (argc == 2) {
     FILE *input = fopen(argv[1], "r");
     if (input == NULL) {
       printf("Error opening file: %s\n", argv[1]);
       return -1;
     }
-    if (coo_from_file(input, coo)!=0){
+    if (coo_from_file(input, coo) != 0) {
       printf("Error reading COO from file: %s\n", argv[1]);
       fclose(input);
       return -1;
     }
-  } else{
+  } else {
     coo_generate_random(coo, ROWS, COLS, NNZ);
   }
   CSR *csr = csr_new();
   coo_to_csr(coo, csr);
 
   float *rand_vec = (float *)malloc(sizeof(float) * csr->ncol);
-  float *output = (float *)malloc(sizeof(float) *  csr->ncol * 2);
-  memset(output, 0, sizeof(float) *  csr->ncol * 2);
-  for (unsigned i = 0; i <  csr->ncol; i++) {
+  float *output = (float *)malloc(sizeof(float) * csr->ncol * 2);
+  memset(output, 0, sizeof(float) * csr->ncol * 2);
+  for (unsigned i = 0; i < csr->ncol; i++) {
     rand_vec[i] = (float)(rand() % 2001 - 1000) * 0.001;
   }
 
