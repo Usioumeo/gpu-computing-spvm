@@ -11,10 +11,10 @@
 module load CUDA/12.1
 make all
 #ARGUMENT=./data/mawi_201512020000/mawi_201512020000.mtx
-#ARGUMENT=./data/mawi_201512020330/mawi_201512020330.mtx
+ARGUMENT=./data/mawi_201512020330/mawi_201512020330.mtx
 RUNNER=
 #RUNNER=srun
-ARGUMENT= 
+#ARGUMENT= 
 $RUNNER ./build/bench/std/bins/1_baseline_single_coreO3 $ARGUMENT
 $RUNNER ./build/bench/std/bins/2_simd_ilpO3 $ARGUMENT
 $RUNNER ./build/bench/std/bins/3_simd_ilp_openmpO3 $ARGUMENT
