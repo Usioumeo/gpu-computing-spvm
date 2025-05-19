@@ -14,7 +14,7 @@
 #define WARMUPS 0
 #define REPS 1
 
-#define BLOCK_SIZE (1<<13)
+#define BLOCK_SIZE (1<<12)
 inline static float simd_process(CSR csr, unsigned start, unsigned end, float *input_vec
                                  ) {
   float ret = 0.0;
