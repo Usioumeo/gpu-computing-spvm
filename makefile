@@ -7,9 +7,8 @@ FLAGS=-Wall -Wextra -Wpedantic -mavx2 -march=native -DUSE_OPENMP #-fsanitize=add
 INCLUDES=-I/usr/include/suitesparse  -Isrc/headers
 CUDA_FLAGS=-DUSE_CUDA -Wno-deprecated-gpu-targets -rdc=true #-Wall -Wextra -Wpedantic -mavx2
 
-LIB_FLAGS=-lm   -lsuitesparseconfig -lcxsparse  \
--ftree-vectorize -msse3 -mfpmath=sse -ftree-vectorizer-verbose=5 -fopt-info-vec-missed=output.miss -fopenmp #-fsanitize=address
-#-fopenmp  -lopenblas
+LIB_FLAGS=-lm -ftree-vectorize -msse3 -mfpmath=sse -ftree-vectorizer-verbose=5 -fopt-info-vec-missed=output.miss -fopenmp #-fsanitize=address
+#-fopenmp  -lopenblas -lsuitesparseconfig -lcxsparse  
 
 
 BUILD_FOLDER := build
