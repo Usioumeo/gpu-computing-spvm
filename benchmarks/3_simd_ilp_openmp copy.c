@@ -24,18 +24,26 @@ int spmv_csr_simd_ilp_openmp(CSR csr, unsigned n, float *input_vec,
   for (unsigned i = 0; i < csr.nrow; ++i) {
     output_vec[i] = 0.0;
     unsigned start = csr.row_idx[i];
-    unsigned start2 = (start + 7) & ~7;
+    unsigned aligned_start = (start + 7) & ~7;
     unsigned end = csr.row_idx[i + 1];
-    unsigned end2 = end & ~7;
-    for (unsigned k = start; k < start2; k++) {
+    unsigned aligned_end = end & ~7;
+    if (aligned_start > aligned_end){
+      for (unsigned k = start; k < end; k++) {
+        output_vec[i] += csr.val[k] * input_vec[csr.col_idx[k]];
+      }
+      continue;
+    }
+      
+    for (unsigned k = start; k < aligned_start; k++) {
       output_vec[i] += csr.val[k] * input_vec[csr.col_idx[k]];
     }
     __m256 cumulate = _mm256_setzero_ps();
 
-    for (unsigned j = start2; j < end2; j += 8) {
+    for (unsigned j = aligned_start; j < aligned_end; j += 8) {
       // load 8 offsets
       __m256 vec1 = _mm256_loadu_ps(&csr.val[j]);
-      __m256i indices = _mm256_loadu_si256((const __m256i_u *)&csr.col_idx[j]);
+      // Gather indices as 8 32-bit integers
+      __m256i indices = _mm256_loadu_si256((const __m256i *)&csr.col_idx[j]);
       __m256 vec2 = _mm256_i32gather_ps(input_vec, indices, 4);
       __m256 product = _mm256_mul_ps(vec1, vec2);
       cumulate = _mm256_add_ps(cumulate, product);
@@ -47,7 +55,7 @@ int spmv_csr_simd_ilp_openmp(CSR csr, unsigned n, float *input_vec,
       output_vec[i] += temp[j];
     }
     
-    for (unsigned j = end2; j < end; ++j) {
+    for (unsigned j = aligned_end; j < end; ++j) {
       output_vec[i] += csr.val[j] * input_vec[csr.col_idx[j]];
     }
   }

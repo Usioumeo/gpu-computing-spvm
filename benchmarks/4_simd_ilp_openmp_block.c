@@ -11,30 +11,16 @@
 #define NNZ (1 << 24)
 
 #define WARMUPS 40
-#define REPS 500
-
-// default implementation, it should be the correct version
-/*int spmv_csr(CSR csr, unsigned n, float *input_vec, float *output_vec) {
-  if (n != csr.ncol) {
-    return 1;
-  }
-  for (unsigned i = 0; i < csr.nrow; ++i) {
-    output_vec[i] = 0.0;
-    for (unsigned j = csr.row_idx[i]; j < csr.row_idx[i + 1]; ++j) {
-      output_vec[i] += csr.val[j] * input_vec[csr.col_idx[j]];
-    }
-  }
-
-  return 0;
-}*/
+#define REPS 100
 
 
-int spmv_csr_simd_ilp(CSR csr, unsigned n, float *input_vec,
+int spmv_csr_simd_ilp_openmp(CSR csr, unsigned n, float *input_vec,
                          float *output_vec) {
                          
   if (n != csr.ncol) {
     return 1;
   }
+  #pragma omp parallel for schedule(static, 1)
   for (unsigned i = 0; i < csr.nrow; ++i) {
     output_vec[i] = 0.0;
     unsigned start = csr.row_idx[i];
@@ -76,9 +62,9 @@ int spmv_csr_simd_ilp(CSR csr, unsigned n, float *input_vec,
   return 0;
 }
 
+
 int main(int argc, char *argv[]) {
-   srand(100);
-  printf("simd ilp\n");
+  printf("simd ilp openmp\n");
   COO *coo = coo_new();
   if(argc > 2) {
     printf("Usage: %s <input_file>\n", argv[0]);
@@ -108,7 +94,7 @@ int main(int argc, char *argv[]) {
     rand_vec[i] = (float)(rand() % 2001 - 1000) * 0.001;
   }
 
-  TEST_FUNCTION(spmv_csr_simd_ilp(*csr, csr->ncol, rand_vec, output);)
+  TEST_FUNCTION(spmv_csr_simd_ilp_openmp(*csr, csr->ncol, rand_vec, output);)
 
   spmv_csr(*csr, csr->ncol, rand_vec, output + csr->ncol);
 
