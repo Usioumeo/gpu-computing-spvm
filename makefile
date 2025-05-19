@@ -56,12 +56,12 @@ endef
 
 
 #std_tests
-$(eval $(call BUILD_OBJ_LIB_TEMPLATE,$(BUILD_FOLDER)/tests/std,$(CC),$(FLAGS) -g -fsanitize=address,c))
-$(eval $(call BUILD_OBJ_TEMPLATE,$(BUILD_FOLDER)/tests/std,$(CC),$(FLAGS) -g -fsanitize=address,$(TEST_SRC_FOLDER),c))
+$(eval $(call BUILD_OBJ_LIB_TEMPLATE,$(BUILD_FOLDER)/tests/std,$(CC),$(FLAGS),c))
+$(eval $(call BUILD_OBJ_TEMPLATE,$(BUILD_FOLDER)/tests/std,$(CC),$(FLAGS),$(TEST_SRC_FOLDER),c))
 
 OBJ_LIB_DEPS := $(patsubst $(SRC_FOLDER)/%.c, $(BUILD_FOLDER)/tests/std/obj_lib/%.o, $(LIBS_SRC))
 
-$(eval $(call BUILD_BIN_TEMPLATE,$(BUILD_FOLDER)/tests/std,$(CC),$(FLAGS) -g -fsanitize=address,$(OBJ_LIB_DEPS),$(LIB_FLAGS)))
+$(eval $(call BUILD_BIN_TEMPLATE,$(BUILD_FOLDER)/tests/std,$(CC),$(FLAGS),$(OBJ_LIB_DEPS),$(LIB_FLAGS)))
 
 TEST_SOURCES := $(wildcard $(TEST_SRC_FOLDER)/*.c)
 STD_TESTS := $(patsubst $(TEST_SRC_FOLDER)/%.c, $(BUILD_FOLDER)/tests/std/bins/%, $(TEST_SOURCES))
