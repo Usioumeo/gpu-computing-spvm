@@ -12,8 +12,8 @@ extern "C" {
 #define COLS (1 << 13)
 #define NNZ (1 << 24)
 
-#define WARMUPS 40
-#define REPS 100
+#define WARMUPS 4
+#define REPS 10
 
 #define BLOCK_SIZE 32
 #define DATA_BLOCK (16)
@@ -55,7 +55,7 @@ int spmv_csr_gpu(CSR csr, unsigned n, float *input_vec, float *output_vec) {
 }
 
 int main(int argc, char *argv[]) {
-  printf("baseline single core\n");
+  printf("gpu baseline\n");
   COO *coo = coo_new();
   if(argc > 2) {
     printf("Usage: %s <input_file>\n", argv[0]);
@@ -99,6 +99,7 @@ int main(int argc, char *argv[]) {
   csr_free(csr);
   cudaFree(rand_vec);
   cudaFree(output);
+  printf("\n\n");
   // free(rand_vec);
   // free(output);
   // printf("test passed\n");

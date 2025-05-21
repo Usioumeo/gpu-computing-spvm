@@ -15,7 +15,7 @@ extern "C" {
 #define REPS 500
 
 int main(int argc, char *argv[]) {
-  printf("cusparse baseline\n");
+  printf("cusparse baseline alg 1\n");
   COO *coo = coo_new();
   if (argc > 2) {
     printf("Usage: %s <input_file>\n", argv[0]);
@@ -77,9 +77,9 @@ int main(int argc, char *argv[]) {
 
   TEST_FUNCTION(cusparseSpMV(handle, CUSPARSE_OPERATION_NON_TRANSPOSE, &alpha,
                              matA, input_vec, &beta, output_vec, CUDA_R_32F,
-                             CUSPARSE_SPMV_ALG_DEFAULT, dBuffer);
+                             CUSPARSE_SPMV_CSR_ALG1, dBuffer);
                 cudaDeviceSynchronize();)
-  spmv_csr(*csr, COLS, rand_vec, &output[COLS]);
+  spmv_csr(*csr, csr->ncol, rand_vec, &output[csr->ncol]);
   // Check results
   if (relative_error_compare(output, output + csr->ncol, csr->ncol)) {
     printf("Error in the output\n");

@@ -23,7 +23,8 @@ LIBS_SRC = $(wildcard $(SRC_FOLDER)/*.c)
 LIBS_SRC_CUDA = $(wildcard $(SRC_FOLDER)/*.cu)
 #TEST_OBJECTS := $(patsubst $(TEST_FOLDER)/%.c, $(OBJ_FOLDER)/tests/%.o, $(TEST_SOURCES))
 
-all: build_tests build_bench
+all: build_tests build_bench datasets
+	@echo "All tests and benchmarks built successfully!"
 #TODO add data
 clean:
 	rm -rf $(BUILD_FOLDER)
@@ -141,25 +142,34 @@ build_cuda_bench: $(CUDA_BENCH)
 build_bench: build_std_bench build_cuda_bench
 
 
-# 
+define DATASET_URLS
+mawi_201512020330=https://suitesparse-collection-website.herokuapp.com/MM/MAWI/mawi_201512020330.tar.gz
+mawi_201512020000=https://suitesparse-collection-website.herokuapp.com/MM/MAWI/mawi_201512020000.tar.gz
+nlpkkt240=https://suitesparse-collection-website.herokuapp.com/MM/Schenk/nlpkkt240.tar.gz
+bump_2911=https://suitesparse-collection-website.herokuapp.com/MM/Janna/Bump_2911.tar.gz
 
-datasets:
+endef
+export DATASET_URLS
+DATASETS := $(foreach l,$(DATASET_URLS),$(firstword $(subst =, ,$(l))))
+
+# Helper to get URL by dataset name
+get-url = $(word 2, $(subst =, ,$(filter $(1)=%, $(DATASET_URLS))))
+
+# Rule to download and extract a dataset
+$(DATA_FOLDER)/%.tar.gz:
 	@mkdir -p $(DATA_FOLDER)
-	@if ! [ -f $(DATA_FOLDER)/abb313.tar.gz ]; then \
-		echo "Downloading dataset..."; \
-		curl -L --output $(DATA_FOLDER)/abb313.tar.gz https://suitesparse-collection-website.herokuapp.com/MM/HB/abb313.tar.gz; \
-		echo "Unpacking dataset..."; \
-		tar -xzf $(DATA_FOLDER)/abb313.tar.gz -C $(DATA_FOLDER); \
-	fi
-	@if ! [ -f $(DATA_FOLDER)/mawi_201512020330.tar.gz ]; then \
-		echo "Downloading dataset..."; \
-		curl -L --output $(DATA_FOLDER)/mawi_201512020330.tar.gz https://suitesparse-collection-website.herokuapp.com/MM/MAWI/mawi_201512020330.tar.gz; \
-		echo "Unpacking dataset..."; \
-		tar -xzf $(DATA_FOLDER)/mawi_201512020330.tar.gz -C $(DATA_FOLDER); \
-	fi
-	@if ! [ -f $(DATA_FOLDER)/mawi_201512020000.tar.gz ]; then \
-		echo "Downloading dataset..."; \
-		curl -L --output $(DATA_FOLDER)/mawi_201512020000.tar.gz https://suitesparse-collection-website.herokuapp.com/MM/MAWI/mawi_201512020000.tar.gz; \
-		echo "Unpacking dataset..."; \
-		tar -xzf $(DATA_FOLDER)/mawi_201512020000.tar.gz -C $(DATA_FOLDER); \
-	fi
+	@url="$(call get-url,$*)"; \
+	if [ -z "$$url" ]; then \
+		echo "No URL found for $*"; exit 1; \
+	fi; \
+	echo "Downloading $$url..."; \
+	curl -L --output $@ "$$url"
+	@echo "Unpacking $@..."; \
+	tar -xzf $@ -C $(DATA_FOLDER)
+
+$(DATA_FOLDER)/random2.mtx: $(BUILD_FOLDER)/bench/std/bins/0_generate_dataO3
+	$(BUILD_FOLDER)/bench/std/bins/0_generate_dataO3 $(DATA_FOLDER)/random2.mtx 35991342 35991342 37242710
+
+
+datasets: $(addprefix $(DATA_FOLDER)/, $(addsuffix .tar.gz, $(DATASETS))) $(DATA_FOLDER)/random2.mtx
+

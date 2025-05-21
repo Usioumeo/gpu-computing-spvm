@@ -121,6 +121,6 @@ int main(int argc, char *argv[]) {
   csr_free(csr);
   free(rand_vec);
   free(output);
-  printf("test passed\n");
+  printf("test passed\n\n");
   return 0;
 }

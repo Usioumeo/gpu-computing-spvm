@@ -7,50 +7,91 @@ extern "C" {
 #include <stdio.h>
 #include <sys/select.h>
 #include <sys/time.h>
+#define ROWS (1 << 13)
+#define COLS (1 << 13)
+#define NNZ (1 << 24)
 
 #define WARMUPS 50
-#define REPS 1000
+#define REPS 100
 
 #define BLOCK_SIZE 32
 #define DATA_BLOCK (16)
+/*
+__global__ void spmv_csr_gpu_kernel_dynamic_son(float *val, unsigned *col_idx,
+                                                float *input_vec,
+                                                unsigned row_size,
+                                                float *output) {
+  unsigned i = blockIdx.x * blockDim.x + threadIdx.x;
+  if (row_size==2814){
+      printf("Hello from thread %d, block %d\n", threadIdx.x, blockIdx.x);
+      printf("row %u %u <= %u < %u\n", i, row_size, i,
+             row_size);
+      assert(1 == 0);
+    }
+  if (i < row_size) {
+    
+    atomicAdd(output, val[i] * input_vec[col_idx[i]]);
+    //output+= row_val[i] * input_vec[col_idx[i]];
+  }
+}
 
-__global__ void spmv_csr_gpu_kernel(CSR csr, unsigned n, float *input_vec,
-                                    float *output_vec) {
+__global__ void spmv_csr_gpu_kernel_dynamic(CSR csr, unsigned n,
+                                            float *input_vec,
+                                            float *output_vec) {
+                                              __syncthreads();
   // for (unsigned i = 0; i < csr.nrow; ++i) {
   unsigned i = blockIdx.x * blockDim.x + threadIdx.x;
   if (i < csr.nrow) {
-    float out = 0.0;
+
     unsigned start = csr.row_idx[i];
     unsigned end = csr.row_idx[i + 1];
 
-    float *val = csr.val + start;
-    unsigned *col = csr.col_idx + start;
-    float *val_end = csr.val + end;
+    if (end - start >= 16) {
+#define SON_BLOCK_SIZE 16
+      unsigned n_blocks_son =
+          (end - start + SON_BLOCK_SIZE - 1) / SON_BLOCK_SIZE;
+      if (i < 5846347 && i > 5846147) {
+        printf("row %d, length %u, n_blocks_son %u\n", i, end - start,
+               n_blocks_son);
+               spmv_csr_gpu_kernel_dynamic_son<<<1, end - start>>>(
+          csr.val + start, csr.col_idx + start, input_vec, end - start,
+          &output_vec[i]);
+      }
 
-    while (val < val_end) {
+      
+    } else {
+      float out = 0.0;
+      float *val = csr.val + start;
+      unsigned *col = csr.col_idx + start;
+      float *val_end = csr.val + end;
 
-      out += *val * input_vec[*col];
-      val++;
-      col++;
+      while (val < val_end) {
+
+        out += *val * input_vec[*col];
+        val++;
+        col++;
+      }
+      output_vec[i] = out;
     }
-    output_vec[i] = out;
   }
 
   //}
 }
-int spmv_csr_gpu(CSR csr, unsigned n, float *input_vec, float *output_vec) {
+
+int spmv_csr_gpu_dynamic(CSR csr, unsigned n, float *input_vec,
+                         float *output_vec) {
   if (n != csr.ncol) {
     return 1;
   }
-
-  unsigned int nblocks = (csr.nrow + BLOCK_SIZE - 1) / BLOCK_SIZE;
-  spmv_csr_gpu_kernel<<<nblocks, BLOCK_SIZE>>>(csr, n, input_vec, output_vec);
-  // Wait for GPU to finish before accessing on host
+  cudaMemset(output_vec, 0, sizeof(float) * csr.nrow);
+  unsigned nblocks = (csr.nrow + BLOCK_SIZE - 1) / BLOCK_SIZE;
+  spmv_csr_gpu_kernel_dynamic<<<nblocks, BLOCK_SIZE>>>(csr, n, input_vec,
+                                                       output_vec);
   cudaDeviceSynchronize();
 
   return 0;
 }
-
+*/
 __device__ unsigned upper_bound(const unsigned *arr, int size, unsigned key) {
   int left = 0;
   int right = size;
@@ -170,101 +211,27 @@ int spmv_csr_gpu_nnz(CSR csr, unsigned n, float *input_vec, float *output_vec, u
 
   return 0;
 }
-/*
-__global__ void spmv_csr_gpu_kernel_dynamic_son(float *val, unsigned *col_idx,
-                                                float *input_vec,
-                                                unsigned row_size,
-                                                float *output) {
-  unsigned i = blockIdx.x * blockDim.x + threadIdx.x;
-  if (row_size==2814){
-      printf("Hello from thread %d, block %d\n", threadIdx.x, blockIdx.x);
-      printf("row %u %u <= %u < %u\n", i, row_size, i,
-             row_size);
-      assert(1 == 0);
-    }
-  if (i < row_size) {
-    
-    atomicAdd(output, val[i] * input_vec[col_idx[i]]);
-    //*output+= row_val[i] * input_vec[col_idx[i]];
-  }
-}
 
-__global__ void spmv_csr_gpu_kernel_dynamic(CSR csr, unsigned n,
-                                            float *input_vec,
-                                            float *output_vec) {
-                                              __syncthreads();
-  // for (unsigned i = 0; i < csr.nrow; ++i) {
-  unsigned i = blockIdx.x * blockDim.x + threadIdx.x;
-  if (i < csr.nrow) {
-
-    unsigned start = csr.row_idx[i];
-    unsigned end = csr.row_idx[i + 1];
-
-    if (end - start >= 16) {
-#define SON_BLOCK_SIZE 16
-      unsigned n_blocks_son =
-          (end - start + SON_BLOCK_SIZE - 1) / SON_BLOCK_SIZE;
-      if (i < 5846347 && i > 5846147) {
-        printf("row %d, length %u, n_blocks_son %u\n", i, end - start,
-               n_blocks_son);
-               spmv_csr_gpu_kernel_dynamic_son<<<1, end - start>>>(
-          csr.val + start, csr.col_idx + start, input_vec, end - start,
-          &output_vec[i]);
-      }
-
-      
-    } else {
-      float out = 0.0;
-      float *val = csr.val + start;
-      unsigned *col = csr.col_idx + start;
-      float *val_end = csr.val + end;
-
-      while (val < val_end) {
-
-        out += *val * input_vec[*col];
-        val++;
-        col++;
-      }
-      output_vec[i] = out;
-    }
-  }
-
-  //}
-}
-
-int spmv_csr_gpu_dynamic(CSR csr, unsigned n, float *input_vec,
-                         float *output_vec) {
-  if (n != csr.ncol) {
-    return 1;
-  }
-  cudaMemset(output_vec, 0, sizeof(float) * csr.nrow);
-  unsigned nblocks = (csr.nrow + BLOCK_SIZE - 1) / BLOCK_SIZE;
-  spmv_csr_gpu_kernel_dynamic<<<nblocks, BLOCK_SIZE>>>(csr, n, input_vec,
-                                                       output_vec);
-  cudaDeviceSynchronize();
-
-  return 0;
-}
-*/
 int main(int argc, char *argv[]) {
-  if (argc != 2) {
+  COO *coo = coo_new();
+  if(argc > 2) {
     printf("Usage: %s <input_file>\n", argv[0]);
     return -1;
   }
-  COO *coo = coo_new();
-  // cudaMallocManaged(&coo, sizeof(COO));
-  FILE *file = fopen(argv[1], "r");
-  if (file == NULL) {
-    printf("Error opening file\n");
-    return -1;
+  if (argc==2) {
+    FILE *input = fopen(argv[1], "r");
+    if (input == NULL) {
+      printf("Error opening file: %s\n", argv[1]);
+      return -1;
+    }
+    if (coo_from_file(input, coo)!=0){
+      printf("Error reading COO from file: %s\n", argv[1]);
+      fclose(input);
+      return -1;
+    }
+  } else{
+    coo_generate_random(coo, ROWS, COLS, NNZ);
   }
-
-  if (coo_from_file(file, coo)) {
-    printf("Error reading file\n");
-    fclose(file);
-    return -1;
-  }
-  // coo_generate_random(coo, 12000, 12000, 100000);
   CSR *csr = csr_new();
   coo_to_csr(coo, csr);
   printf("coo->nrow %u coo->ncol %u coo->nnz %u\n", coo->nrow, coo->ncol,
@@ -292,6 +259,7 @@ int main(int argc, char *argv[]) {
   cudaFree(rand_vec);
   cudaFree(output);
   cudaFree(tmp);
+  printf("test passed\n\n");
   // free(rand_vec);
   // free(output);
   // printf("test passed\n");

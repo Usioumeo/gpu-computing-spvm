@@ -130,7 +130,7 @@ int spmv_csr_simd_ilp_openmp(CSR csr, unsigned n, float *input_vec,
 }
 
 int main(int argc, char *argv[]) {
-  printf("simd ilp openmp\n");
+  printf("simd ilp openmp block\n");
   COO *coo = coo_new();
   if (argc > 2) {
     printf("Usage: %s <input_file>\n", argv[0]);
@@ -173,6 +173,6 @@ int main(int argc, char *argv[]) {
   csr_free(csr);
   free(rand_vec);
   free(output);
-  printf("test passed\n");
+  printf("test passed\n\n");
   return 0;
 }

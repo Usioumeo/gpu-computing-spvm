@@ -64,7 +64,7 @@ int spmv_csr_simd_ilp_openmp(CSR csr, unsigned n, float *input_vec,
 
 
 int main(int argc, char *argv[]) {
-  printf("simd ilp openmp\n");
+  printf("simd ilp openmp\n\n");
   COO *coo = coo_new();
   if(argc > 2) {
     printf("Usage: %s <input_file>\n", argv[0]);
