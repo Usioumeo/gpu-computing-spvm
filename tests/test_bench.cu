@@ -77,8 +77,6 @@ int main(void) {
   for (unsigned i = 0; i < COLS; i++) {
     rand_vec[i] = (float)(rand() % 2001 - 1000) * 0.001;
   }
-  // CSR *temp=csr_new();
-  //  csr_sort_in_ascending_order(*csr);
 
   START_TIMER
   spmv_csr_gpu(*csr, COLS, rand_vec, output);

@@ -40,19 +40,16 @@ int main(int argc, char *argv[]) {
   coo_to_csr(coo, csr);
 
   float *rand_vec = (float *)malloc(sizeof(float) * csr->ncol);
-  float *output = (float *)malloc(sizeof(float) *  csr->ncol * 2);
-  memset(output, 0, sizeof(float) *  csr->ncol * 2);
+  float *output = (float *)malloc(sizeof(float) *  csr->nrow * 2);
   for (unsigned i = 0; i <  csr->ncol; i++) {
     rand_vec[i] = (float)(rand() % 2001 - 1000) * 0.001;
   }
-  // CSR *temp=csr_new();
-  //  csr_sort_in_ascending_order(*csr);
 
   TEST_FUNCTION(spmv_csr(*csr,  csr->ncol, rand_vec, output);)
 
-  spmv_csr(*csr,  csr->ncol, rand_vec, output +  csr->ncol);
+  spmv_csr(*csr,  csr->ncol, rand_vec, output +  csr->nrow);
 
-  if (relative_error_compare(output, output + csr->ncol, csr->ncol)) {
+  if (relative_error_compare(output, output + csr->nrow, csr->nrow)) {
     printf("Error in the output\n");
     return -1;
   }

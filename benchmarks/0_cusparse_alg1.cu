@@ -41,8 +41,7 @@ int main(int argc, char *argv[]) {
   float *rand_vec;// = (float *)malloc(sizeof(float) * csr->ncol);
   cudaMallocManaged(&rand_vec, sizeof(float) * csr->ncol);
   float *output; //= (float *)malloc(sizeof(float) * csr->ncol * 2);
-  cudaMallocManaged(&output, sizeof(float) * csr->ncol * 2);
-  cudaMemset(output, 0, sizeof(float) * csr->ncol * 2);
+  cudaMallocManaged(&output, sizeof(float) * csr->nrow * 2);
   for (unsigned i = 0; i < csr->ncol; i++) {
     rand_vec[i] = (float)(rand() % 2001 - 1000) * 0.001;
   }
@@ -79,9 +78,9 @@ int main(int argc, char *argv[]) {
                              matA, input_vec, &beta, output_vec, CUDA_R_32F,
                              CUSPARSE_SPMV_CSR_ALG1, dBuffer);
                 cudaDeviceSynchronize();)
-  spmv_csr(*csr, csr->ncol, rand_vec, &output[csr->ncol]);
-  // Check results
-  if (relative_error_compare(output, output + csr->ncol, csr->ncol)) {
+  spmv_csr(*csr,  csr->ncol, rand_vec, output +  csr->nrow);
+
+  if (relative_error_compare(output, output + csr->nrow, csr->nrow)) {
     printf("Error in the output\n");
     return -1;
   }

@@ -87,8 +87,6 @@ int main(int argc, char *argv[]) {
     rand_vec[i] = (float)(rand() % 2001 - 1000) * 0.001;
   }
   printf("starting the test\n");
-  // CSR *temp=csr_new();
-  //  csr_sort_in_ascending_order(*csr);
 
   START_TIMER
   spmv_csr_gpu(*csr, csr->ncol, rand_vec, output);

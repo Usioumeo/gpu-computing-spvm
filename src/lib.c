@@ -309,9 +309,11 @@ int spmv_csr(CSR csr, unsigned n, float *input_vec, float *output_vec) {
   }
   for (unsigned i = 0; i < csr.nrow; ++i) {
     output_vec[i] = 0.0;
+    float out = 0.0;
     for (unsigned j = csr.row_idx[i]; j < csr.row_idx[i + 1]; ++j) {
-      output_vec[i] += csr.val[j] * input_vec[csr.col_idx[j]];
+      out+= csr.val[j] * input_vec[csr.col_idx[j]];
     }
+    output_vec[i] = out;
   }
 
   return 0;

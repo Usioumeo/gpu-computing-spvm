@@ -7,15 +7,15 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
-#define ROWS (1 << 13)
+#define ROWS (1 << 16)
 #define COLS (1 << 13)
 #define NNZ (1 << 24)
 
 #define WARMUPS 4
-#define REPS 10
+#define REPS 50
 
 #define BLOCK_SIZE 512
-#define BLOCK_ADV 16
+#define BLOCK_ADV 32
 typedef struct {
   float cur;
   unsigned row;
@@ -23,6 +23,8 @@ typedef struct {
   unsigned *col_index_end;
   unsigned *col_index_aligned_end;
   float *val_cur;
+
+  //char align[24]; // padding to ensure alignment
 } BlockData;
 
 inline static void process_step(BlockData *blocks, float *input_vec) {
@@ -46,7 +48,7 @@ int spmv_csr_simd_ilp_openmp(CSR csr, unsigned n, float *input_vec,
       blocks[i].row = row;
       blocks[i].col_index_cur = &csr.col_idx[csr.row_idx[row]];
       blocks[i].col_index_end = &csr.col_idx[csr.row_idx[row + 1]];
-      blocks[i].col_index_aligned_end = &csr.col_idx[csr.row_idx[row + 1] & ~7];
+      blocks[i].col_index_aligned_end = (unsigned *)((uintptr_t)blocks[i].col_index_end & ~(uintptr_t)7);
       blocks[i].val_cur = &csr.val[csr.row_idx[blocks[i].row]];
       if (row >= csr.nrow) {
         nblocks = i;
@@ -54,15 +56,18 @@ int spmv_csr_simd_ilp_openmp(CSR csr, unsigned n, float *input_vec,
       }
     }
     // process small
-    /*for (unsigned bi = 0; bi < nblocks; bi++) {
+    for (unsigned bi = 0; bi < nblocks; bi++) {
       if (blocks[bi].col_index_end - blocks[bi].col_index_cur <= 8) {
         while (blocks[bi].col_index_cur < blocks[bi].col_index_end) {
           process_step(&blocks[bi], input_vec);
         }
         output_vec[blocks[bi].row] = blocks[bi].cur;
+        
+        blocks[bi] = blocks[--nblocks];
+        bi--;
       }
     }
-    // align blocks
+    /*// align blocks
     for (unsigned bi = 0; bi < nblocks; bi++) {
       unsigned *aligned_start =
           (unsigned *)(((uintptr_t)blocks[bi].col_index_cur + 7) &
@@ -71,6 +76,7 @@ int spmv_csr_simd_ilp_openmp(CSR csr, unsigned n, float *input_vec,
         process_step(&blocks[bi], input_vec);
       }
     }*/
+
     // process remaining
     while (nblocks > 0) {
       for (int bi = 0; bi < nblocks; bi++) {
@@ -154,20 +160,38 @@ int main(int argc, char *argv[]) {
   coo_to_csr(coo, csr);
 
   float *rand_vec = (float *)malloc(sizeof(float) * csr->ncol);
-  float *output = (float *)malloc(sizeof(float) * csr->ncol * 2);
-  memset(output, 0, sizeof(float) * csr->ncol * 2);
+  float *output = (float *)malloc(sizeof(float) *  csr->nrow * 2);
   for (unsigned i = 0; i < csr->ncol; i++) {
     rand_vec[i] = (float)(rand() % 2001 - 1000) * 0.001;
+  }
+  int sorted = 1;
+  for(unsigned i = 0; i < csr->nrow&&sorted; i++) {
+    unsigned cur_col=csr->col_idx[csr->row_idx[i]];
+    for(unsigned j = csr->row_idx[i]; j < csr->row_idx[i + 1]&&sorted; j++) {
+      if(csr->col_idx[j] < cur_col) {
+        sorted = 0;
+        break;
+      }else{
+        cur_col = csr->col_idx[j];
+      }
+
+    }
+  } 
+  if(sorted) {
+    printf("is sorted\n");
+  }else{
+    printf("is not sorted\n");
   }
 
   TEST_FUNCTION(spmv_csr_simd_ilp_openmp(*csr, csr->ncol, rand_vec, output);)
 
-  spmv_csr(*csr, csr->ncol, rand_vec, output + csr->ncol);
+  spmv_csr(*csr,  csr->ncol, rand_vec, output +  csr->nrow);
 
-  if (relative_error_compare(output, output + csr->ncol, csr->ncol)) {
+  if (relative_error_compare(output, output + csr->nrow, csr->nrow)) {
     printf("Error in the output\n");
     return -1;
   }
+
 
   coo_free(coo);
   csr_free(csr);

@@ -52,8 +52,6 @@ int main(int argc, char *argv[]) {
     rand_vec[i] = (float)(rand() % 2001 - 1000) * 0.001;
   }
   printf("vector %u %f\n", csr->ncol, rand_vec[0]);
-  // CSR *temp=csr_new();
-  //  csr_sort_in_ascending_order(*csr);
 
   START_TIMER
   spmv_csr_openmp_simd(*csr, csr->ncol, rand_vec, output);

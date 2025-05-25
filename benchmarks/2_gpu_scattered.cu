@@ -11,7 +11,7 @@ extern "C" {
 #define COLS (1 << 13)
 #define NNZ (1 << 24)
 
-#define WARMUPS 50
+#define WARMUPS 40
 #define REPS 100
 
 #define BLOCK_SIZE 32
@@ -239,17 +239,16 @@ int main(int argc, char *argv[]) {
   float *rand_vec; // = (float * )malloc(sizeof(float)*COLS);
   cudaMallocManaged(&rand_vec, csr->ncol * sizeof(float));
   float *output; //= (float*)malloc(sizeof(float)*COLS*(REPS+1));
-  cudaMallocManaged(&output, csr->ncol * 2 * sizeof(float));
-  memset(output, 0, sizeof(float) * csr->ncol * 2);
+  cudaMallocManaged(&output, sizeof(float) * csr->nrow * 2);
   for (unsigned i = 0; i < csr->ncol; i++) {
     rand_vec[i] = (float)(rand() % 2001 - 1000) * 0.001;
   }
   unsigned * tmp;
   cudaMallocManaged(&tmp, csr->nnz * sizeof(unsigned));
   TEST_FUNCTION(spmv_csr_gpu_nnz(*csr, csr->ncol, rand_vec, output, tmp));
-  spmv_csr(*csr, csr->ncol, rand_vec, &output[csr->ncol]);
-  // printf("output %lu\n", out-output);
-  if (relative_error_compare(output, output + csr->ncol, csr->ncol)) {
+  spmv_csr(*csr,  csr->ncol, rand_vec, output +  csr->nrow);
+
+  if (relative_error_compare(output, output + csr->nrow, csr->nrow)) {
     printf("Error in the output\n");
     return -1;
   }
