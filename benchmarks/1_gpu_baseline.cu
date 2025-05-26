@@ -12,8 +12,8 @@ extern "C" {
 #define COLS (1 << 13)
 #define NNZ (1 << 24)
 
-#define WARMUPS 40
-#define REPS 100
+#define WARMUPS 4
+#define REPS 10
 
 #define BLOCK_SIZE 32
 #define DATA_BLOCK (16)

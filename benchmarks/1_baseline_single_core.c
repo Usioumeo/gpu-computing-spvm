@@ -10,7 +10,7 @@
 #define NNZ (1 << 24)
 
 #define WARMUPS 40
-#define REPS 500
+#define REPS 100
 
 
 

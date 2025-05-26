@@ -11,7 +11,7 @@
 #define NNZ (1 << 24)
 
 #define WARMUPS 40
-#define REPS 500
+#define REPS 100
 
 
 int spmv_csr_simd_ilp_openmp(CSR csr, unsigned n, float *input_vec,

@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
-#define ROWS (1 << 16)
+#define ROWS (1 << 13)
 #define COLS (1 << 13)
 #define NNZ (1 << 24)
 
