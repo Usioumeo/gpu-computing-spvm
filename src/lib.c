@@ -61,7 +61,7 @@ void coo_reserve(COO *coo, unsigned nnz) {
   coo->nnz = nnz;
 }
 
-#ifndef USE_CUDA
+//#ifndef USE_CUDA
 // Function to reserve memory for CSR matrix
 void csr_reserve(CSR *csr, unsigned nnz, unsigned nrow) {
   csr->nnz = nnz;
@@ -97,7 +97,7 @@ CSR *csr_new() {
   return csr;
 }
 
-#endif
+//#endif
 
 // Function to convert COO to CSR
 //
@@ -240,6 +240,8 @@ int coo_from_file(FILE *input, COO *coo) {
 
   if (input != stdin)
     fclose(input);
+  printf("scanfato\n");
+  fflush(stdout);
   return 0;
 }
 

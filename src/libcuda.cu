@@ -1,7 +1,7 @@
 
 extern "C" {
   #include "lib.h"
-void csr_reserve(CSR *csr, unsigned nnz, unsigned nrow) {
+/*void csr_reserve(CSR *csr, unsigned nnz, unsigned nrow) {
   if (csr->nnz < nnz || csr->nrow < nrow || csr->val == NULL ||
       csr->col_idx == NULL || csr->row_idx == NULL) {
     // resize csr arrays
@@ -49,5 +49,5 @@ CSR *csr_new() {
   csr->nrow = 0;
   csr->ncol = 0;
   return csr;
-}
+}*/
 }
