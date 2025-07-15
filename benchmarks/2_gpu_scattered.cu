@@ -11,10 +11,10 @@ extern "C" {
 #define COLS (1 << 13)
 #define NNZ (1 << 24)
 
-#define WARMUPS 40
-#define REPS 100
+#define WARMUPS 0
+#define REPS 2
 
-#define BLOCK_SIZE 32
+#define BLOCK_SIZE 512
 #define DATA_BLOCK (16)
 /*
 __global__ void spmv_csr_gpu_kernel_dynamic_son(float *val, unsigned *col_idx,

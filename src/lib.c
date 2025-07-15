@@ -303,7 +303,7 @@ int spmv_coo(COO coo, unsigned n, float *input_vec, float *output_vec) {
 }
 
 // default implementation, it should be the correct version
-int spmv_csr(CSR csr, unsigned n, float *input_vec, float *output_vec) {
+int spmv_csr(CSR csr, unsigned n, float *restrict input_vec, float *restrict output_vec) {
   if (n != csr.ncol) {
     return 1;
   }

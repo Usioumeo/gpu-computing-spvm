@@ -14,13 +14,13 @@
 #define REPS 100
 
 
-int spmv_csr_simd_ilp_openmp(CSR csr, unsigned n, float *input_vec,
-                         float *output_vec) {
+int spmv_csr_simd_ilp_openmp(CSR csr, unsigned n, float *restrict input_vec,
+                         float *restrict output_vec) {
                          
   if (n != csr.ncol) {
     return 1;
   }
-  #pragma omp parallel for schedule(static, 1)
+  #pragma omp parallel for schedule(static, 64)
   for (unsigned i = 0; i < csr.nrow; ++i) {
     output_vec[i] = 0.0;
     unsigned start = csr.row_idx[i];

@@ -15,6 +15,7 @@
 
 
 
+
 int main(int argc, char *argv[]) {
   printf("baseline single core\n");
   COO *coo = coo_new();
@@ -44,7 +45,7 @@ int main(int argc, char *argv[]) {
   for (unsigned i = 0; i <  csr->ncol; i++) {
     rand_vec[i] = (float)(rand() % 2001 - 1000) * 0.001;
   }
-
+  printf("CSR matrix: %d rows, %d cols, %d nnz\n", csr->nrow, csr->ncol, csr->nnz);
   TEST_FUNCTION(spmv_csr(*csr,  csr->ncol, rand_vec, output);)
 
   spmv_csr(*csr,  csr->ncol, rand_vec, output +  csr->nrow);
