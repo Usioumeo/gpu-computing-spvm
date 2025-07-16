@@ -12,7 +12,7 @@ extern "C" {
 #define REPS 2
 
 //how many threads per block
-#define BLOCK_THREADS 32
+#define BLOCK_THREADS 128
 
 // size of data_block, so how many consegutive elements to process in a single block
 #define DATA_BLOCK 512
@@ -62,7 +62,7 @@ __global__ void spmv_csr_gpu_kernel_nnz( const float* __restrict__ val, const un
         contributions[i-block_start]= val[i] * input_vec[col_idx[i]];
         unsigned local_idx = i - block_start;
         unsigned row = shared_rows_idx[local_idx];
-        atomicAdd(&output_vec[row], contributions[i-block_start]);
+        //atomicAdd(&output_vec[row], contributions[i-block_start]);
         /*if (row != prev_row) {
           
           contributions[local_idx-BLOCK_THREADS] = contribution;
@@ -76,27 +76,47 @@ __global__ void spmv_csr_gpu_kernel_nnz( const float* __restrict__ val, const un
   
   __syncthreads();
   //accumulate all contributions and write them in a single atomic operation
-  /*if(threadIdx.x==0){
+  if(threadIdx.x==0){
     float contrib = 0.0;
     unsigned prev_row = shared_rows_idx[0];
     bool first = true;
-    for(unsigned i=block_start; i<block_end; i++) {
+    for(unsigned i=block_start; i<(block_end+block_start)/2; i++) {
       if (shared_rows_idx[i-block_start] != prev_row) {
-        /*if (!first) {
+        if (first) {
           atomicAdd(&output_vec[prev_row], contrib);
         } else {
           first = false;
           output_vec[prev_row] = contrib;
         }
-        atomicAdd(&output_vec[prev_row], contrib);
+        //atomicAdd(&output_vec[prev_row], contrib);
         contrib = 0.0;
         prev_row = shared_rows_idx[i-block_start];
       }
       //contrib += contributions[i];
-      contrib+= contributions[i];
+      contrib+= contributions[i-block_start];
     }
     atomicAdd(&output_vec[prev_row], contrib);
-  }*/
+  }else if(threadIdx.x==1){
+    float contrib = 0.0;
+    unsigned prev_row = shared_rows_idx[0];
+    bool first = true;
+    for(unsigned i=(block_end+block_start)/2; i<block_end; i++) {
+      if (shared_rows_idx[i-block_start] != prev_row) {
+        if (first) {
+          atomicAdd(&output_vec[prev_row], contrib);
+        } else {
+          first = false;
+          output_vec[prev_row] = contrib;
+        }
+        //atomicAdd(&output_vec[prev_row], contrib);
+        contrib = 0.0;
+        prev_row = shared_rows_idx[i-block_start];
+      }
+      //contrib += contributions[i];
+      contrib+= contributions[i-block_start];
+    }
+    atomicAdd(&output_vec[prev_row], contrib);
+  }
 
   /*for(int i=start; i<block_end; i+= BLOCK_THREADS) {
       float contribution = val[i] * input_vec[col_idx[i]];
