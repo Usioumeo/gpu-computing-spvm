@@ -1,53 +1,39 @@
-
 extern "C" {
-  #include "lib.h"
-/*void csr_reserve(CSR *csr, unsigned nnz, unsigned nrow) {
-  if (csr->nnz < nnz || csr->nrow < nrow || csr->val == NULL ||
-      csr->col_idx == NULL || csr->row_idx == NULL) {
-    // resize csr arrays
-    if (csr->row_idx != NULL) {
-      cudaFree(csr->row_idx);
-    }
-    cudaMallocManaged(&csr->row_idx, (nrow + 1) * sizeof(unsigned));
-    if (csr->col_idx != NULL) {
-      cudaFree(csr->col_idx);
-    }
-    cudaMallocManaged(&csr->col_idx, nnz * sizeof(unsigned));
-    if (csr->val != NULL) {
-      cudaFree(csr->val);
-    }
-    cudaMallocManaged(&csr->val, nnz * sizeof(float));
-    //(unsigned *)realloc(csr->row_idx, (nrow + 1) * sizeof(unsigned));
-    // csr->col_idx = (unsigned *)realloc(csr->col_idx, nnz * sizeof(unsigned));
-    // csr->val = (float *)realloc(csr->val, nnz * sizeof(float));
-  }
-  csr->nnz = nnz;
-  csr->nrow = nrow;
+#define USE_CUDA
+#include "lib.h"
+CSR *copy_csr_to_gpu(CSR *csr) {
+  // Move CSR data to GPU
+  float *d_val;
+  unsigned *d_col_idx, *d_row_idx;
+  CSR *ret = (CSR *)malloc(sizeof(CSR));
+
+  CHECK_CUDA(cudaMalloc(&d_val, csr->nnz * sizeof(float)));
+  CHECK_CUDA(cudaMalloc(&d_col_idx, csr->nnz * sizeof(unsigned)));
+  CHECK_CUDA(cudaMalloc(&d_row_idx, (csr->nrow + 1) * sizeof(unsigned)));
+
+  CHECK_CUDA(cudaMemcpy(d_val, csr->val, csr->nnz * sizeof(float),
+                        cudaMemcpyHostToDevice));
+  CHECK_CUDA(cudaMemcpy(d_col_idx, csr->col_idx, csr->nnz * sizeof(unsigned),
+                        cudaMemcpyHostToDevice));
+  CHECK_CUDA(cudaMemcpy(d_row_idx, csr->row_idx,
+                        (csr->nrow + 1) * sizeof(unsigned),
+                        cudaMemcpyHostToDevice));
+
+  ret->val = d_val;
+  ret->col_idx = d_col_idx;
+  ret->row_idx = d_row_idx;
+  ret->ncol = csr->ncol; // Keep the number of columns
+  ret->nrow = csr->nrow; // Keep the number of rows
+  ret->nnz = csr->nnz;   // Keep the number of non-zero
+
+  return ret;
 }
 
-// Function to free the memory allocated for CSR matrix
-// IT ALSO FREES THE POINTER
-void csr_free(CSR *csr) {
-
-  cudaFree(csr->row_idx);
-  cudaFree(csr->col_idx);
-  cudaFree(csr->val);
-  csr->row_idx = NULL;
-  csr->col_idx = NULL;
-  csr->val = NULL;
-  cudaFree(csr);
+void free_csr_gpu(CSR *csr) {
+  // Free GPU memory
+  CHECK_CUDA(cudaFree(csr->val));
+  CHECK_CUDA(cudaFree(csr->col_idx));
+  CHECK_CUDA(cudaFree(csr->row_idx));
+  free(csr);
 }
-
-// Function to create a new empty CSR matrix
-CSR *csr_new() {
-  CSR *csr; //= (CSR *)malloc(sizeof(CSR));
-  cudaMallocManaged(&csr, sizeof(CSR));
-  csr->row_idx = NULL;
-  csr->col_idx = NULL;
-  csr->val = NULL;
-  csr->nnz = 0;
-  csr->nrow = 0;
-  csr->ncol = 0;
-  return csr;
-}*/
 }

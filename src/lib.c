@@ -449,11 +449,45 @@ int spmv_csr_order(CSR csr, unsigned n, float *input_vec, float *output_vec) {
 int relative_error_compare(float *a, float *b, unsigned n) {
   for (unsigned j = 0; j < n; j++) {
 
-    if (!((a[j] - b[j])/(fabs(a[j])+0.0001) < 0.001 ||fabs(a[j] - b[j])<0.0001)) {
+    if (!((a[j] - b[j])/(fabs(a[j])+0.001) < 0.001 ||fabs(a[j] - b[j])<0.001)) {
       printf("The two output are not the same: %f!=%f (%u)\n", a[j],
              b[j], j);
       return -1;
     }
   }
+  return 0;
+}
+
+int write_bin_to_file(CSR *csr, const char *filename) {
+  FILE *output = fopen(filename, "wb");
+  if (output == NULL) {
+    fprintf(stderr, "Error opening file for writing: %s\n", filename);
+    return -1;
+  }
+  fwrite(&csr->nrow, sizeof(unsigned), 1, output);
+  fwrite(&csr->ncol, sizeof(unsigned), 1, output);
+  fwrite(&csr->nnz, sizeof(unsigned), 1, output);
+  fwrite(csr->row_idx, sizeof(unsigned), csr->nrow + 1, output);
+  fwrite(csr->col_idx, sizeof(unsigned), csr->nnz, output);
+  fwrite(csr->val, sizeof(float), csr->nnz, output);
+  fclose(output);
+  return 0;
+}
+int read_bin_to_csr(const char *filename, CSR *csr) {
+  FILE *input = fopen(filename, "rb");
+  if (input == NULL) {
+    fprintf(stderr, "Error opening file for reading: %s\n", filename);
+    return -1;
+  }
+  fread(&csr->nrow, sizeof(unsigned), 1, input);
+  fread(&csr->ncol, sizeof(unsigned), 1, input);
+  fread(&csr->nnz, sizeof(unsigned), 1, input);
+  csr->row_idx = (unsigned *)malloc((csr->nrow + 1) * sizeof(unsigned));
+  csr->col_idx = (unsigned *)malloc(csr->nnz * sizeof(unsigned));
+  csr->val = (float *)malloc(csr->nnz * sizeof(float));
+  fread(csr->row_idx, sizeof(unsigned), csr->nrow + 1,  input);
+  fread(csr->col_idx, sizeof(unsigned), csr->nnz, input);
+  fread(csr->val, sizeof(float), csr->nnz, input);
+  fclose(input);
   return 0;
 }

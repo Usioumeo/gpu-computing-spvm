@@ -12,10 +12,10 @@ extern "C" {
 #define COLS (1 << 13)
 #define NNZ (1 << 24)
 
-#define WARMUPS 40
-#define REPS 100
+#define WARMUPS 0
+#define REPS 2
 
-#define BLOCK_SIZE 32
+#define BLOCK_SIZE 512
 #define DATA_BLOCK (16)
 
 __device__ unsigned upper_bound(const unsigned *arr, int size, unsigned key) {
@@ -175,7 +175,7 @@ int main(int argc, char *argv[]) {
   }
   unsigned * tmp;
   cudaMallocManaged(&tmp, csr->nnz * sizeof(unsigned));
-  TEST_FUNCTION(spmv_csr_gpu_chunks(*csr, csr->ncol, rand_vec, output)); //, tmp
+  TEST_FUNCTION(spmv_csr_gpu_nnz(*csr, csr->ncol, rand_vec, output, tmp)); //
   spmv_csr(*csr,  csr->ncol, rand_vec, output +  csr->nrow);
 
   if (relative_error_compare(output, output + csr->nrow, csr->nrow)) {

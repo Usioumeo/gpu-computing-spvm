@@ -31,7 +31,7 @@
   printf("Gflops: %f\n", flops / 1.0e9);\
   size_t total_memory = (csr->nrow) * sizeof(unsigned) * 2 + \
                         csr->nnz * (sizeof(float) + sizeof(unsigned)) +\
-                        csr->nnz * sizeof(float) + csr->nrow * sizeof(unsigned);\
+                        csr->nnz * sizeof(float) + csr->nrow * sizeof(float);\
   float gbytes = (float)total_memory / 1.0e9;\
   float gbytesps = gbytes / CPU_time;\
   printf("Total memory moved: %f GB\n", gbytes);\
@@ -139,8 +139,21 @@ int spmv_coo(COO coo, unsigned n, float *input_vec, float * output_vec);
 // default implementation, it should be the correct version
 int spmv_csr(CSR csr, unsigned n, float *input_vec, float * output_vec);
 
-
+int write_bin_to_file(CSR *csr, const char *filename);
+int read_bin_to_csr(const char *filename, CSR *csr);
 int spmv_csr_block(CSR csr, unsigned n, float *input_vec, float * output_vec);
+#ifdef USE_CUDA
+CSR *copy_csr_to_gpu(CSR *csr);
+
+void free_csr_gpu(CSR *csr);
+#endif
+#define CHECK_CUDA(call)                                                       \
+  if ((call) != cudaSuccess) {                                                 \
+    fprintf(stderr, "CUDA error at %s:%u %u\n", __FILE__, __LINE__, call);     \
+    exit(1);                                                                   \
+  }
+
+
 #ifdef USE_OPENMP
 int spmv_csr_openmp(CSR csr, unsigned n, float *input_vec, float * output_vec);
 int spmv_csr_openmp_simd(CSR csr, unsigned n, float *input_vec, float * output_vec);
@@ -148,4 +161,5 @@ int spmv_csr_openmp_simd(CSR csr, unsigned n, float *input_vec, float * output_v
 int spmv_csr_sort(CSR csr, unsigned n, float *input_vec, float * output_vec);
 void csr_sort_in_ascending_order(CSR csr);
 int relative_error_compare(float *a, float *b, unsigned n);
+
 #endif

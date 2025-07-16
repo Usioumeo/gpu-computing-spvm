@@ -1,5 +1,4 @@
 #include <cassert>
-#include <cstdlib>
 extern "C" {
 #define USE_CUDA
 #include "lib.h"
@@ -8,70 +7,85 @@ extern "C" {
 #include <stdio.h>
 #include <sys/select.h>
 #include <sys/time.h>
+
+#include <stdint.h>  
 #define ROWS (1 << 13)
 #define COLS (1 << 13)
 #define NNZ (1 << 24)
 
-#define WARMUPS 0
-#define REPS 2
+#define WARMUPS 4
+#define REPS 10
 
-#define BLOCK_SIZE 32
-#define SHARED_DATA_BLOCK 100000
-__global__ void spmv_csr_gpu_kernel_blocks(CSR csr, unsigned n, float *__restrict__ input_vec,
+#define BLOCK_SIZE 16
+#define ROW_PER_BLOCK 16
+__global__ void spmv_csr_gpu_kernel(CSR csr, unsigned n, float *__restrict__ input_vec,
                                     float *output_vec) {
-  //__shared__ float shared_input[SHARED_DATA_BLOCK];
-  //const float4 *input_vec4 = reinterpret_cast<const float4 *>(input_vec);
+  __shared__ float shared_output[ROW_PER_BLOCK];
+  for(unsigned i=threadIdx.x; i<ROW_PER_BLOCK; i+=BLOCK_SIZE){
+    shared_output[i] = 0.0;
+  }
+  
+  //unsigned i = blockIdx.x * blockDim.x + threadIdx.x;
+  __syncthreads();
+  unsigned starting_row = blockIdx.x*ROW_PER_BLOCK;
+  unsigned end_row = (blockIdx.x+1)*ROW_PER_BLOCK<csr.nrow ? (blockIdx.x+1)*ROW_PER_BLOCK : csr.nrow;
+  for (unsigned i = starting_row; i<end_row; i++) {
+    float out = 0.0;
+    unsigned start = csr.row_idx[i]+threadIdx.x;
+    unsigned end = csr.row_idx[i + 1];
 
-
-  // for (unsigned i = 0; i < csr.nrow; ++i) {
+    float *val = csr.val + start;
+    unsigned *col = csr.col_idx + start;
+    float *val_end = csr.val + end;
+    unsigned col_val=__ldg(col);
+    while (val < val_end) {
+      out += *val * __ldg(&input_vec[col_val]);
+      
+      col+= BLOCK_SIZE;
+      col_val=__ldg(col);
+      val+= BLOCK_SIZE;
+      
+    }
+    atomicAdd(&shared_output[i-starting_row], out);
+    //__syncthreads();
+    //shared_output[i] += out;
+    //output_vec[i] = out;
+  }
+  __syncthreads();
+  for(unsigned i=threadIdx.x+starting_row; i<end_row; i+=BLOCK_SIZE){
+    output_vec[i]=shared_output[i-starting_row];
+  }
+  /*// for (unsigned i = 0; i < csr.nrow; ++i) {
   unsigned i = blockIdx.x * blockDim.x + threadIdx.x;
   if (i < csr.nrow) {
     float out = 0.0;
     unsigned start = csr.row_idx[i];
     unsigned end = csr.row_idx[i + 1];
-    const float *__restrict__ val = csr.val + start;
-    const unsigned *__restrict__ col = csr.col_idx + start;
-    const float *__restrict__ val_end = csr.val + end;
 
-    unsigned nblocks = (csr.ncol+ BLOCK_SIZE - 1)/ BLOCK_SIZE;
-    for(unsigned b=0; b<nblocks; b++) {
-      unsigned start_block = b * BLOCK_SIZE;
-      unsigned end_block = (b + 1) * BLOCK_SIZE;
+    float *val = csr.val + start;
+    unsigned *col = csr.col_idx + start;
+    float *val_end = csr.val + end;
 
-      unsigned col_val=__ldg(col);
-      while (val < val_end ) { //&& *col<csr.ncol
-        //&&col_val<end_block
-        
-        //out += *val * __ldg(&input_vec[*col]);
-        //col_val=__ldg(col++);
-        val++;
-        //col++;
-      }
+    while (val < val_end) {
       
-      //__syncthreads();
+      out += *val * __ldg(&input_vec[*col]);
+      val++;
+      col++;
     }
-    
-    
-    
-    
-
-    
-
-
-    
     output_vec[i] = out;
   }
 
-  //}
+  //}*/
 }
 
 void dummy_launcher(CSR *csr, float *input_vec, float *output_vec) {
-  unsigned nblocks = (csr->nrow + BLOCK_SIZE - 1) / BLOCK_SIZE;
-  spmv_csr_gpu_kernel_blocks<<<nblocks, BLOCK_SIZE>>>(*csr, csr->ncol, input_vec,
+  unsigned nblocks = (csr->nrow + ROW_PER_BLOCK- 1) / ROW_PER_BLOCK;
+  spmv_csr_gpu_kernel<<<nblocks, BLOCK_SIZE>>>(*csr, csr->ncol, input_vec,
                                                output_vec);
   CHECK_CUDA(cudaDeviceSynchronize());
 }
-int spmv_csr_gpu_chunks(CSR *csr, unsigned n, float *input_vec,
+
+int spmv_csr_gpu(CSR *csr, unsigned n, float *input_vec,
                         float *output_vec) {
   if (n != csr->ncol) {
     return 1;
@@ -116,10 +130,12 @@ int main(int argc, char *argv[]) {
     coo_to_csr(coo, csr);
     write_bin_to_file(csr, "tmp.bin");
   } else {
-    // coo_generate_random(coo, ROWS, COLS, NNZ);
+    //coo_generate_random(coo, ROWS, COLS, NNZ);
     read_bin_to_csr("tmp.bin", csr);
   }
-
+  
+  
+  
   printf("csr->nrow %u csr->ncol %u csr->nnz %u\n", csr->nrow, csr->ncol,
          csr->nnz);
 
@@ -131,12 +147,12 @@ int main(int argc, char *argv[]) {
 
   float *output = (float *)malloc(sizeof(float) * csr->nrow * 2);
 
-  spmv_csr_gpu_chunks(csr, csr->ncol, input, output); //, tmp
+  spmv_csr_gpu(csr, csr->ncol, input, output); //, tmp
   spmv_csr(*csr, csr->ncol, input, output + csr->nrow);
 
   if (relative_error_compare(output, output + csr->nrow, csr->nrow)) {
     printf("Error in the output\n");
-    return 0;
+    return -1;
   }
 
   coo_free(coo);
