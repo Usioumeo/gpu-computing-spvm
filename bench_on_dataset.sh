@@ -1,6 +1,7 @@
 #!/bin/bash
 #SBATCH --partition=edu-short
 #SBATCH --nodes=1
+#SBATCH --nodelist=edu02
 #SBATCH --tasks=1
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=1
