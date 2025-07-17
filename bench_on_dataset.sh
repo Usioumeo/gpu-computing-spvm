@@ -8,7 +8,11 @@
 #SBATCH --job-name=test
 #SBATCH --output=test-%j.out
 #SBATCH --error=test-%j.err
-module load CUDA/12.1
+#module load CUDA/12.1
+pwd
+ls -la
+nvidia-smi
+EXEC=./build/bench/cuda/bins/2_gpu_scattered_v2O3
 echo default
 $EXEC
 echo mawi1

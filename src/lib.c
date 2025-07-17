@@ -195,6 +195,31 @@ COO *coo_new() {
   return coo;
 }
 
+
+void read_char_blob(char **pos, char *out){
+  char *cur = *pos;
+  //skip spaces
+  while(*cur<=' '){
+    cur++;
+  }
+  //read until next space
+  while(*cur>' '){
+    *out++ = *cur++;
+  }
+  *out = '\0';
+  *pos = cur;
+}
+unsigned read_unsigned(char **pos) {
+  char out_buffer[128];
+  read_char_blob(pos, out_buffer);
+  return (unsigned)atoi(out_buffer);
+}
+float read_float(char **pos) {
+  char out_buffer[128];
+  read_char_blob(pos, out_buffer);
+  return (float)atof(out_buffer);
+}
+
 int coo_from_file(FILE *input, COO *coo) {
   MM_typecode matcode;
 
@@ -220,26 +245,45 @@ int coo_from_file(FILE *input, COO *coo) {
   coo->ncol = N;
   coo->nnz = nnz;
 
+  long where_to_read  = ftell(input);
+  fseek(input, 0, SEEK_END);
+  long fsize = ftell(input);
+  fseek(input, where_to_read, SEEK_SET);
+  char * tmp_buffer = (char *)malloc(fsize - where_to_read);
+  //try to read
+  if (fread(tmp_buffer, fsize - where_to_read, 1, input) != 1) {
+    printf("Error reading file\n");
+    free(tmp_buffer);
+    return -1;
+  }
+  fclose(input);
+
+
   /* reseve memory for matrices */
   coo_reserve(coo, coo->nnz);
 
   /* NOTE: when reading in doubles, ANSI C requires the use of the "l"  */
   /*   specifier as in "%lg", "%lf", "%le", otherwise errors will occur */
   /*  (ANSI C X3.159-1989, Sec. 4.9.6.2, p. 136 lines 13-15)            */
-
+  char * buffer_pointer = tmp_buffer;
+  printf("reading %u rows, %u cols, %u nnz\n", coo->nrow, coo->ncol,
+         coo->nnz);
+  fflush(stdout);
   for (unsigned int i = 0; i < coo->nnz; i++) {
-    int c=fscanf(input, "%u %u %f\n", &coo->data[i].row, &coo->data[i].col,
-               &coo->data[i].val);
-    if (3!=c) {
-      printf("Error reading COO entry %u %d\n", i, c);
-    }
+    /*int adv;
+    int c=sscanf(buffer_pointer, "%u %u %f\n%n", &coo->data[i].row, &coo->data[i].col,
+               &coo->data[i].val, &adv);*/
+    coo->data[i].row = read_unsigned(&buffer_pointer);
+    coo->data[i].col = read_unsigned(&buffer_pointer);
+    coo->data[i].val = read_float(&buffer_pointer);
+    /*printf("read %u %u %f\n", coo->data[i].row, coo->data[i].col,
+           coo->data[i].val);*/
+    //buffer_pointer += adv;
 
     coo->data[i].row--; /* adjust from 1-based to 0-based */
     coo->data[i].col--;
   }
-
-  if (input != stdin)
-    fclose(input);
+  free(tmp_buffer);
   printf("scanfato\n");
   fflush(stdout);
   return 0;
