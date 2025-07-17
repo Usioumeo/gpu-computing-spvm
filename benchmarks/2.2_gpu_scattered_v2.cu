@@ -7,6 +7,8 @@ extern "C" {
 #include <stdio.h>
 #include <sys/select.h>
 #include <sys/time.h>
+#include <cooperative_groups.h>
+#include <cooperative_groups/memcpy_async.h>
 
 #define WARMUPS 0
 #define REPS 2
@@ -15,15 +17,15 @@ extern "C" {
 #define BLOCK_THREADS 128
 
 // size of data_block, so how many consegutive elements to process in a single block
-#define DATA_BLOCK 512
+#define DATA_BLOCK 384
 
-__device__ inline unsigned upper_bound(const unsigned *arr, int size, unsigned key) {
+__device__ inline unsigned upper_bound(const unsigned *__restrict__ arr, int size, unsigned key) {;
   int left = 0;
   int right = size;
   while (left + 1 < right) {
     // printf("left %u right %u\n", left, right);
-    int mid = (right + left) / 2;
-    if (arr[mid] <= key)
+    int mid = (right + left)>>1;
+    if (__ldg(arr + mid) <= key)
       left = mid;
     else
       right = mid;
@@ -43,14 +45,28 @@ __global__ void spmv_csr_gpu_kernel_nnz( const float* __restrict__ val, const un
   ///build the shared memory with the row_idx
   unsigned assigned_start = block_start+(DATA_BLOCK/BLOCK_THREADS)*threadIdx.x;
   unsigned assigned_end = min(block_start+(DATA_BLOCK/BLOCK_THREADS)*(threadIdx.x+1), block_end);
-
+// Async copy from global to shared memory
+    /*auto block = cg::this_thread_block();
+    cg::memcpy_async(block, shared_rows_idx, row_idx + assigned_start, sizeof(unsigned) * (assigned_end - assigned_start));
+    cg::memcpy_async(block, contributions, val + assigned_start, sizeof(float) * (assigned_end - assigned_start));
+    cg::wait(block);*/
   for(unsigned i=assigned_start; i<assigned_end; ) {
     unsigned row = upper_bound(row_idx, nrow, i);
-    while(i< assigned_end && i < row_idx[row+1]) {
+    unsigned row_end=min(row_idx[row+1], assigned_end);
+    for(unsigned j=i; j < row_end; j++) {
+      shared_rows_idx[j-block_start] = row;
+    }
+    i=row_end;
+    /*while(i< assigned_end && i < row_idx[row+1]) {
       shared_rows_idx[i-block_start] = row;
       i++;
-    }
+    }*/
   }
+  /*for(unsigned i=block_start+threadIdx.x; i<block_end; i+=BLOCK_THREADS) {
+    unsigned row = upper_bound(row_idx, nrow, i);
+    shared_rows_idx[i-block_start] = row;
+  }*/
+
   __syncthreads();
 
   unsigned start = block_start+ threadIdx.x;
@@ -60,8 +76,10 @@ __global__ void spmv_csr_gpu_kernel_nnz( const float* __restrict__ val, const un
     
     for(unsigned i=start; i<block_end; i+= BLOCK_THREADS) {
         contributions[i-block_start]= val[i] * input_vec[col_idx[i]];
-        unsigned local_idx = i - block_start;
-        unsigned row = shared_rows_idx[local_idx];
+        //unsigned cur_row = shared_rows_idx[i-block_start];
+        //atomicAdd(&output_vec[cur_row], contributions[i-block_start]);
+        //unsigned local_idx = i - block_start;
+        //unsigned row = shared_rows_idx[local_idx];
         //atomicAdd(&output_vec[row], contributions[i-block_start]);
         /*if (row != prev_row) {
           
@@ -75,32 +93,15 @@ __global__ void spmv_csr_gpu_kernel_nnz( const float* __restrict__ val, const un
   }
   
   __syncthreads();
+  #define WRITE_OUT_BLOCKS 8
   //accumulate all contributions and write them in a single atomic operation
-  if(threadIdx.x==0){
+  if(threadIdx.x<WRITE_OUT_BLOCKS){
+    unsigned assigned_start = block_start+(DATA_BLOCK/WRITE_OUT_BLOCKS)*threadIdx.x;
+    unsigned assigned_end = min(block_start+(DATA_BLOCK/WRITE_OUT_BLOCKS)*(threadIdx.x+1), block_end);
     float contrib = 0.0;
     unsigned prev_row = shared_rows_idx[0];
     bool first = true;
-    for(unsigned i=block_start; i<(block_end+block_start)/2; i++) {
-      if (shared_rows_idx[i-block_start] != prev_row) {
-        if (first) {
-          atomicAdd(&output_vec[prev_row], contrib);
-        } else {
-          first = false;
-          output_vec[prev_row] = contrib;
-        }
-        //atomicAdd(&output_vec[prev_row], contrib);
-        contrib = 0.0;
-        prev_row = shared_rows_idx[i-block_start];
-      }
-      //contrib += contributions[i];
-      contrib+= contributions[i-block_start];
-    }
-    atomicAdd(&output_vec[prev_row], contrib);
-  }else if(threadIdx.x==1){
-    float contrib = 0.0;
-    unsigned prev_row = shared_rows_idx[0];
-    bool first = true;
-    for(unsigned i=(block_end+block_start)/2; i<block_end; i++) {
+    for(unsigned i=assigned_start; i<assigned_end; i++) {
       if (shared_rows_idx[i-block_start] != prev_row) {
         if (first) {
           atomicAdd(&output_vec[prev_row], contrib);
