@@ -11,20 +11,38 @@ extern "C" {
 #include <cooperative_groups/memcpy_async.h>
 
 #define WARMUPS 0
-#define REPS 2
+#define REPS 20
 
 //how many threads per block
-#define BLOCK_THREADS 128
+#define BLOCK_THREADS (128-16*2)
 
-// size of data_block, so how many consegutive elements to process in a single block
-#define DATA_BLOCK 384
+// size of data_block, so how many consecutive elements to process in a single block
+#define DATA_BLOCK (512-128)
+#define WRITE_OUT_BLOCKS 12
 
-__device__ inline unsigned upper_bound(const unsigned *__restrict__ arr, int size, unsigned key) {;
-  int left = 0;
-  int right = size;
+/*__device__ inline unsigned upper_bound(const unsigned *__restrict__ arr, int size, unsigned key, unsigned prev=0) {
+  int left = prev;
+  int incr=1;
+  while(prev+incr<size&& arr[prev+incr]<=key) {
+    incr<<=1;
+  }
+  int right = min(prev+incr, size);
   while (left + 1 < right) {
     // printf("left %u right %u\n", left, right);
     int mid = (right + left)>>1;
+    if (__ldg(arr + mid) <= key)
+      left = mid;
+    else
+      right = mid;
+  }
+  return left;
+}*/
+__device__ inline unsigned normal_upper_bound(const unsigned *__restrict__ arr, int size, unsigned key) {
+  unsigned left = 0;
+  unsigned right = size;
+  while (left + 1 < right) {
+    // printf("left %u right %u\n", left, right);
+    unsigned mid = (right + left)>>1;
     if (__ldg(arr + mid) <= key)
       left = mid;
     else
@@ -43,15 +61,21 @@ __global__ void spmv_csr_gpu_kernel_nnz( const float* __restrict__ val, const un
   unsigned block_start = blockIdx.x * DATA_BLOCK;
   unsigned block_end = min(block_start + DATA_BLOCK, nnz);
   ///build the shared memory with the row_idx
-  unsigned assigned_start = block_start+(DATA_BLOCK/BLOCK_THREADS)*threadIdx.x;
-  unsigned assigned_end = min(block_start+(DATA_BLOCK/BLOCK_THREADS)*(threadIdx.x+1), block_end);
+  unsigned assigned_start = block_start+DATA_BLOCK*threadIdx.x/BLOCK_THREADS;
+  unsigned assigned_end = min(block_start+DATA_BLOCK*(threadIdx.x+1)/BLOCK_THREADS, block_end);
 // Async copy from global to shared memory
     /*auto block = cg::this_thread_block();
     cg::memcpy_async(block, shared_rows_idx, row_idx + assigned_start, sizeof(unsigned) * (assigned_end - assigned_start));
     cg::memcpy_async(block, contributions, val + assigned_start, sizeof(float) * (assigned_end - assigned_start));
     cg::wait(block);*/
+    unsigned row=0;
   for(unsigned i=assigned_start; i<assigned_end; ) {
-    unsigned row = upper_bound(row_idx, nrow, i);
+    row = normal_upper_bound(row_idx, nrow, i);
+    /*unsigned other_row=normal_upper_bound(row_idx, nrow, i);
+    if(row!=other_row){
+      printf("%u %u\n", row, other_row);
+      assert(row==other_row);
+    }*/
     unsigned row_end=min(row_idx[row+1], assigned_end);
     for(unsigned j=i; j < row_end; j++) {
       shared_rows_idx[j-block_start] = row;
@@ -73,7 +97,6 @@ __global__ void spmv_csr_gpu_kernel_nnz( const float* __restrict__ val, const un
   if (start < block_end) {
     //unsigned prev_row = upper_bound(row_idx, nrow, start);
     unsigned prev_row = shared_rows_idx[start - block_start];
-    
     for(unsigned i=start; i<block_end; i+= BLOCK_THREADS) {
         contributions[i-block_start]= val[i] * input_vec[col_idx[i]];
         //unsigned cur_row = shared_rows_idx[i-block_start];
@@ -93,14 +116,16 @@ __global__ void spmv_csr_gpu_kernel_nnz( const float* __restrict__ val, const un
   }
   
   __syncthreads();
-  #define WRITE_OUT_BLOCKS 8
+  
   //accumulate all contributions and write them in a single atomic operation
   if(threadIdx.x<WRITE_OUT_BLOCKS){
-    unsigned assigned_start = block_start+(DATA_BLOCK/WRITE_OUT_BLOCKS)*threadIdx.x;
-    unsigned assigned_end = min(block_start+(DATA_BLOCK/WRITE_OUT_BLOCKS)*(threadIdx.x+1), block_end);
+    unsigned assigned_start = block_start+(DATA_BLOCK*threadIdx.x/WRITE_OUT_BLOCKS);
+    unsigned assigned_end = min(block_start+(DATA_BLOCK*(threadIdx.x+1)/WRITE_OUT_BLOCKS), block_end);
     float contrib = 0.0;
     unsigned prev_row = shared_rows_idx[0];
     bool first = true;
+    
+
     for(unsigned i=assigned_start; i<assigned_end; i++) {
       if (shared_rows_idx[i-block_start] != prev_row) {
         if (first) {

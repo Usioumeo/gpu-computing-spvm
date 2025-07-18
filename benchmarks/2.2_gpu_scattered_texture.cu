@@ -7,11 +7,9 @@ extern "C" {
 #include <stdio.h>
 #include <sys/select.h>
 #include <sys/time.h>
-#include <cooperative_groups.h>
-#include <cooperative_groups/memcpy_async.h>
-#include <atomic>
+#include <nvtx3/nvToolsExt.h>
 #define WARMUPS 0
-#define REPS 800
+#define REPS 2
 #define WRITE_OUT_BLOCKS 8
 //how many threads per block
 #define BLOCK_THREADS 128
@@ -19,14 +17,14 @@ extern "C" {
 // size of data_block, so how many consegutive elements to process in a single block
 #define DATA_BLOCK 384
 
-__device__ inline unsigned upper_bound(const unsigned *__restrict__ arr, int size, unsigned key) {
+__device__ inline unsigned upper_bound(cudaTextureObject_t arr, int size, unsigned key) {
   int left = 0;
   int right = size;
-  #pragma unroll 3
+  #pragma unroll 4
   while (left + 1 < right) {
     // printf("left %u right %u\n", left, right);
     int mid = (right + left)>>1;
-    if (__ldg(arr + mid) <= key)
+    if (tex1Dfetch<unsigned>(arr, mid) <= key)
       left = mid;
     else
       right = mid;
@@ -34,38 +32,51 @@ __device__ inline unsigned upper_bound(const unsigned *__restrict__ arr, int siz
   return left;
 }
 
-
-__global__ void spmv_csr_gpu_kernel_nnz( const float* __restrict__ val, const unsigned * __restrict__ row_idx, const unsigned* __restrict__ col_idx,
+__device__ inline unsigned upper_bound_next(cudaTextureObject_t arr, int size, unsigned key, unsigned prev) {
+  int left = prev;
+  int right=prev+1;
+  while(right<size&& tex1Dfetch<unsigned>(arr, right)<=key) {
+    right=(right|(right-1))+1;
+  }
+  right = min(right, size);
+  while (left + 1 < right) {
+    // printf("left %u right %u\n", left, right);
+    int mid = (right + left)>>1;
+    if (tex1Dfetch<unsigned>(arr, mid) <= key)
+      left = mid;
+    else
+      right = mid;
+  }
+  return left;
+}
+__global__ void spmv_csr_gpu_kernel_nnz( const float* __restrict__ val, cudaTextureObject_t row_idx, const unsigned* __restrict__ col_idx,
                                            cudaTextureObject_t input_tex, float *output_vec, unsigned nrow, unsigned ncol, unsigned nnz){
   __shared__ unsigned shared_rows_idx[DATA_BLOCK];
   __shared__ float contributions[DATA_BLOCK];
-
                                             // for (unsigned i = 0; i < csr.nrow; ++i) {
   unsigned block_start = blockIdx.x * DATA_BLOCK;
   unsigned block_end = min(block_start + DATA_BLOCK, nnz);
   ///build the shared memory with the row_idx
   unsigned assigned_start = block_start+(DATA_BLOCK/BLOCK_THREADS)*threadIdx.x;
   unsigned assigned_end = min(block_start+(DATA_BLOCK/BLOCK_THREADS)*(threadIdx.x+1), block_end);
-// Async copy from global to shared memory
-    /*auto block = cg::this_thread_block();
-    cg::memcpy_async(block, shared_rows_idx, row_idx + assigned_start, sizeof(unsigned) * (assigned_end - assigned_start));
-    cg::memcpy_async(block, contributions, val + assigned_start, sizeof(float) * (assigned_end - assigned_start));
-    cg::wait(block);*/
+  //get rows
+  unsigned row=0;
   for(unsigned i=assigned_start; i<assigned_end; ) {
-    unsigned row = upper_bound(row_idx, nrow, i);
-    unsigned row_end=min(row_idx[row+1], assigned_end);
+    row = upper_bound(row_idx, nrow, i);
+    //unsigned row_end = i+1;
+    unsigned row_end=min(tex1Dfetch<unsigned>(row_idx, row+1), assigned_end);
     for(unsigned j=i; j < row_end; j++) {
       shared_rows_idx[j-block_start] = row;
     }
     i=row_end;
   }
-
   __syncthreads();
 
+  //compute
   unsigned start = block_start+ threadIdx.x;
   if (start < block_end) {
-    unsigned prev_row = shared_rows_idx[start - block_start];
-    
+    unsigned prev_row = 1.0;//shared_rows_idx[start - block_start];
+    #pragma unroll 10
     for(unsigned i=start; i<block_end; i+= BLOCK_THREADS) {
         contributions[i-block_start]= val[i] * tex1Dfetch<float>(input_tex, col_idx[i]);
     }
@@ -98,49 +109,17 @@ __global__ void spmv_csr_gpu_kernel_nnz( const float* __restrict__ val, const un
   }
 }
 
-std::atomic<bool> keep_busy{false};
-void cpu_busy_loop() {
-    while (keep_busy.load()) {
-        // Keep CPU busy to prevent downclocking
-        volatile int x = 0;
-        for (int i = 0; i < 10000000; i++) {
-            x += i;
-        }
-    }
-}
-void dummy_launcher(CSR *csr, cudaTextureObject_t input_tex, float *output_vec) {
-  /*flush_instruction_cache<<<1, 1>>>();
-  cudaDeviceSynchronize();
-  cudaEvent_t start, stop;
-    cudaEventCreate(&start);
-    cudaEventCreate(&stop);
-    
-    cudaEventRecord(start);*/
-
+void dummy_launcher(CSR *csr, cudaTextureObject_t input_tex, float *output_vec, cudaTextureObject_t row_idx) {
 
 
   CHECK_CUDA(cudaMemset(output_vec, 0, sizeof(float) * csr->nrow));
   unsigned int nblocks = (csr->nnz + DATA_BLOCK - 1) / DATA_BLOCK;
   spmv_csr_gpu_kernel_nnz<<<nblocks, BLOCK_THREADS>>>(
-      csr->val, csr->row_idx, csr->col_idx, input_tex, output_vec, csr->nrow,
+      csr->val, row_idx, csr->col_idx, input_tex, output_vec, csr->nrow,
       csr->ncol, csr->nnz);
   //cpu_busy_loop();
   CHECK_CUDA(cudaDeviceSynchronize());
 
-  /*cudaEventRecord(stop);
-    cudaEventSynchronize(stop);
-    
-    cudaEventSynchronize(stop);
-    
-    float kernel_time;
-    cudaEventElapsedTime(&kernel_time, start, stop);
-    
-    printf("Kernel: %.3f ms\n", kernel_time);
-    
-    cudaEventDestroy(start);
-    cudaEventDestroy(stop);
-    cudaStreamDestroy(stream);
-  // Clean up texture object*/
     
 }
 
@@ -157,7 +136,7 @@ int spmv_csr_gpu_nnz(CSR *csr, unsigned n, float *input_vec,
                         cudaMemcpyHostToDevice));
   printf("nrow %u ncol %u nnz %u\n", csr->nrow, csr->ncol, csr->nnz);
   CHECK_CUDA(cudaMalloc(&output_gpu, sizeof(float) * csr->nrow));
-  //create texture object
+  //create texture object for input
      // Create texture object
     cudaResourceDesc resDesc;
     memset(&resDesc, 0, sizeof(resDesc));
@@ -178,11 +157,34 @@ int spmv_csr_gpu_nnz(CSR *csr, unsigned n, float *input_vec,
     CHECK_CUDA(cudaCreateTextureObject(&input_tex, &resDesc, &texDesc, NULL));
     
 
+    /// CREATE TEXTURE OBJECT FOR ROW IDX
+cudaResourceDesc resDesc2;
+    memset(&resDesc2, 0, sizeof(resDesc2));
+    resDesc2.resType = cudaResourceTypeLinear;
+    resDesc2.res.linear.devPtr = gpu_csr->row_idx;
+    resDesc2.res.linear.desc.f = cudaChannelFormatKindUnsigned;
+    resDesc2.res.linear.desc.x = 32; // 32-bit float
+    resDesc2.res.linear.sizeInBytes = (csr->nrow+1) * sizeof(unsigned);
+
+    cudaTextureDesc texDesc2;
+    memset(&texDesc2, 0, sizeof(texDesc2));
+    texDesc2.addressMode[0] = cudaAddressModeClamp;
+    texDesc2.filterMode = cudaFilterModePoint;
+    texDesc2.readMode = cudaReadModeElementType;
+    texDesc2.normalizedCoords = 0;
+
+    cudaTextureObject_t row_idx_tex = 0;
+    CHECK_CUDA(cudaCreateTextureObject(&row_idx_tex, &resDesc2, &texDesc2, NULL));
 
 
 
-  TEST_FUNCTION(dummy_launcher(gpu_csr, input_tex, output_gpu));
+
+
+
+
+  TEST_FUNCTION(dummy_launcher(gpu_csr, input_tex, output_gpu, row_idx_tex));
   CHECK_CUDA(cudaDestroyTextureObject(input_tex));
+  CHECK_CUDA(cudaDestroyTextureObject(row_idx_tex));
   CHECK_CUDA(cudaMemcpy(output_vec, output_gpu, sizeof(float) * gpu_csr->nrow,
                         cudaMemcpyDeviceToHost));
   CHECK_CUDA(cudaFree(input_vec_gpu));
