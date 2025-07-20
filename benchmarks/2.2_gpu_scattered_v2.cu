@@ -1,5 +1,4 @@
 #include <cassert>
-#define USE_CUDA
 extern "C" {
 #include "lib.h"
 }
@@ -7,18 +6,19 @@ extern "C" {
 #include <stdio.h>
 #include <sys/select.h>
 #include <sys/time.h>
+#include <unistd.h>
 #include <cooperative_groups.h>
 #include <cooperative_groups/memcpy_async.h>
 
 #define WARMUPS 0
-#define REPS 20
+#define REPS 2
 
 //how many threads per block
-#define BLOCK_THREADS (128-16*2)
+#define BLOCK_THREADS (96)
 
 // size of data_block, so how many consecutive elements to process in a single block
-#define DATA_BLOCK (512-128)
-#define WRITE_OUT_BLOCKS 12
+#define DATA_BLOCK (384)
+#define WRITE_OUT_BLOCKS 8
 
 /*__device__ inline unsigned upper_bound(const unsigned *__restrict__ arr, int size, unsigned key, unsigned prev=0) {
   int left = prev;
@@ -51,11 +51,82 @@ __device__ inline unsigned normal_upper_bound(const unsigned *__restrict__ arr, 
   return left;
 }
 
+__device__ inline unsigned warp_optimized_upper_bound(const unsigned *__restrict__ arr, int size, unsigned key) {
+  unsigned left = 0;
+  unsigned right = size;
+  
+  // Phase 1: Warp-synchronized iterations when threads likely converge
+  const int MAX_WARP_ITERS = 4; // Adjust based on your data characteristics
+  int warp_iter = 0;
+  
+  while (left + 1 < right && warp_iter < MAX_WARP_ITERS) {
+    unsigned mid = (right + left) >> 1;
+    
+    // Use warp-level ballot to check if all threads in warp agree on the same mid
+    unsigned warp_mask = __activemask();
+    unsigned same_mid_mask = __ballot_sync(warp_mask, true); // All active threads
+    
+    // Load once per warp using a designated thread, then broadcast
+    unsigned mid_value;
+    if (__popc(warp_mask) > 1) { // Only optimize if multiple threads active
+      // Use lane 0 (or first active lane) to load the value
+      int first_lane = __ffs(warp_mask) - 1;
+      if ((warp_mask & (1u << threadIdx.x)) && threadIdx.x % 32 == first_lane) {
+        mid_value = __ldg(arr + mid);
+      }
+      mid_value = __shfl_sync(warp_mask, mid_value, first_lane);
+    } else {
+      // Only one thread active, use normal load
+      mid_value = __ldg(arr + mid);
+    }
+    
+    if (mid_value <= key) {
+      left = mid;
+    } else {
+      right = mid;
+    }
+    
+    // Check if threads are starting to diverge significantly
+    unsigned left_vote = __ballot_sync(warp_mask, mid_value <= key);
+    unsigned divergence = __popc(left_vote) * __popc(~left_vote & warp_mask);
+    
+    // If divergence is too high, break out of warp-sync phase
+    if (divergence > (__popc(warp_mask) / 2)) {
+      break;
+    }
+    
+    warp_iter++;
+  }
+  
+  // Phase 2: Normal binary search for remaining iterations
+  while (left + 1 < right) {
+    unsigned mid = (right + left) >> 1;
+    if (__ldg(arr + mid) <= key) {
+      left = mid;
+    } else {
+      right = mid;
+    }
+  }
+  
+  return left;
+}
+
 
 __global__ void spmv_csr_gpu_kernel_nnz( const float* __restrict__ val, const unsigned * __restrict__ row_idx, const unsigned* __restrict__ col_idx,
                                            const float* __restrict__ input_vec, float *output_vec, unsigned nrow, unsigned ncol, unsigned nnz){
   __shared__ unsigned shared_rows_idx[DATA_BLOCK];
   __shared__ float contributions[DATA_BLOCK];
+  // Use interleaved assignment instead of consecutive
+  /*unsigned stride = gridDim.x;
+  unsigned block_id = blockIdx.x;
+  
+  // Calculate interleaved block range
+  unsigned elements_per_block = (nnz + stride - 1) / stride;
+  unsigned block_start = block_id * elements_per_block;
+  unsigned block_end = min(block_start + elements_per_block, nnz);
+  
+  unsigned assigned_start = block_start+DATA_BLOCK*threadIdx.x/BLOCK_THREADS;
+  unsigned assigned_end = min(block_start+DATA_BLOCK*(threadIdx.x+1)/BLOCK_THREADS, block_end);*/
 
                                             // for (unsigned i = 0; i < csr.nrow; ++i) {
   unsigned block_start = blockIdx.x * DATA_BLOCK;
@@ -63,6 +134,8 @@ __global__ void spmv_csr_gpu_kernel_nnz( const float* __restrict__ val, const un
   ///build the shared memory with the row_idx
   unsigned assigned_start = block_start+DATA_BLOCK*threadIdx.x/BLOCK_THREADS;
   unsigned assigned_end = min(block_start+DATA_BLOCK*(threadIdx.x+1)/BLOCK_THREADS, block_end);
+
+
 // Async copy from global to shared memory
     /*auto block = cg::this_thread_block();
     cg::memcpy_async(block, shared_rows_idx, row_idx + assigned_start, sizeof(unsigned) * (assigned_end - assigned_start));
@@ -116,7 +189,7 @@ __global__ void spmv_csr_gpu_kernel_nnz( const float* __restrict__ val, const un
   }
   
   __syncthreads();
-  
+ 
   //accumulate all contributions and write them in a single atomic operation
   if(threadIdx.x<WRITE_OUT_BLOCKS){
     unsigned assigned_start = block_start+(DATA_BLOCK*threadIdx.x/WRITE_OUT_BLOCKS);
@@ -157,11 +230,16 @@ __global__ void spmv_csr_gpu_kernel_nnz( const float* __restrict__ val, const un
 void dummy_launcher(CSR *csr, float *input_vec, float *output_vec) {
   cudaMemset(output_vec, 0, sizeof(float) * csr->nrow);
   unsigned int nblocks = (csr->nnz + DATA_BLOCK - 1) / DATA_BLOCK;
-
-  printf("nblocks %u\n", nblocks);
   spmv_csr_gpu_kernel_nnz<<<nblocks, BLOCK_THREADS>>>(
       csr->val, csr->row_idx, csr->col_idx, input_vec, output_vec, csr->nrow,
       csr->ncol, csr->nnz);
+  /*cudaEvent_t kernel_done;
+  cudaEventCreate(&kernel_done);
+  cudaEventRecord(kernel_done);
+  while (cudaEventQuery(kernel_done) == cudaErrorNotReady) {
+    usleep(100); // Sleep for 100 microseconds
+  }
+  cudaEventDestroy(kernel_done);*/
   CHECK_CUDA(cudaDeviceSynchronize());
 }
 

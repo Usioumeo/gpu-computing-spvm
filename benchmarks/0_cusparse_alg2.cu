@@ -2,7 +2,6 @@
 #include <cusparse_v2.h>
 #include <sys/select.h>
 #include <sys/time.h>
-#define USE_CUDA
 extern "C" {
 #include "lib.h"
 }

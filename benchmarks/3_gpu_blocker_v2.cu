@@ -1,7 +1,6 @@
 #include <cassert>
 #include <cstdlib>
 extern "C" {
-#define USE_CUDA
 #include "lib.h"
 }
 #include <math.h>
@@ -15,50 +14,65 @@ extern "C" {
 #define WARMUPS 0
 #define REPS 2
 
-#define BLOCK_SIZE 32
-#define SHARED_DATA_BLOCK 100000
-__global__ void spmv_csr_gpu_kernel_blocks(CSR csr, unsigned n, float *__restrict__ input_vec,
-                                    float *output_vec) {
-  //__shared__ float shared_input[SHARED_DATA_BLOCK];
-  //const float4 *input_vec4 = reinterpret_cast<const float4 *>(input_vec);
+#define BLOCK_SIZE 128
+#define SHARED_DATA_BLOCK 2048
+__inline__ __device__ unsigned warpReduceMin(unsigned val) {
+  for (int offset = 16; offset > 0; offset /= 2) {
+    val = min(val, __shfl_down_sync(0xffffffff, val, offset));
+  }
 
+  return __shfl_sync(0xffffffff, val, 0);
+  //return val;
+}
+__global__ void spmv_csr_gpu_kernel_blocks(CSR csr, unsigned n,
+                                           float *__restrict__ input_vec,
+                                           float *output_vec) {
+  __shared__ float shared_input[SHARED_DATA_BLOCK*BLOCK_SIZE/32];
 
   // for (unsigned i = 0; i < csr.nrow; ++i) {
   unsigned i = blockIdx.x * blockDim.x + threadIdx.x;
-  if (i < csr.nrow) {
-    float out = 0.0;
-    unsigned start = csr.row_idx[i];
-    unsigned end = csr.row_idx[i + 1];
-    const float *__restrict__ val = csr.val + start;
-    const unsigned *__restrict__ col = csr.col_idx + start;
-    const float *__restrict__ val_end = csr.val + end;
+  unsigned warp_id = threadIdx.x / 32;
+  unsigned lane_id = threadIdx.x % 32;
+  unsigned shared_offset = warp_id * SHARED_DATA_BLOCK;
+  float out = 0.0;
+  unsigned pos;
+  unsigned end;
+  if(i<csr.nrow){
+    pos = csr.row_idx[i];
+    end = csr.row_idx[i + 1];
+  } else {
+    end = csr.nnz; // If i >= nrow, set end to nnz to avoid out-of-bounds access
+    pos = csr.nnz; // If i >= nrow, set pos to nnz to avoid out-of-bounds access
+  }
+  
+  
+  const float *__restrict__ val = csr.val + pos;
+  /*const unsigned *__restrict__ col = csr.col_idx + start;
+  const float *__restrict__ val_end = csr.val + end;*/
+  __syncthreads();
+  unsigned end_block = 0;
+  while (end_block< csr.ncol) {
+    unsigned to_send =
+        (pos < end && i < csr.nrow) ? csr.col_idx[pos] : csr.ncol;
 
-    unsigned nblocks = (csr.ncol+ BLOCK_SIZE - 1)/ BLOCK_SIZE;
-    for(unsigned b=0; b<nblocks; b++) {
-      unsigned start_block = b * BLOCK_SIZE;
-      unsigned end_block = (b + 1) * BLOCK_SIZE;
-
-      unsigned col_val=__ldg(col);
-      while (val < val_end ) { //&& *col<csr.ncol
-        //&&col_val<end_block
-        
-        //out += *val * __ldg(&input_vec[*col]);
-        //col_val=__ldg(col++);
-        val++;
-        //col++;
-      }
-      
-      //__syncthreads();
+    __syncwarp();
+    assert(__activemask() ==0xffffffff);
+    unsigned min_col = warpReduceMin(to_send);
+    end_block = min(min_col + SHARED_DATA_BLOCK, csr.ncol);
+    __syncwarp();
+    for(unsigned i=min_col+lane_id; i < end_block; i += 32) {
+      shared_input[i-min_col+shared_offset] = __ldg(input_vec + i);
     }
-    
-    
-    
-    
-
-    
+    __syncwarp();
 
 
-    
+
+
+    while (pos < end && csr.col_idx[pos] < end_block) {
+      out += *val* shared_input[csr.col_idx[pos]-min_col+shared_offset];
+      pos++;
+      val++;
+    }
     output_vec[i] = out;
   }
 
@@ -67,8 +81,8 @@ __global__ void spmv_csr_gpu_kernel_blocks(CSR csr, unsigned n, float *__restric
 
 void dummy_launcher(CSR *csr, float *input_vec, float *output_vec) {
   unsigned nblocks = (csr->nrow + BLOCK_SIZE - 1) / BLOCK_SIZE;
-  spmv_csr_gpu_kernel_blocks<<<nblocks, BLOCK_SIZE>>>(*csr, csr->ncol, input_vec,
-                                               output_vec);
+  spmv_csr_gpu_kernel_blocks<<<nblocks, BLOCK_SIZE>>>(*csr, csr->ncol,
+                                                      input_vec, output_vec);
   CHECK_CUDA(cudaDeviceSynchronize());
 }
 int spmv_csr_gpu_chunks(CSR *csr, unsigned n, float *input_vec,

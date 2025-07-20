@@ -1,6 +1,5 @@
 
 #include <cassert>
-#define USE_CUDA
 extern "C" {
 #include "lib.h"
 }

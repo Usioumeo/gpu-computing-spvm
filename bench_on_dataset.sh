@@ -13,9 +13,9 @@
 pwd
 ls -la
 nvidia-smi
-EXEC=./build/bench/cuda/bins/2.2_gpu_scattered_v2O3
-echo default
-$EXEC
+EXEC=./build/bench/cuda/bins/2.2_gpu_scattered_textureO3
+#echo default
+#$EXEC
 echo mawi1
 $EXEC ./data/mawi_201512020000/mawi_201512020000.mtx
 echo random2

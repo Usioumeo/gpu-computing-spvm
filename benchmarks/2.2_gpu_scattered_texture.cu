@@ -1,5 +1,4 @@
 #include <cassert>
-#define USE_CUDA
 extern "C" {
 #include "lib.h"
 }
@@ -9,13 +8,13 @@ extern "C" {
 #include <sys/time.h>
 #include <nvtx3/nvToolsExt.h>
 #define WARMUPS 0
-#define REPS 2
+#define REPS 20
 #define WRITE_OUT_BLOCKS 8
 //how many threads per block
-#define BLOCK_THREADS 128
+#define BLOCK_THREADS (96)
 
 // size of data_block, so how many consegutive elements to process in a single block
-#define DATA_BLOCK 384
+#define DATA_BLOCK (384)
 
 __device__ inline unsigned upper_bound(cudaTextureObject_t arr, int size, unsigned key) {
   int left = 0;
@@ -57,8 +56,8 @@ __global__ void spmv_csr_gpu_kernel_nnz( const float* __restrict__ val, cudaText
   unsigned block_start = blockIdx.x * DATA_BLOCK;
   unsigned block_end = min(block_start + DATA_BLOCK, nnz);
   ///build the shared memory with the row_idx
-  unsigned assigned_start = block_start+(DATA_BLOCK/BLOCK_THREADS)*threadIdx.x;
-  unsigned assigned_end = min(block_start+(DATA_BLOCK/BLOCK_THREADS)*(threadIdx.x+1), block_end);
+  unsigned assigned_start = block_start+(DATA_BLOCK*threadIdx.x)/BLOCK_THREADS;
+  unsigned assigned_end = min(block_start+(DATA_BLOCK*(threadIdx.x+1))/BLOCK_THREADS, block_end);
   //get rows
   unsigned row=0;
   for(unsigned i=assigned_start; i<assigned_end; ) {
@@ -74,8 +73,7 @@ __global__ void spmv_csr_gpu_kernel_nnz( const float* __restrict__ val, cudaText
 
   //compute
   unsigned start = block_start+ threadIdx.x;
-  if (start < block_end) {
-    unsigned prev_row = 1.0;//shared_rows_idx[start - block_start];
+  if (start < block_end) {//shared_rows_idx[start - block_start];
     #pragma unroll 10
     for(unsigned i=start; i<block_end; i+= BLOCK_THREADS) {
         contributions[i-block_start]= val[i] * tex1Dfetch<float>(input_tex, col_idx[i]);
@@ -87,8 +85,8 @@ __global__ void spmv_csr_gpu_kernel_nnz( const float* __restrict__ val, cudaText
   
   //accumulate all contributions and write them in the least amount of atomic operations
   if(threadIdx.x<WRITE_OUT_BLOCKS){
-    unsigned assigned_start = block_start+(DATA_BLOCK/WRITE_OUT_BLOCKS)*threadIdx.x;
-    unsigned assigned_end = min(block_start+(DATA_BLOCK/WRITE_OUT_BLOCKS)*(threadIdx.x+1), block_end);
+    unsigned assigned_start = block_start+(DATA_BLOCK*threadIdx.x)/WRITE_OUT_BLOCKS;
+    unsigned assigned_end = min(block_start+(DATA_BLOCK*(threadIdx.x+1))/WRITE_OUT_BLOCKS, block_end);
     float contrib = 0.0;
     unsigned prev_row = shared_rows_idx[0];
     bool first = true;

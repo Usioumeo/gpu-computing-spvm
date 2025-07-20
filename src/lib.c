@@ -415,6 +415,20 @@ void csr_sort_in_ascending_order(CSR csr) {
   }
   free(tmp);
 }
+#ifndef USE_CUDA
+CSR *copy_csr_to_gpu(CSR *csr){
+  printf("copy_csr_to_gpu not implemented\n");
+  exit(1);
+}
+
+
+void free_csr_gpu(CSR *csr){
+  printf("free_csr_gpu not implemented\n");
+  exit(1);
+}
+
+#endif
+
 #ifdef USE_OPENMP
 #include <immintrin.h>
 int spmv_csr_openmp(CSR csr, unsigned n, float *input_vec, float *output_vec) {

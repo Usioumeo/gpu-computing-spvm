@@ -142,11 +142,11 @@ int spmv_csr(CSR csr, unsigned n, float *input_vec, float * output_vec);
 int write_bin_to_file(CSR *csr, const char *filename);
 int read_bin_to_csr(const char *filename, CSR *csr);
 int spmv_csr_block(CSR csr, unsigned n, float *input_vec, float * output_vec);
-#ifdef USE_CUDA
+
 CSR *copy_csr_to_gpu(CSR *csr);
 
 void free_csr_gpu(CSR *csr);
-#endif
+
 #define CHECK_CUDA(call)                                                       \
   if ((call) != cudaSuccess) {                                                 \
     fprintf(stderr, "CUDA error at %s:%u %u\n", __FILE__, __LINE__, call);     \

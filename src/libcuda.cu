@@ -1,5 +1,4 @@
 extern "C" {
-#define USE_CUDA
 #include "lib.h"
 CSR *copy_csr_to_gpu(CSR *csr) {
   // Move CSR data to GPU
