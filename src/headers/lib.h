@@ -5,6 +5,9 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define WARMUPS 0
+#define REPS 5
+
 #define START_TIMER                                                            \
   struct timeval temp_1 = {0, 0}, temp_2 = {0, 0};                             \
   for (int i = -WARMUPS; i < REPS; i++) {                                      \
@@ -146,6 +149,9 @@ int spmv_csr_block(CSR csr, unsigned n, float *input_vec, float * output_vec);
 CSR *copy_csr_to_gpu(CSR *csr);
 
 void free_csr_gpu(CSR *csr);
+
+
+CSR* read_from_file(int argc, char *argv[]);
 
 #define CHECK_CUDA(call)                                                       \
   if ((call) != cudaSuccess) {                                                 \

@@ -6,8 +6,6 @@
 #include <sys/time.h>
 #include <immintrin.h>
 #define SIZE 100000000
-#define WARMUPS 40
-#define REPS 500
 
 float dummy_sum(float *a, float *b) {
     float val = 0;

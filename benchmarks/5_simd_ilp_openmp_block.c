@@ -5,14 +5,7 @@
 #include <omp.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <string.h>
 #include <sys/time.h>
-#define ROWS (1 << 13)
-#define COLS (1 << 13)
-#define NNZ (1 << 24)
-
-#define WARMUPS 4
-#define REPS 50
 
 #define BLOCK_SIZE 512
 #define BLOCK_ADV 32
@@ -137,27 +130,7 @@ int spmv_csr_simd_ilp_openmp(CSR csr, unsigned n, float *input_vec,
 
 int main(int argc, char *argv[]) {
   printf("simd ilp openmp block\n");
-  COO *coo = coo_new();
-  if (argc > 2) {
-    printf("Usage: %s <input_file>\n", argv[0]);
-    return -1;
-  }
-  if (argc == 2) {
-    FILE *input = fopen(argv[1], "r");
-    if (input == NULL) {
-      printf("Error opening file: %s\n", argv[1]);
-      return -1;
-    }
-    if (coo_from_file(input, coo) != 0) {
-      printf("Error reading COO from file: %s\n", argv[1]);
-      fclose(input);
-      return -1;
-    }
-  } else {
-    coo_generate_random(coo, ROWS, COLS, NNZ);
-  }
-  CSR *csr = csr_new();
-  coo_to_csr(coo, csr);
+  CSR *csr = read_from_file(argc, argv);
 
   float *rand_vec = (float *)malloc(sizeof(float) * csr->ncol);
   float *output = (float *)malloc(sizeof(float) *  csr->nrow * 2);
@@ -192,8 +165,6 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-
-  coo_free(coo);
   csr_free(csr);
   free(rand_vec);
   free(output);

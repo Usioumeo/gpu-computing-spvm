@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cstdlib>
 extern "C" {
 #include "lib.h"
 }
@@ -7,6 +8,7 @@ extern "C" {
 #include <sys/select.h>
 #include <sys/time.h>
 #include <unistd.h>
+
 
 //how many threads per block
 #define BLOCK_THREADS (96)
@@ -32,50 +34,14 @@ __device__ inline unsigned normal_upper_bound(const unsigned *__restrict__ arr, 
 
 
 __global__ void spmv_csr_gpu_kernel_nnz( const float* __restrict__ val, const unsigned * __restrict__ row_idx, const unsigned* __restrict__ col_idx,
-                                           const float* __restrict__ input_vec, float *output_vec, unsigned nrow, unsigned ncol, unsigned nnz){
-  __shared__ unsigned shared_rows_idx[DATA_BLOCK];
+                                           const float* __restrict__ input_vec, float *output_vec, unsigned nrow, unsigned ncol, unsigned nnz, unsigned *cuda_extended_row){
   __shared__ float contributions[DATA_BLOCK];
-  // Use interleaved assignment instead of consecutive
-  /*unsigned stride = gridDim.x;
-  unsigned block_id = blockIdx.x;
-  
-  // Calculate interleaved block range
-  unsigned elements_per_block = (nnz + stride - 1) / stride;
-  unsigned block_start = block_id * elements_per_block;
-  unsigned block_end = min(block_start + elements_per_block, nnz);
-  
-  unsigned assigned_start = block_start+DATA_BLOCK*threadIdx.x/BLOCK_THREADS;
-  unsigned assigned_end = min(block_start+DATA_BLOCK*(threadIdx.x+1)/BLOCK_THREADS, block_end);*/
 
                                             // for (unsigned i = 0; i < csr.nrow; ++i) {
   unsigned block_start = blockIdx.x * DATA_BLOCK;
   unsigned block_end = min(block_start + DATA_BLOCK, nnz);
   ///build the shared memory with the row_idx
-  unsigned assigned_start = block_start+DATA_BLOCK*threadIdx.x/BLOCK_THREADS;
   unsigned assigned_end = min(block_start+DATA_BLOCK*(threadIdx.x+1)/BLOCK_THREADS, block_end);
-
-
-// Async copy from global to shared memory
-    /*auto block = cg::this_thread_block();
-    cg::memcpy_async(block, shared_rows_idx, row_idx + assigned_start, sizeof(unsigned) * (assigned_end - assigned_start));
-    cg::memcpy_async(block, contributions, val + assigned_start, sizeof(float) * (assigned_end - assigned_start));
-    cg::wait(block);*/
-    unsigned row=0;
-  for(unsigned i=assigned_start; i<assigned_end; ) {
-    row = normal_upper_bound(row_idx, nrow, i);
-    /*unsigned other_row=normal_upper_bound(row_idx, nrow, i);
-    if(row!=other_row){
-      printf("%u %u\n", row, other_row);
-      assert(row==other_row);
-    }*/
-    unsigned row_end=min(row_idx[row+1], assigned_end);
-    for(unsigned j=i; j < row_end; j++) {
-      shared_rows_idx[j-block_start] = row;
-    }
-    i=row_end;
-  }
-
-  __syncthreads();
 
   unsigned start = block_start+ threadIdx.x;
   if (start < block_end) {
@@ -92,12 +58,12 @@ __global__ void spmv_csr_gpu_kernel_nnz( const float* __restrict__ val, const un
     unsigned assigned_start = block_start+(DATA_BLOCK*threadIdx.x/WRITE_OUT_BLOCKS);
     unsigned assigned_end = min(block_start+(DATA_BLOCK*(threadIdx.x+1)/WRITE_OUT_BLOCKS), block_end);
     float contrib = 0.0;
-    unsigned prev_row = shared_rows_idx[0];
+    unsigned prev_row = cuda_extended_row[block_start];
     bool first = true;
     
 
     for(unsigned i=assigned_start; i<assigned_end; i++) {
-      if (shared_rows_idx[i-block_start] != prev_row) {
+      if (cuda_extended_row[i] != prev_row) {
         if (first) {
           atomicAdd(&output_vec[prev_row], contrib);
         } else {
@@ -106,7 +72,7 @@ __global__ void spmv_csr_gpu_kernel_nnz( const float* __restrict__ val, const un
         }
         //atomicAdd(&output_vec[prev_row], contrib);
         contrib = 0.0;
-        prev_row = shared_rows_idx[i-block_start];
+        prev_row = cuda_extended_row[i];
       }
       //contrib += contributions[i];
       contrib+= contributions[i-block_start];
@@ -124,12 +90,12 @@ __global__ void spmv_csr_gpu_kernel_nnz( const float* __restrict__ val, const un
   //atomicAdd(&output_vec[prev_row], cur);
 }
 
-void dummy_launcher(CSR *csr, float *input_vec, float *output_vec) {
+void dummy_launcher(CSR *csr, float *input_vec, float *output_vec, unsigned *cuda_extended_row) {
   cudaMemset(output_vec, 0, sizeof(float) * csr->nrow);
   unsigned int nblocks = (csr->nnz + DATA_BLOCK - 1) / DATA_BLOCK;
   spmv_csr_gpu_kernel_nnz<<<nblocks, BLOCK_THREADS>>>(
       csr->val, csr->row_idx, csr->col_idx, input_vec, output_vec, csr->nrow,
-      csr->ncol, csr->nnz);
+      csr->ncol, csr->nnz, cuda_extended_row);
   /*cudaEvent_t kernel_done;
   cudaEventCreate(&kernel_done);
   cudaEventRecord(kernel_done);
@@ -147,6 +113,8 @@ int spmv_csr_gpu_nnz(CSR *csr, unsigned n, float *input_vec,
   }
   CSR *gpu_csr = copy_csr_to_gpu(csr);
 
+
+
   float *input_vec_gpu, *output_gpu;
   CHECK_CUDA(cudaMalloc(&input_vec_gpu, sizeof(float) * csr->ncol));
   CHECK_CUDA(cudaMemcpy(input_vec_gpu, input_vec, sizeof(float) * csr->ncol,
@@ -154,8 +122,22 @@ int spmv_csr_gpu_nnz(CSR *csr, unsigned n, float *input_vec,
 
   CHECK_CUDA(cudaMalloc(&output_gpu, sizeof(float) * gpu_csr->nrow));
 
-  TEST_FUNCTION(dummy_launcher(gpu_csr, input_vec_gpu, output_gpu));
+  //uncompress rows
+  unsigned *extended_row = (unsigned*)malloc(sizeof(unsigned) * csr->nnz);
+  for(unsigned r=0; r<csr->nrow; r++){
+    for(unsigned j=csr->row_idx[r]; j<csr->row_idx[r+1]; j++){
+      extended_row[j]=r;
+    }
+  }
+  unsigned *cuda_extended_row;
+  CHECK_CUDA(cudaMalloc(&cuda_extended_row, sizeof(unsigned) * gpu_csr->nnz));
+  CHECK_CUDA(cudaMemcpy(cuda_extended_row, extended_row, sizeof(float) * csr->nnz,
+                        cudaMemcpyHostToDevice));
 
+  TEST_FUNCTION(dummy_launcher(gpu_csr, input_vec_gpu, output_gpu, cuda_extended_row));
+
+  free(extended_row);
+  CHECK_CUDA(cudaFree(cuda_extended_row));
   CHECK_CUDA(cudaMemcpy(output_vec, output_gpu, sizeof(float) * gpu_csr->nrow,
                         cudaMemcpyDeviceToHost));
   CHECK_CUDA(cudaFree(input_vec_gpu));
@@ -185,7 +167,7 @@ int main(int argc, char *argv[]) {
     printf("Error in the output\n");
     return 0;
   }
-
+  
   csr_free(csr);
   free(input);
   free(output);

@@ -9,12 +9,7 @@ extern "C" {
 #include <sys/time.h>
 
 #include <stdint.h>  
-#define ROWS (1 << 13)
-#define COLS (1 << 13)
-#define NNZ (1 << 24)
 
-#define WARMUPS 4
-#define REPS 10
 
 #define BLOCK_SIZE 32
  
@@ -29,33 +24,15 @@ __global__ void spmv_csr_gpu_kernel_texture(CSR csr, unsigned n,
         unsigned end = csr.row_idx[i + 1];
         unsigned idx = start;
         
-        // Process 4 elements at once when possible AND aligned
-        while (idx + 3 < end && (idx % 4 == 0)) {
-            // Check if we can safely load float4 (16-byte aligned)
-            if (((uintptr_t)(&csr.val[idx]) % 16 == 0) && 
-                ((uintptr_t)(&csr.col_idx[idx]) % 16 == 0)) {
-                
-                float4 val4 = *reinterpret_cast<const float4*>(&csr.val[idx]);
-                uint4 col4 = *reinterpret_cast<const uint4*>(&csr.col_idx[idx]);
-                
-                // Sequential texture fetches instead of concurrent
-                float input0 = tex1Dfetch<float>(input_tex, col4.x);
-                float input1 = tex1Dfetch<float>(input_tex, col4.y);
-                float input2 = tex1Dfetch<float>(input_tex, col4.z);
-                float input3 = tex1Dfetch<float>(input_tex, col4.w);
-                
-                out += val4.x * input0 + val4.y * input1 + val4.z * input2 + val4.w * input3;
-                idx += 4;
-            } else {
-                // Fall back to scalar access
-                out += csr.val[idx] * tex1Dfetch<float>(input_tex, csr.col_idx[idx]);
-                idx++;
-            }
-        }
         
-        // Handle remaining elements
+        // compute
         while (idx < end) {
-            out += csr.val[idx] * tex1Dfetch<float>(input_tex, csr.col_idx[idx]);
+          unsigned col = __ldg(csr.col_idx +idx);
+          float input_val = tex1Dfetch<float>(input_tex, col);
+          float val = __ldg(csr.val + idx);
+          // Use texture memory to fetch the input vector
+          
+            out += val * input_val;
             idx++;
         }
         
@@ -121,31 +98,7 @@ int spmv_csr_gpu(CSR *csr, unsigned n, float *input_vec,
 }
 
 int main(int argc, char *argv[]) {
-  COO *coo = coo_new();
-  CSR *csr = csr_new();
-  if (argc > 2) {
-    printf("Usage: %s <input_file>\n", argv[0]);
-    return -1;
-  }
-  if (argc == 2) {
-    FILE *input = fopen(argv[1], "r");
-    if (input == NULL) {
-      printf("Error opening file: %s\n", argv[1]);
-      return -1;
-    }
-    if (coo_from_file(input, coo) != 0) {
-      printf("Error reading COO from file: %s\n", argv[1]);
-      fclose(input);
-      return -1;
-    }
-    coo_to_csr(coo, csr);
-    write_bin_to_file(csr, "tmp.bin");
-  } else {
-    //coo_generate_random(coo, ROWS, COLS, NNZ);
-    read_bin_to_csr("tmp.bin", csr);
-  }
-  
-  
+  CSR *csr = read_from_file(argc, argv);
   
   printf("csr->nrow %u csr->ncol %u csr->nnz %u\n", csr->nrow, csr->ncol,
          csr->nnz);
@@ -166,7 +119,6 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-  coo_free(coo);
   csr_free(csr);
   free(input);
   free(output);

@@ -7,8 +7,7 @@ extern "C" {
 #include <sys/select.h>
 #include <sys/time.h>
 #include <nvtx3/nvToolsExt.h>
-#define WARMUPS 0
-#define REPS 20
+
 #define WRITE_OUT_BLOCKS 8
 //how many threads per block
 #define BLOCK_THREADS (96)
@@ -192,29 +191,7 @@ cudaResourceDesc resDesc2;
 }
 
 int main(int argc, char *argv[]) {
-  COO *coo = coo_new();
-  CSR *csr = csr_new();
-  if (argc > 2) {
-    printf("Usage: %s <input_file>\n", argv[0]);
-    return -1;
-  }
-  if (argc == 2) {
-    FILE *input = fopen(argv[1], "r");
-    if (input == NULL) {
-      printf("Error opening file: %s\n", argv[1]);
-      return -1;
-    }
-    if (coo_from_file(input, coo) != 0) {
-      printf("Error reading COO from file: %s\n", argv[1]);
-      fclose(input);
-      return -1;
-    }
-    coo_to_csr(coo, csr);
-    write_bin_to_file(csr, "tmp.bin");
-  } else {
-    // coo_generate_random(coo, ROWS, COLS, NNZ);
-    read_bin_to_csr("tmp.bin", csr);
-  }
+  CSR *csr = read_from_file(argc, argv);
 
   printf("csr->nrow %u csr->ncol %u csr->nnz %u\n", csr->nrow, csr->ncol,
          csr->nnz);
@@ -235,7 +212,6 @@ int main(int argc, char *argv[]) {
     return 0;
   }
 
-  coo_free(coo);
   csr_free(csr);
   free(input);
   free(output);

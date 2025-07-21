@@ -7,74 +7,120 @@ extern "C" {
 #include <stdio.h>
 #include <sys/select.h>
 #include <sys/time.h>
-#define ROWS (1 << 13)
-#define COLS (1 << 13)
-#define NNZ (1 << 24)
 
-#define WARMUPS 0
-#define REPS 2
 
-#define BLOCK_SIZE 128
-#define SHARED_DATA_BLOCK 2048
+#define BLOCK_SIZE (32 * 2)
+#define SHARED_DATA_BLOCK (1024)
 __inline__ __device__ unsigned warpReduceMin(unsigned val) {
   for (int offset = 16; offset > 0; offset /= 2) {
     val = min(val, __shfl_down_sync(0xffffffff, val, offset));
   }
 
   return __shfl_sync(0xffffffff, val, 0);
-  //return val;
+  // return val;
 }
+
+__inline__ __device__ unsigned blockReduceMin(unsigned val) {
+  __shared__ unsigned partialMins[BLOCK_SIZE / 32];
+  unsigned lane_id = threadIdx.x % 32;
+  unsigned warp_id = threadIdx.x / 32;
+
+  for (int offset = 16; offset > 0; offset /= 2) {
+    val = min(val, __shfl_down_sync(0xffffffff, val, offset));
+  }
+  if (lane_id == 0) {
+    partialMins[warp_id] = val;
+  }
+
+  __syncthreads();
+  // accumulate partial accumulation
+  if (threadIdx.x < 32) {
+    val = threadIdx.x < BLOCK_SIZE / 32 ? partialMins[threadIdx.x] : 0xffffffff;
+    // Reduce within this warp to find global minimum
+    for (int offset = 16; offset > 0; offset /= 2) {
+      val = min(val, __shfl_down_sync(0xffffffff, val, offset));
+    }
+    val = __shfl_sync(0xffffffff, val, 0);
+    partialMins[threadIdx.x] = val;
+  }
+  __syncthreads();
+  if (lane_id == 0) {
+    val = partialMins[warp_id];
+  }
+  __syncwarp();
+  return __shfl_sync(0xffffffff, val, 0);
+}
+
+__inline__ __device__ unsigned warpReduceMax(unsigned val) {
+  for (int offset = 16; offset > 0; offset /= 2) {
+    val = max(val, __shfl_down_sync(0xffffffff, val, offset));
+  }
+
+  return __shfl_sync(0xffffffff, val, 0);
+  // return val;
+}
+
 __global__ void spmv_csr_gpu_kernel_blocks(CSR csr, unsigned n,
                                            float *__restrict__ input_vec,
                                            float *output_vec) {
-  __shared__ float shared_input[SHARED_DATA_BLOCK*BLOCK_SIZE/32];
+  __shared__ float shared_input[SHARED_DATA_BLOCK];
 
   // for (unsigned i = 0; i < csr.nrow; ++i) {
   unsigned i = blockIdx.x * blockDim.x + threadIdx.x;
-  unsigned warp_id = threadIdx.x / 32;
-  unsigned lane_id = threadIdx.x % 32;
-  unsigned shared_offset = warp_id * SHARED_DATA_BLOCK;
   float out = 0.0;
   unsigned pos;
   unsigned end;
-  if(i<csr.nrow){
+  if (i < csr.nrow) {
     pos = csr.row_idx[i];
     end = csr.row_idx[i + 1];
   } else {
     end = csr.nnz; // If i >= nrow, set end to nnz to avoid out-of-bounds access
     pos = csr.nnz; // If i >= nrow, set pos to nnz to avoid out-of-bounds access
   }
-  
-  
-  const float *__restrict__ val = csr.val + pos;
-  /*const unsigned *__restrict__ col = csr.col_idx + start;
-  const float *__restrict__ val_end = csr.val + end;*/
+
   __syncthreads();
   unsigned end_block = 0;
-  while (end_block< csr.ncol) {
+  
+  while (end_block < csr.ncol) {
     unsigned to_send =
         (pos < end && i < csr.nrow) ? csr.col_idx[pos] : csr.ncol;
 
-    __syncwarp();
-    assert(__activemask() ==0xffffffff);
-    unsigned min_col = warpReduceMin(to_send);
+    //__syncwarp();
+    // assert(__activemask() ==0xffffffff);
+    __syncthreads();
+    unsigned min_col = blockReduceMin(to_send);
+    // printf("min_col %u\n", min_col);
     end_block = min(min_col + SHARED_DATA_BLOCK, csr.ncol);
-    __syncwarp();
-    for(unsigned i=min_col+lane_id; i < end_block; i += 32) {
-      shared_input[i-min_col+shared_offset] = __ldg(input_vec + i);
+    __syncthreads();
+    for (unsigned j = min_col + threadIdx.x; j < end_block; j += BLOCK_SIZE) {
+
+      shared_input[j - min_col] = __ldg(input_vec + j);
     }
-    __syncwarp();
+    __syncthreads();
 
-
-
-
-    while (pos < end && csr.col_idx[pos] < end_block) {
-      out += *val* shared_input[csr.col_idx[pos]-min_col+shared_offset];
+    /*unsigned col_val=*col;
+    while (pos < end && col_val < end_block) {
+      out += *val * shared_input[col_val - min_col];
+      col_val=*++col;
       pos++;
+      //col++;
       val++;
+
+    }*/
+    unsigned col_val = (pos < end) ? csr.col_idx[pos] : end_block;
+    float val_current = (pos < end) ? csr.val[pos] : 0.0f;
+
+    while (pos < end && col_val < end_block) {
+      // Use current values
+      out += val_current * shared_input[col_val - min_col];
+
+      // Prefetch next iteration
+      pos++;
+      col_val = (pos < end) ? csr.col_idx[pos] : end_block;
+      val_current = (pos < end) ? csr.val[pos] : 0.0f;
     }
-    output_vec[i] = out;
   }
+  output_vec[i] = out;
 
   //}
 }
@@ -110,29 +156,7 @@ int spmv_csr_gpu_chunks(CSR *csr, unsigned n, float *input_vec,
 }
 
 int main(int argc, char *argv[]) {
-  COO *coo = coo_new();
-  CSR *csr = csr_new();
-  if (argc > 2) {
-    printf("Usage: %s <input_file>\n", argv[0]);
-    return -1;
-  }
-  if (argc == 2) {
-    FILE *input = fopen(argv[1], "r");
-    if (input == NULL) {
-      printf("Error opening file: %s\n", argv[1]);
-      return -1;
-    }
-    if (coo_from_file(input, coo) != 0) {
-      printf("Error reading COO from file: %s\n", argv[1]);
-      fclose(input);
-      return -1;
-    }
-    coo_to_csr(coo, csr);
-    write_bin_to_file(csr, "tmp.bin");
-  } else {
-    // coo_generate_random(coo, ROWS, COLS, NNZ);
-    read_bin_to_csr("tmp.bin", csr);
-  }
+  CSR *csr = read_from_file(argc, argv);
 
   printf("csr->nrow %u csr->ncol %u csr->nnz %u\n", csr->nrow, csr->ncol,
          csr->nnz);
@@ -153,7 +177,6 @@ int main(int argc, char *argv[]) {
     return 0;
   }
 
-  coo_free(coo);
   csr_free(csr);
   free(input);
   free(output);

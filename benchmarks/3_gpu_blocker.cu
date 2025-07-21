@@ -7,12 +7,7 @@ extern "C" {
 #include <stdio.h>
 #include <sys/select.h>
 #include <sys/time.h>
-#define ROWS (1 << 13)
-#define COLS (1 << 13)
-#define NNZ (1 << 24)
 
-#define WARMUPS 40
-#define REPS 100
 
 #define BLOCK_SIZE 32
 #define DATA_BLOCK (16)
@@ -142,29 +137,10 @@ int spmv_csr_gpu_nnz(CSR csr, unsigned n, float *input_vec, float *output_vec, u
 }
 
 int main(int argc, char *argv[]) {
-  COO *coo = coo_new();
-  if(argc > 2) {
-    printf("Usage: %s <input_file>\n", argv[0]);
-    return -1;
-  }
-  if (argc==2) {
-    FILE *input = fopen(argv[1], "r");
-    if (input == NULL) {
-      printf("Error opening file: %s\n", argv[1]);
-      return -1;
-    }
-    if (coo_from_file(input, coo)!=0){
-      printf("Error reading COO from file: %s\n", argv[1]);
-      fclose(input);
-      return -1;
-    }
-  } else{
-    coo_generate_random(coo, ROWS, COLS, NNZ);
-  }
-  CSR *csr = csr_new();
-  coo_to_csr(coo, csr);
-  printf("coo->nrow %u coo->ncol %u coo->nnz %u\n", coo->nrow, coo->ncol,
-         coo->nnz);
+  CSR *csr = read_from_file(argc, argv);
+
+  printf("csr->nrow %u csr->ncol %u csr->nnz %u\n", csr->nrow, csr->ncol,
+         csr->nnz);
   float *rand_vec; // = (float * )malloc(sizeof(float)*COLS);
   cudaMallocManaged(&rand_vec, csr->ncol * sizeof(float));
   float *output; //= (float*)malloc(sizeof(float)*COLS*(REPS+1));
@@ -182,7 +158,6 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-  coo_free(coo);
   csr_free(csr);
   cudaFree(rand_vec);
   cudaFree(output);

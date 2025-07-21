@@ -11,7 +11,6 @@ Entry to COO
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 typedef struct {
   UT_hash_handle hh;
   uint64_t key;
@@ -548,4 +547,32 @@ int read_bin_to_csr(const char *filename, CSR *csr) {
   fread(csr->val, sizeof(float), csr->nnz, input);
   fclose(input);
   return 0;
+}
+
+CSR* read_from_file(int argc, char *argv[]){
+  COO *coo = coo_new();
+  CSR *csr = csr_new();
+  if (argc > 2) {
+    printf("Usage: %s <input_file>\n", argv[0]);
+    exit(-1);
+  }
+  if (argc == 2) {
+    FILE *input = fopen(argv[1], "r");
+    if (input == NULL) {
+      printf("Error opening file: %s\n", argv[1]);
+      exit(-1);
+    }
+    if (coo_from_file(input, coo) != 0) {
+      printf("Error reading COO from file: %s\n", argv[1]);
+      fclose(input);
+      exit(-1);
+    }
+    coo_to_csr(coo, csr);
+    write_bin_to_file(csr, "tmp.bin");
+  } else {
+    //coo_generate_random(coo, ROWS, COLS, NNZ);
+    read_bin_to_csr("tmp.bin", csr);
+  }
+  free(coo);
+  return csr;
 }

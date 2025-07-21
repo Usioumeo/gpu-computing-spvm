@@ -8,12 +8,6 @@ extern "C" {
 #include <sys/time.h>
 
 #include <stdint.h>  
-#define ROWS (1 << 13)
-#define COLS (1 << 13)
-#define NNZ (1 << 24)
-
-#define WARMUPS 4
-#define REPS 10
 
 #define BLOCK_SIZE 16
 #define ROW_PER_BLOCK 16
@@ -109,29 +103,7 @@ int spmv_csr_gpu(CSR *csr, unsigned n, float *input_vec,
 }
 
 int main(int argc, char *argv[]) {
-  COO *coo = coo_new();
-  CSR *csr = csr_new();
-  if (argc > 2) {
-    printf("Usage: %s <input_file>\n", argv[0]);
-    return -1;
-  }
-  if (argc == 2) {
-    FILE *input = fopen(argv[1], "r");
-    if (input == NULL) {
-      printf("Error opening file: %s\n", argv[1]);
-      return -1;
-    }
-    if (coo_from_file(input, coo) != 0) {
-      printf("Error reading COO from file: %s\n", argv[1]);
-      fclose(input);
-      return -1;
-    }
-    coo_to_csr(coo, csr);
-    write_bin_to_file(csr, "tmp.bin");
-  } else {
-    //coo_generate_random(coo, ROWS, COLS, NNZ);
-    read_bin_to_csr("tmp.bin", csr);
-  }
+  CSR *csr = read_from_file(argc, argv);
   
   
   
@@ -153,8 +125,6 @@ int main(int argc, char *argv[]) {
     printf("Error in the output\n");
     return -1;
   }
-
-  coo_free(coo);
   csr_free(csr);
   free(input);
   free(output);

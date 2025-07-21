@@ -167,9 +167,12 @@ $(DATA_FOLDER)/%.tar.gz:
 	@echo "Unpacking $@..."; \
 	tar -xzf $@ -C $(DATA_FOLDER)
 
+$(DATA_FOLDER)/random1.mtx: $(BUILD_FOLDER)/bench/std/bins/0_generate_dataO3
+	$(BUILD_FOLDER)/bench/std/bins/0_generate_dataO3 $(DATA_FOLDER)/random1.mtx 8192 8192 16777216
+
 $(DATA_FOLDER)/random2.mtx: $(BUILD_FOLDER)/bench/std/bins/0_generate_dataO3
 	$(BUILD_FOLDER)/bench/std/bins/0_generate_dataO3 $(DATA_FOLDER)/random2.mtx 35991342 35991342 37242710
 
 
-datasets: $(addprefix $(DATA_FOLDER)/, $(addsuffix .tar.gz, $(DATASETS))) $(DATA_FOLDER)/random2.mtx
+datasets: $(addprefix $(DATA_FOLDER)/, $(addsuffix .tar.gz, $(DATASETS))) $(DATA_FOLDER)/random1.mtx $(DATA_FOLDER)/random2.mtx
 

@@ -12,8 +12,6 @@ extern "C" {
 #define NNZ 37242710
 //(1 << 26)
 
-#define WARMUPS 40
-#define REPS 1000
 
 #define BLOCK_SIZE 64
 

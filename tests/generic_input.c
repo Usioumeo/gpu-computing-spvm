@@ -8,8 +8,7 @@
 #define COL (1 << 13)
 #define NNZ (1 << 24)
 
-#define WARMUPS 40
-#define REPS 10000
+
 
 #define BLOCK_SIZE 64
 
