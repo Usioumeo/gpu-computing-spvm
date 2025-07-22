@@ -8,7 +8,6 @@ extern "C" {
 #include <sys/select.h>
 #include <sys/time.h>
 
-
 #define BLOCK_SIZE 512
 #define DATA_BLOCK (16)
 /*
@@ -24,7 +23,7 @@ __global__ void spmv_csr_gpu_kernel_dynamic_son(float *val, unsigned *col_idx,
       assert(1 == 0);
     }
   if (i < row_size) {
-    
+
     atomicAdd(output, val[i] * input_vec[col_idx[i]]);
     //output+= row_val[i] * input_vec[col_idx[i]];
   }
@@ -53,7 +52,7 @@ __global__ void spmv_csr_gpu_kernel_dynamic(CSR csr, unsigned n,
           &output_vec[i]);
       }
 
-      
+
     } else {
       float out = 0.0;
       float *val = csr.val + start;
@@ -101,16 +100,19 @@ __device__ unsigned upper_bound(const unsigned *arr, int size, unsigned key) {
   return left;
 }
 
-__global__ void spmv_csr_gpu_kernel_chunks( const float* __restrict__ val, const unsigned * __restrict__ row_idx, const unsigned* __restrict__ col_idx,
-                                           const float* __restrict__ input_vec, float *output_vec, unsigned nrow, unsigned ncol, unsigned nnz) {
+__global__ void spmv_csr_gpu_kernel_chunks(const float *__restrict__ val,
+                                           const unsigned *__restrict__ row_idx,
+                                           const unsigned *__restrict__ col_idx,
+                                           const float *__restrict__ input_vec,
+                                           float *output_vec, unsigned nrow,
+                                           unsigned ncol, unsigned nnz) {
   unsigned i = blockIdx.x * blockDim.x + threadIdx.x;
   unsigned starting_point = i * DATA_BLOCK;
   if (starting_point >= nnz) {
     return;
   }
   unsigned row = upper_bound(row_idx, nrow, starting_point);
-  if (row_idx[row] > starting_point ||
-      starting_point >= row_idx[row + 1]) {
+  if (row_idx[row] > starting_point || starting_point >= row_idx[row + 1]) {
 
     printf("Hello from thread %d, block %d\n", threadIdx.x, blockIdx.x);
     printf("row %u %u <= %u < %u\n", row, row_idx[row], starting_point,
@@ -144,7 +146,6 @@ __global__ void spmv_csr_gpu_kernel_chunks( const float* __restrict__ val, const
   atomicAdd(&output_vec[row], cur_val);
 }
 
-
 int spmv_csr_gpu_chunks(CSR csr, unsigned n, float *input_vec,
                         float *output_vec) {
   if (n != csr.ncol) {
@@ -166,33 +167,38 @@ int spmv_csr_gpu_chunks(CSR csr, unsigned n, float *input_vec,
   return 0;
 }
 
-__global__ void spmv_csr_gpu_kernel_nnz( const float* __restrict__ val, const unsigned * __restrict__ row_idx, const unsigned* __restrict__ col_idx,
-                                           const float* __restrict__ input_vec, float *output_vec, unsigned nrow, unsigned ncol, unsigned nnz){
+__global__ void spmv_csr_gpu_kernel_nnz(const float *__restrict__ val,
+                                        const unsigned *__restrict__ row_idx,
+                                        const unsigned *__restrict__ col_idx,
+                                        const float *__restrict__ input_vec,
+                                        float *output_vec, unsigned nrow,
+                                        unsigned ncol, unsigned nnz) {
   // for (unsigned i = 0; i < csr.nrow; ++i) {
-  unsigned start = (blockIdx.x * blockDim.x + threadIdx.x)*DATA_BLOCK;
-  
+  unsigned start = (blockIdx.x * blockDim.x + threadIdx.x) * DATA_BLOCK;
+
   unsigned end = start + DATA_BLOCK;
-  if(start>= nnz) {
+  if (start >= nnz) {
     return;
   }
-  if(end > nnz) {
+  if (end > nnz) {
     end = nnz;
   }
-  float cur=0.0;
+  float cur = 0.0;
   unsigned prev_row = upper_bound(row_idx, nrow, start);
-  for(int i=start; i<end; i++){
+  for (int i = start; i < end; i++) {
     unsigned cur_row = upper_bound(row_idx, nrow, i);
     if (prev_row != cur_row) {
       atomicAdd(&output_vec[prev_row], cur);
       cur = 0.0;
       prev_row = cur_row;
     }
-    cur+= val[i] * input_vec[col_idx[i]];
+    cur += val[i] * input_vec[col_idx[i]];
   }
   atomicAdd(&output_vec[prev_row], cur);
 }
 
-int spmv_csr_gpu_nnz(CSR csr, unsigned n, float *input_vec, float *output_vec, unsigned* rows) {
+int spmv_csr_gpu_nnz(CSR csr, unsigned n, float *input_vec, float *output_vec,
+                     unsigned *rows) {
   if (n != csr.ncol) {
     return 1;
   }
@@ -221,10 +227,10 @@ int main(int argc, char *argv[]) {
   for (unsigned i = 0; i < csr->ncol; i++) {
     rand_vec[i] = (float)(rand() % 2001 - 1000) * 0.001;
   }
-  unsigned * tmp;
+  unsigned *tmp;
   cudaMallocManaged(&tmp, csr->nnz * sizeof(unsigned));
   TEST_FUNCTION(spmv_csr_gpu_nnz(*csr, csr->ncol, rand_vec, output, tmp)); //
-  spmv_csr(*csr,  csr->ncol, rand_vec, output +  csr->nrow);
+  spmv_csr(*csr, csr->ncol, rand_vec, output + csr->nrow);
 
   if (relative_error_compare(output, output + csr->nrow, csr->nrow)) {
     printf("Error in the output\n");

@@ -1,33 +1,31 @@
 // USELESS DEFINE, MAKES HAPPY THE LINTER
 
 #include "lib.h"
+#include <immintrin.h>
 #include <omp.h>
 #include <stdio.h>
 #include <sys/time.h>
-#include <immintrin.h>
-
-
 
 int spmv_csr_simd_ilp_openmp(CSR csr, unsigned n, float *restrict input_vec,
-                         float *restrict output_vec) {
-                         
+                             float *restrict output_vec) {
+
   if (n != csr.ncol) {
     return 1;
   }
-  #pragma omp parallel for schedule(static, 64)
+#pragma omp parallel for schedule(static, 64)
   for (unsigned i = 0; i < csr.nrow; ++i) {
     output_vec[i] = 0.0;
     unsigned start = csr.row_idx[i];
     unsigned aligned_start = (start + 7) & ~7;
     unsigned end = csr.row_idx[i + 1];
     unsigned aligned_end = end & ~7;
-    if (aligned_start > aligned_end){
+    if (aligned_start > aligned_end) {
       for (unsigned k = start; k < end; k++) {
         output_vec[i] += csr.val[k] * input_vec[csr.col_idx[k]];
       }
       continue;
     }
-      
+
     for (unsigned k = start; k < aligned_start; k++) {
       output_vec[i] += csr.val[k] * input_vec[csr.col_idx[k]];
     }
@@ -48,7 +46,7 @@ int spmv_csr_simd_ilp_openmp(CSR csr, unsigned n, float *restrict input_vec,
     for (int j = 0; j < 8; j++) {
       output_vec[i] += temp[j];
     }
-    
+
     for (unsigned j = aligned_end; j < end; ++j) {
       output_vec[i] += csr.val[j] * input_vec[csr.col_idx[j]];
     }
@@ -56,21 +54,19 @@ int spmv_csr_simd_ilp_openmp(CSR csr, unsigned n, float *restrict input_vec,
   return 0;
 }
 
-
 int main(int argc, char *argv[]) {
   CSR *csr = common_read_from_file(argc, argv);
   float *input = common_generate_random_input(csr);
-  float *output = (float *)malloc(sizeof(float) *  csr->nrow * 2);
+  float *output = (float *)malloc(sizeof(float) * csr->nrow * 2);
 
   TEST_FUNCTION(spmv_csr_simd_ilp_openmp(*csr, csr->ncol, input, output);)
 
-  spmv_csr(*csr,  csr->ncol, input, output +  csr->nrow);
+  spmv_csr(*csr, csr->ncol, input, output + csr->nrow);
 
   if (relative_error_compare(output, output + csr->nrow, csr->nrow)) {
     printf("Error in the output\n");
     return -1;
   }
-
 
   csr_free(csr);
   free(input);

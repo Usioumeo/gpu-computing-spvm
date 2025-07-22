@@ -8,7 +8,6 @@ extern "C" {
 #include <sys/select.h>
 #include <sys/time.h>
 
-
 #define BLOCK_SIZE (32 * 2)
 #define SHARED_DATA_BLOCK (1024)
 __inline__ __device__ unsigned warpReduceMin(unsigned val) {
@@ -80,7 +79,7 @@ __global__ void spmv_csr_gpu_kernel_blocks(CSR csr, unsigned n,
 
   __syncthreads();
   unsigned end_block = 0;
-  
+
   while (end_block < csr.ncol) {
     unsigned to_send =
         (pos < end && i < csr.nrow) ? csr.col_idx[pos] : csr.ncol;
@@ -157,8 +156,6 @@ int spmv_csr_gpu_chunks(CSR *csr, unsigned n, float *input_vec,
 
 int main(int argc, char *argv[]) {
   CSR *csr = common_read_from_file(argc, argv);
-
-   
 
   float *input = common_generate_random_input(csr);
 

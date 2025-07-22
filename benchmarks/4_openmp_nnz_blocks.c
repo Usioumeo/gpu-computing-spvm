@@ -7,10 +7,9 @@
 #include <stdio.h>
 #include <sys/time.h>
 
-
-#define BLOCK_SIZE (1<<12)
-inline static float simd_process(CSR csr, unsigned start, unsigned end, float *input_vec
-                                 ) {
+#define BLOCK_SIZE (1 << 12)
+inline static float simd_process(CSR csr, unsigned start, unsigned end,
+                                 float *input_vec) {
   float ret = 0.0;
   unsigned aligned_start = (start + 7) & ~7;
   unsigned aligned_end = end & ~7;
@@ -66,7 +65,7 @@ int spmv_csr_simd_ilp_openmp(CSR csr, unsigned n, float *input_vec,
   if (n != csr.ncol) {
     return 1;
   }
-  for(unsigned i=0; i<csr.nrow; i++){
+  for (unsigned i = 0; i < csr.nrow; i++) {
     output_vec[i] = 0.0;
   }
 
@@ -78,17 +77,20 @@ int spmv_csr_simd_ilp_openmp(CSR csr, unsigned n, float *input_vec,
                              ? (block_start + BLOCK_SIZE)
                              : csr.nnz;
     unsigned row = upper_bound(csr.row_idx, csr.nrow, block_start);
-    do{
-      unsigned start_row = (csr.row_idx[row]<block_start)?(block_start):(csr.row_idx[row]);
-      unsigned end_row = (csr.row_idx[row + 1]<block_max)?(csr.row_idx[row + 1]):block_max;
-      float cur= simd_process(csr, start_row, end_row, input_vec);
-      #pragma omp critical
+    do {
+      unsigned start_row =
+          (csr.row_idx[row] < block_start) ? (block_start) : (csr.row_idx[row]);
+      unsigned end_row = (csr.row_idx[row + 1] < block_max)
+                             ? (csr.row_idx[row + 1])
+                             : block_max;
+      float cur = simd_process(csr, start_row, end_row, input_vec);
+#pragma omp critical
       {
         output_vec[row] += cur;
       }
       ++row;
 
-    }while (row < csr.nrow && csr.row_idx[row] < block_max);
+    } while (row < csr.nrow && csr.row_idx[row] < block_max);
   }
   return 0;
 }
@@ -97,17 +99,16 @@ int main(int argc, char *argv[]) {
   CSR *csr = common_read_from_file(argc, argv);
 
   float *input = common_generate_random_input(csr);
-  float *output = (float *)malloc(sizeof(float) *  csr->nrow * 2);
+  float *output = (float *)malloc(sizeof(float) * csr->nrow * 2);
 
   TEST_FUNCTION(spmv_csr_simd_ilp_openmp(*csr, csr->ncol, input, output);)
 
-  spmv_csr(*csr,  csr->ncol, input, output +  csr->nrow);
+  spmv_csr(*csr, csr->ncol, input, output + csr->nrow);
 
   if (relative_error_compare(output, output + csr->nrow, csr->nrow)) {
     printf("Error in the output\n");
     return -1;
   }
-
 
   csr_free(csr);
   free(input);

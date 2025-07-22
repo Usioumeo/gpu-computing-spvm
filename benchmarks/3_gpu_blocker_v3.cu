@@ -10,7 +10,6 @@ extern "C" {
 
 #include <stdint.h>
 
-
 #define BLOCK_SIZE 32
 #define BLOCK_DATA_SIZE (512)
 
@@ -65,7 +64,7 @@ __global__ void spmv_csr_gpu_kernel_texture(CSR csr, unsigned n,
     __syncwarp();
     const float *__restrict__ local_cache = cache - min_cols;
     __syncwarp();
-    //unrolled
+    // unrolled
     while (idx + 3 < end) {
       unsigned col0 = __ldg(csr.col_idx + idx);
       unsigned col1 = __ldg(csr.col_idx + idx + 1);
@@ -175,7 +174,6 @@ int main(int argc, char *argv[]) {
     printf("Error in the output\n");
     return -1;
   }
-
 
   csr_free(csr);
   free(input);

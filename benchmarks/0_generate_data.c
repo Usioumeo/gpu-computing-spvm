@@ -6,7 +6,6 @@
 #include <string.h>
 #include <sys/time.h>
 
-
 // <file out>, <rows>, <cols>, <nnz>
 int main(int argc, char *argv[]) {
   if (argc != 5) {

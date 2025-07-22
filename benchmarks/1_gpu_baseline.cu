@@ -8,13 +8,12 @@ extern "C" {
 #include <sys/select.h>
 #include <sys/time.h>
 
-#include <stdint.h>  
-
-
+#include <stdint.h>
 
 #define BLOCK_SIZE 32
- 
-__global__ void spmv_csr_gpu_kernel(CSR csr, unsigned n, float *__restrict__ input_vec,
+
+__global__ void spmv_csr_gpu_kernel(CSR csr, unsigned n,
+                                    float *__restrict__ input_vec,
                                     float *output_vec) {
   // for (unsigned i = 0; i < csr.nrow; ++i) {
   unsigned i = blockIdx.x * blockDim.x + threadIdx.x;
@@ -28,7 +27,7 @@ __global__ void spmv_csr_gpu_kernel(CSR csr, unsigned n, float *__restrict__ inp
     float *val_end = csr.val + end;
 
     while (val < val_end) {
-      
+
       out += *val * __ldg(&input_vec[*col]);
       val++;
       col++;
@@ -46,8 +45,7 @@ void dummy_launcher(CSR *csr, float *input_vec, float *output_vec) {
   CHECK_CUDA(cudaDeviceSynchronize());
 }
 
-int spmv_csr_gpu(CSR *csr, unsigned n, float *input_vec,
-                        float *output_vec) {
+int spmv_csr_gpu(CSR *csr, unsigned n, float *input_vec, float *output_vec) {
   if (n != csr->ncol) {
     return 1;
   }
@@ -72,9 +70,6 @@ int spmv_csr_gpu(CSR *csr, unsigned n, float *input_vec,
 
 int main(int argc, char *argv[]) {
   CSR *csr = common_read_from_file(argc, argv);
-  
-  
-   
 
   float *input = common_generate_random_input(csr);
 

@@ -12,9 +12,7 @@ extern "C" {
 #define NNZ 37242710
 //(1 << 26)
 
-
 #define BLOCK_SIZE 64
-
 
 __global__ void spmv_csr_gpu_kernel(CSR csr, unsigned n, float *input_vec,
                                     float *output_vec) {
@@ -25,19 +23,19 @@ __global__ void spmv_csr_gpu_kernel(CSR csr, unsigned n, float *input_vec,
     unsigned start = csr.row_idx[i];
     unsigned end = csr.row_idx[i + 1];
 
-    float *val = csr.val+start;
-    unsigned *col = csr.col_idx+start;
-    float *val_end = csr.val+end;
-    
-    while (val< val_end) {
-      
+    float *val = csr.val + start;
+    unsigned *col = csr.col_idx + start;
+    float *val_end = csr.val + end;
+
+    while (val < val_end) {
+
       out += *val * input_vec[*col];
       val++;
       col++;
     }
     output_vec[i] = out;
   }
-  
+
   //}
 }
 int spmv_csr_gpu(CSR csr, unsigned n, float *input_vec, float *output_vec) {
@@ -51,10 +49,8 @@ int spmv_csr_gpu(CSR csr, unsigned n, float *input_vec, float *output_vec) {
   // Wait for GPU to finish before accessing on host
   cudaDeviceSynchronize();
 
-
   return 0;
 }
-
 
 int main(void) {
   COO *coo = coo_new();
@@ -72,13 +68,13 @@ int main(void) {
     rand_vec[i] = (float)(rand() % 2001 - 1000) * 0.001;
   }
 
-  printf("coo->nrow %u coo->ncol %u coo->nnz %u\n", coo->nrow,
-         coo->ncol, coo->nnz);
+  printf("coo->nrow %u coo->ncol %u coo->nnz %u\n", coo->nrow, coo->ncol,
+         coo->nnz);
   TEST_FUNCTION(spmv_csr_gpu(*csr, COLS, rand_vec, output));
 
   spmv_csr(*csr, COLS, rand_vec, &output[COLS]);
-  
-  if(relative_error_compare(output, output+csr->ncol, csr->ncol)) {
+
+  if (relative_error_compare(output, output + csr->ncol, csr->ncol)) {
     printf("Error in the output\n");
     return -1;
   }
