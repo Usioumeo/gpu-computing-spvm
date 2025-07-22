@@ -58,17 +58,13 @@ int spmv_csr_simd_ilp_openmp(CSR csr, unsigned n, float *restrict input_vec,
 
 
 int main(int argc, char *argv[]) {
-  printf("simd ilp openmp\n\n");
-  CSR *csr = read_from_file(argc, argv);
-  float *rand_vec = (float *)malloc(sizeof(float) * csr->ncol);
+  CSR *csr = common_read_from_file(argc, argv);
+  float *input = common_generate_random_input(csr);
   float *output = (float *)malloc(sizeof(float) *  csr->nrow * 2);
-  for (unsigned i = 0; i <  csr->ncol; i++) {
-    rand_vec[i] = (float)(rand() % 2001 - 1000) * 0.001;
-  }
 
-  TEST_FUNCTION(spmv_csr_simd_ilp_openmp(*csr, csr->ncol, rand_vec, output);)
+  TEST_FUNCTION(spmv_csr_simd_ilp_openmp(*csr, csr->ncol, input, output);)
 
-  spmv_csr(*csr,  csr->ncol, rand_vec, output +  csr->nrow);
+  spmv_csr(*csr,  csr->ncol, input, output +  csr->nrow);
 
   if (relative_error_compare(output, output + csr->nrow, csr->nrow)) {
     printf("Error in the output\n");
@@ -77,7 +73,7 @@ int main(int argc, char *argv[]) {
 
 
   csr_free(csr);
-  free(rand_vec);
+  free(input);
   free(output);
   printf("test passed\n");
   return 0;

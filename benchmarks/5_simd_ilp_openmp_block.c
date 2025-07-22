@@ -72,7 +72,7 @@ int spmv_csr_simd_ilp_openmp(CSR csr, unsigned n, float *input_vec,
 
     // process remaining
     while (nblocks > 0) {
-      for (int bi = 0; bi < nblocks; bi++) {
+      for (unsigned bi = 0; bi < nblocks; bi++) {
         for (int kd = 0; kd < BLOCK_ADV; kd++) {
 
           if (blocks[bi].col_index_cur < blocks[bi].col_index_end) {
@@ -130,13 +130,10 @@ int spmv_csr_simd_ilp_openmp(CSR csr, unsigned n, float *input_vec,
 
 int main(int argc, char *argv[]) {
   printf("simd ilp openmp block\n");
-  CSR *csr = read_from_file(argc, argv);
+  CSR *csr = common_read_from_file(argc, argv);
 
-  float *rand_vec = (float *)malloc(sizeof(float) * csr->ncol);
+  float *input = common_generate_random_input(csr);
   float *output = (float *)malloc(sizeof(float) *  csr->nrow * 2);
-  for (unsigned i = 0; i < csr->ncol; i++) {
-    rand_vec[i] = (float)(rand() % 2001 - 1000) * 0.001;
-  }
   int sorted = 1;
   for(unsigned i = 0; i < csr->nrow&&sorted; i++) {
     unsigned cur_col=csr->col_idx[csr->row_idx[i]];
@@ -156,9 +153,9 @@ int main(int argc, char *argv[]) {
     printf("is not sorted\n");
   }
 
-  TEST_FUNCTION(spmv_csr_simd_ilp_openmp(*csr, csr->ncol, rand_vec, output);)
+  TEST_FUNCTION(spmv_csr_simd_ilp_openmp(*csr, csr->ncol, input, output);)
 
-  spmv_csr(*csr,  csr->ncol, rand_vec, output +  csr->nrow);
+  spmv_csr(*csr,  csr->ncol, input, output +  csr->nrow);
 
   if (relative_error_compare(output, output + csr->nrow, csr->nrow)) {
     printf("Error in the output\n");
@@ -166,7 +163,7 @@ int main(int argc, char *argv[]) {
   }
 
   csr_free(csr);
-  free(rand_vec);
+  free(input);
   free(output);
   printf("test passed\n\n");
   return 0;

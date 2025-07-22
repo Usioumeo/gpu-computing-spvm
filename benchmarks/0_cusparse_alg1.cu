@@ -46,7 +46,7 @@ int spmv_csr_gpu_cusparse(CSR *csr, unsigned n, float *input_vec,
   // Query buffer size for SpMV
   cusparseSpMV_bufferSize(handle, CUSPARSE_OPERATION_NON_TRANSPOSE, &alpha,
                           matA, input_vec_cuda, &beta, output_vec_cuda,
-                          CUDA_R_32F, CUSPARSE_SPMV_ALG_DEFAULT, &bufferSize);
+                          CUDA_R_32F, CUSPARSE_SPMV_CSR_ALG1, &bufferSize);
   cudaMalloc(&dBuffer, bufferSize);
   TEST_FUNCTION(cusparseSpMV(handle, CUSPARSE_OPERATION_NON_TRANSPOSE, &alpha,
                              matA, input_vec_cuda, &beta, output_vec_cuda,
@@ -70,16 +70,9 @@ int spmv_csr_gpu_cusparse(CSR *csr, unsigned n, float *input_vec,
 }
 
 int main(int argc, char *argv[]) {
-  CSR *csr = read_from_file(argc, argv);
+  CSR *csr = common_read_from_file(argc, argv);
 
-  printf("csr->nrow %u csr->ncol %u csr->nnz %u\n", csr->nrow, csr->ncol,
-         csr->nnz);
-
-  float *input = (float *)malloc(sizeof(float) * csr->ncol);
-  // cudaMallocHost(&rand_vec_host, sizeof(float)*COLS);
-  for (unsigned i = 0; i < csr->ncol; i++) {
-    input[i] = (float)(rand() % 2001 - 1000) * 0.001;
-  }
+  float *input = common_generate_random_input(csr);
 
   float *output = (float *)malloc(sizeof(float) * csr->nrow * 2);
 
@@ -95,5 +88,6 @@ int main(int argc, char *argv[]) {
   
   cudaFree(output);
   free(csr);
+  free(input);
   return 0;
 }

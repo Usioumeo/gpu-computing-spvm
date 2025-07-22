@@ -147,16 +147,11 @@ int spmv_csr_gpu_nnz(CSR *csr, unsigned n, float *input_vec,
 }
 
 int main(int argc, char *argv[]) {
-  CSR *csr = read_from_file(argc, argv);
+  CSR *csr = common_read_from_file(argc, argv);
 
-  printf("csr->nrow %u csr->ncol %u csr->nnz %u\n", csr->nrow, csr->ncol,
-         csr->nnz);
+   
 
-  float *input = (float *)malloc(sizeof(float) * csr->ncol);
-  // cudaMallocHost(&rand_vec_host, sizeof(float)*COLS);
-  for (unsigned i = 0; i < csr->ncol; i++) {
-    input[i] = (float)(rand() % 2001 - 1000) * 0.001;
-  }
+  float *input = common_generate_random_input(csr);
 
   float *output = (float *)malloc(sizeof(float) * csr->nrow * 2);
 

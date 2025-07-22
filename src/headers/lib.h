@@ -151,7 +151,8 @@ CSR *copy_csr_to_gpu(CSR *csr);
 void free_csr_gpu(CSR *csr);
 
 
-CSR* read_from_file(int argc, char *argv[]);
+CSR* common_read_from_file(int argc, char *argv[]);
+float* common_generate_random_input(CSR *csr);
 
 #define CHECK_CUDA(call)                                                       \
   if ((call) != cudaSuccess) {                                                 \

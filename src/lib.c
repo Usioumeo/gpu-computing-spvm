@@ -265,9 +265,7 @@ int coo_from_file(FILE *input, COO *coo) {
   /*   specifier as in "%lg", "%lf", "%le", otherwise errors will occur */
   /*  (ANSI C X3.159-1989, Sec. 4.9.6.2, p. 136 lines 13-15)            */
   char * buffer_pointer = tmp_buffer;
-  printf("reading %u rows, %u cols, %u nnz\n", coo->nrow, coo->ncol,
-         coo->nnz);
-  fflush(stdout);
+
   for (unsigned int i = 0; i < coo->nnz; i++) {
     /*int adv;
     int c=sscanf(buffer_pointer, "%u %u %f\n%n", &coo->data[i].row, &coo->data[i].col,
@@ -283,7 +281,7 @@ int coo_from_file(FILE *input, COO *coo) {
     coo->data[i].col--;
   }
   free(tmp_buffer);
-  printf("scanfato\n");
+  printf("Concluded parsing file:\n");
   fflush(stdout);
   return 0;
 }
@@ -549,7 +547,7 @@ int read_bin_to_csr(const char *filename, CSR *csr) {
   return 0;
 }
 
-CSR* read_from_file(int argc, char *argv[]){
+CSR* common_read_from_file(int argc, char *argv[]){
   COO *coo = coo_new();
   CSR *csr = csr_new();
   if (argc > 2) {
@@ -557,6 +555,7 @@ CSR* read_from_file(int argc, char *argv[]){
     exit(-1);
   }
   if (argc == 2) {
+    printf("%s\n", argv[0]);
     FILE *input = fopen(argv[1], "r");
     if (input == NULL) {
       printf("Error opening file: %s\n", argv[1]);
@@ -574,5 +573,16 @@ CSR* read_from_file(int argc, char *argv[]){
     read_bin_to_csr("tmp.bin", csr);
   }
   free(coo);
+  printf("Loaded %u rows, %u cols, %u nnz\n", csr->nrow, csr->ncol,
+         csr->nnz);
   return csr;
+}
+
+float* common_generate_random_input(CSR *csr){
+  float* input = (float *)malloc(sizeof(float) * csr->ncol);
+  // cudaMallocHost(&rand_vec_host, sizeof(float)*COLS);
+  for (unsigned i = 0; i < csr->ncol; i++) {
+    input[i] = (float)(rand() % 2001 - 1000) * 0.001;
+  }
+  return input;
 }

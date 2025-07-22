@@ -72,7 +72,7 @@ int spmv_csr_simd_ilp(CSR csr, unsigned n, float *input_vec,
 int main(int argc, char *argv[]) {
    srand(100);
   printf("simd ilp\n");
-  CSR *csr = read_from_file(argc, argv);
+  CSR *csr = common_read_from_file(argc, argv);
 
   float *rand_vec = (float *)malloc(sizeof(float) * csr->ncol);
   float *output = (float *)malloc(sizeof(float) *  csr->nrow * 2);
