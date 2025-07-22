@@ -38,35 +38,17 @@ __global__ void spmv_csr_gpu_kernel_texture(CSR csr, unsigned n,
 }
 
 // Add texture memory launcher
-void dummy_launcher_texture(CSR *csr, float *input_vec, float *output_vec) {
+void dummy_launcher_texture(CSR *csr, cudaTextureObject_t input_tex, float *output_vec) {
   unsigned nblocks = (csr->nrow + BLOCK_SIZE - 1) / BLOCK_SIZE;
 
-  // Create texture object
-  cudaResourceDesc resDesc;
-  memset(&resDesc, 0, sizeof(resDesc));
-  resDesc.resType = cudaResourceTypeLinear;
-  resDesc.res.linear.devPtr = input_vec;
-  resDesc.res.linear.desc.f = cudaChannelFormatKindFloat;
-  resDesc.res.linear.desc.x = 32; // 32-bit float
-  resDesc.res.linear.sizeInBytes = csr->ncol * sizeof(float);
-
-  cudaTextureDesc texDesc;
-  memset(&texDesc, 0, sizeof(texDesc));
-  texDesc.addressMode[0] = cudaAddressModeClamp;
-  texDesc.filterMode = cudaFilterModePoint;
-  texDesc.readMode = cudaReadModeElementType;
-  texDesc.normalizedCoords = 0;
-
-  cudaTextureObject_t input_tex = 0;
-  CHECK_CUDA(cudaCreateTextureObject(&input_tex, &resDesc, &texDesc, NULL));
+  
 
   // Launch kernel with texture
   spmv_csr_gpu_kernel_texture<<<nblocks, BLOCK_SIZE>>>(*csr, csr->ncol,
                                                        input_tex, output_vec);
   CHECK_CUDA(cudaDeviceSynchronize());
 
-  // Clean up texture object
-  CHECK_CUDA(cudaDestroyTextureObject(input_tex));
+  
 }
 
 int spmv_csr_gpu(CSR *csr, unsigned n, float *input_vec, float *output_vec) {
@@ -82,12 +64,34 @@ int spmv_csr_gpu(CSR *csr, unsigned n, float *input_vec, float *output_vec) {
 
   CHECK_CUDA(cudaMalloc(&output_gpu, sizeof(float) * gpu_csr->nrow));
 
-  TEST_FUNCTION(dummy_launcher_texture(gpu_csr, input_vec_gpu, output_gpu));
+  //allocate texture
+// Create texture object
+  cudaResourceDesc resDesc;
+  memset(&resDesc, 0, sizeof(resDesc));
+  resDesc.resType = cudaResourceTypeLinear;
+  resDesc.res.linear.devPtr = input_vec_gpu;
+  resDesc.res.linear.desc.f = cudaChannelFormatKindFloat;
+  resDesc.res.linear.desc.x = 32; // 32-bit float
+  resDesc.res.linear.sizeInBytes = csr->ncol * sizeof(float);
+
+  cudaTextureDesc texDesc;
+  memset(&texDesc, 0, sizeof(texDesc));
+  texDesc.addressMode[0] = cudaAddressModeClamp;
+  texDesc.filterMode = cudaFilterModePoint;
+  texDesc.readMode = cudaReadModeElementType;
+  texDesc.normalizedCoords = 0;
+
+  cudaTextureObject_t input_tex = 0;
+  CHECK_CUDA(cudaCreateTextureObject(&input_tex, &resDesc, &texDesc, NULL));
+
+  TEST_FUNCTION(dummy_launcher_texture(gpu_csr, input_tex, output_gpu));
 
   CHECK_CUDA(cudaMemcpy(output_vec, output_gpu, sizeof(float) * gpu_csr->nrow,
                         cudaMemcpyDeviceToHost));
   CHECK_CUDA(cudaFree(input_vec_gpu));
   CHECK_CUDA(cudaFree(output_gpu));
+  // Clean up texture object
+  CHECK_CUDA(cudaDestroyTextureObject(input_tex));
   free_csr_gpu(gpu_csr);
   return 0;
 }

@@ -6,6 +6,7 @@ extern "C" {
 #include "lib.h"
 }
 
+
 int spmv_csr_gpu_cusparse(CSR *csr, unsigned n, float *input_vec,
                           float *output_vec) {
   if (n != csr->ncol) {
@@ -31,10 +32,9 @@ int spmv_csr_gpu_cusparse(CSR *csr, unsigned n, float *input_vec,
   cusparseCreate(&handle);
 
   // Create sparse matrix A in CSR format
-  cusparseCreateCsr(&matA, csr->nrow, gpu_csr->ncol, gpu_csr->nnz,
-                    gpu_csr->row_idx, gpu_csr->col_idx, gpu_csr->val,
-                    CUSPARSE_INDEX_32I, CUSPARSE_INDEX_32I,
-                    CUSPARSE_INDEX_BASE_ZERO, CUDA_R_32F);
+  cusparseCreateCsr(&matA, csr->nrow, gpu_csr->ncol, gpu_csr->nnz, gpu_csr->row_idx,
+                    gpu_csr->col_idx, gpu_csr->val, CUSPARSE_INDEX_32I,
+                    CUSPARSE_INDEX_32I, CUSPARSE_INDEX_BASE_ZERO, CUDA_R_32F);
 
   // Create dense vectors
   cusparseCreateDnVec(&input_vec_cuda, csr->ncol, input_vec_gpu, CUDA_R_32F);
@@ -64,7 +64,6 @@ int spmv_csr_gpu_cusparse(CSR *csr, unsigned n, float *input_vec,
   CHECK_CUDA(cudaFree(input_vec_gpu));
   CHECK_CUDA(cudaFree(output_gpu));
   cudaFree(dBuffer);
-  // cudaFree(input_);
   free_csr_gpu(gpu_csr);
   return 0;
 }
@@ -85,6 +84,7 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
+  
   cudaFree(output);
   free(input);
   free(csr);
