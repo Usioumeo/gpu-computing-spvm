@@ -17,7 +17,7 @@ typedef struct {
   unsigned *col_index_aligned_end;
   float *val_cur;
 
-  //char align[24]; // padding to ensure alignment
+  // char align[24]; // padding to ensure alignment
 } BlockData;
 
 inline static void process_step(BlockData *blocks, float *input_vec) {
@@ -41,7 +41,8 @@ int spmv_csr_simd_ilp_openmp(CSR csr, unsigned n, float *input_vec,
       blocks[i].row = row;
       blocks[i].col_index_cur = &csr.col_idx[csr.row_idx[row]];
       blocks[i].col_index_end = &csr.col_idx[csr.row_idx[row + 1]];
-      blocks[i].col_index_aligned_end = (unsigned *)((uintptr_t)blocks[i].col_index_end & ~(uintptr_t)7);
+      blocks[i].col_index_aligned_end =
+          (unsigned *)((uintptr_t)blocks[i].col_index_end & ~(uintptr_t)7);
       blocks[i].val_cur = &csr.val[csr.row_idx[blocks[i].row]];
       if (row >= csr.nrow) {
         nblocks = i;
@@ -55,7 +56,7 @@ int spmv_csr_simd_ilp_openmp(CSR csr, unsigned n, float *input_vec,
           process_step(&blocks[bi], input_vec);
         }
         output_vec[blocks[bi].row] = blocks[bi].cur;
-        
+
         blocks[bi] = blocks[--nblocks];
         bi--;
       }
@@ -133,29 +134,28 @@ int main(int argc, char *argv[]) {
   CSR *csr = common_read_from_file(argc, argv);
 
   float *input = common_generate_random_input(csr);
-  float *output = (float *)malloc(sizeof(float) *  csr->nrow * 2);
+  float *output = (float *)malloc(sizeof(float) * csr->nrow * 2);
   int sorted = 1;
-  for(unsigned i = 0; i < csr->nrow&&sorted; i++) {
-    unsigned cur_col=csr->col_idx[csr->row_idx[i]];
-    for(unsigned j = csr->row_idx[i]; j < csr->row_idx[i + 1]&&sorted; j++) {
-      if(csr->col_idx[j] < cur_col) {
+  for (unsigned i = 0; i < csr->nrow && sorted; i++) {
+    unsigned cur_col = csr->col_idx[csr->row_idx[i]];
+    for (unsigned j = csr->row_idx[i]; j < csr->row_idx[i + 1] && sorted; j++) {
+      if (csr->col_idx[j] < cur_col) {
         sorted = 0;
         break;
-      }else{
+      } else {
         cur_col = csr->col_idx[j];
       }
-
     }
-  } 
-  if(sorted) {
+  }
+  if (sorted) {
     printf("is sorted\n");
-  }else{
+  } else {
     printf("is not sorted\n");
   }
 
   TEST_FUNCTION(spmv_csr_simd_ilp_openmp(*csr, csr->ncol, input, output);)
 
-  spmv_csr(*csr,  csr->ncol, input, output +  csr->nrow);
+  spmv_csr(*csr, csr->ncol, input, output + csr->nrow);
 
   if (relative_error_compare(output, output + csr->nrow, csr->nrow)) {
     printf("Error in the output\n");

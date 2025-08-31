@@ -1,0 +1,72 @@
+###################################################
+2.4
+
+default
+./build/bench/cuda/bins/2.4_gpu_mixedO3
+Concluded parsing file:
+Loaded 8192 rows, 8192 cols, 16777216 nnz
+Elapsed time: 0.000377
+Total reps: 5
+Nrow: 8192
+Ncol: 8192
+Nnz: 16777216
+Gflops: 88.956609
+Total memory moved: 0.201425 GB
+Total bandwidth: 534.000244 GB/s
+test passed
+
+mawi1
+./build/bench/cuda/bins/2.4_gpu_mixedO3
+Concluded parsing file:
+Loaded 35991342 rows, 35991342 cols, 37242710 nnz
+Elapsed time: 0.001710
+Total reps: 5
+Nrow: 35991342
+Ncol: 35991342
+Nnz: 37242710
+Gflops: 43.553632
+Total memory moved: 0.878809 GB
+Total bandwidth: 513.863098 GB/s
+test passed
+
+random2
+./build/bench/cuda/bins/2.4_gpu_mixedO3
+Concluded parsing file:
+Loaded 35991342 rows, 35991342 cols, 37242710 nnz
+Elapsed time: 0.004644
+Total reps: 5
+Nrow: 35991342
+Ncol: 35991342
+Nnz: 37242710
+Gflops: 16.039066
+Total memory moved: 0.878809 GB
+Total bandwidth: 189.235275 GB/s
+test passed
+
+mawi2
+./build/bench/cuda/bins/2.4_gpu_mixedO3
+Concluded parsing file:
+Loaded 226196185 rows, 226196185 cols, 240023949 nnz
+Elapsed time: 0.010075
+Total reps: 5
+Nrow: 226196185
+Ncol: 226196185
+Nnz: 240023949
+Gflops: 47.648379
+Total memory moved: 5.594641 GB
+Total bandwidth: 555.310425 GB/s
+test passed
+
+nlppkkt240
+./build/bench/cuda/bins/2.4_gpu_mixedO3
+Concluded parsing file:
+Loaded 27993600 rows, 27993600 cols, 401232976 nnz
+Elapsed time: 0.005782
+Total reps: 5
+Nrow: 27993600
+Ncol: 27993600
+Nnz: 401232976
+Gflops: 138.777313
+Total memory moved: 5.150719 GB
+Total bandwidth: 890.758057 GB/s
+test passed
