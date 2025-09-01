@@ -5,8 +5,8 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define WARMUPS 50
-#define REPS 500
+#define WARMUPS 5
+#define REPS 50
 
 #define START_TIMER                                                            \
   struct timeval temp_1 = {0, 0}, temp_2 = {0, 0};                             \

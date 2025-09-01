@@ -265,7 +265,8 @@ inline void dummy_launcher_v2(CSR *csr, cudaTextureObject_t input_tex, float *ou
   CHECK_CUDA(cudaDeviceSynchronize());
 }
 inline void dummy_launcher(CSR *csr, cudaTextureObject_t input_tex, float *output_vec) {
-  if (analyze_workload_balance(csr)>10.0){
+  float ret = analyze_workload_balance(csr);
+  if (ret>10.0){
     dummy_launcher_v2(csr, input_tex, output_vec);
   }else{
     dummy_launcher_v1(csr, input_tex, output_vec);

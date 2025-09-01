@@ -34,6 +34,8 @@ echo "2 texture"
 ./build/bench/cuda/bins/2.2_gpu_scattered_textureO3
 echo "3 v3"
 ./build/bench/cuda/bins/3_gpu_blocker_v3O3
+echo "4 mix"
+./build/bench/cuda/bins/2.4_gpu_mixedO3
 echo "cusparse"
 #$RUNNER ./build/bench/cuda/bins/2_gpu_scatteredO3 $ARGUMENT
 ./build/bench/cuda/bins/0_cusparse_alg1O3
